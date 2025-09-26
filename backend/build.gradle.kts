@@ -25,14 +25,14 @@ repositories {
 dependencies {
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
 
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-    //implementation("org.springframework.boot:spring-boot-starter-web:4.0.0-M3")
-    //old dependency
     implementation("org.springframework.boot:spring-boot-starter-web")
 
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
+    //automatic documentation
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    //implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
    // implementation("org.springframework.hateoas:spring-hateoas:2.3.3")
@@ -41,10 +41,10 @@ dependencies {
     //api("org.springframework.security:spring-security-core:6.3.2")
 
     // https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
-    implementation("org.springframework.data:spring-data-jpa:4.0.0-M6")
+    implementation("org.springframework.data:spring-data-jpa:3.5.4")
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.0-M3")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.5.6")
 
     implementation("org.postgresql:postgresql:42.7.2")
 
