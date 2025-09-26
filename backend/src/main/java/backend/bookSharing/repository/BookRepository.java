@@ -1,11 +1,15 @@
 package backend.bookSharing.repository;
 
-import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.book.Book;
+import backend.bookSharing.repository.entities.book.Language;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 //@Component
 public interface BookRepository extends CrudRepository<Book, Integer> {
 
-    Book findByIsbn10(Integer isbn_10);
+    //Book findByIsbn10(Integer isbn_10);
+
+    //List<Book> findByLanguage(Language language);
 }

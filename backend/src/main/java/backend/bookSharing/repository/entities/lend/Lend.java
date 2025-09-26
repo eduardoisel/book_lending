@@ -1,10 +1,7 @@
 package backend.bookSharing.repository.entities.lend;
 
 import backend.bookSharing.repository.entities.owned.Owned;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
@@ -16,6 +13,7 @@ public class Lend {
     @MapsId("requested")
     private Owned owned;
 
+    @Temporal(TemporalType.TIMESTAMP) //may be unnecessary?
     private Timestamp date;
 
     private Integer duration;

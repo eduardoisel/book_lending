@@ -9,6 +9,7 @@ import java.util.List;
 public class Region {
 
     @Id
+    @Column(length = 50, nullable = false, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
