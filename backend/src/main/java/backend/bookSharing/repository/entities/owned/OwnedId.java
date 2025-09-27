@@ -3,7 +3,6 @@ package backend.bookSharing.repository.entities.owned;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 
-@Entity
 @Embeddable
 public class OwnedId {
 

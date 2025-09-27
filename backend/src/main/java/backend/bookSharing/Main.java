@@ -16,9 +16,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 @SpringBootApplication
 public class Main {
 
-    @Value( "${jdbc.url}" )
-    private String jdbcUrl;
-
     /*
     @Bean
     DataSource dataSource() {
@@ -41,11 +38,17 @@ public class Main {
     public CommandLineRunner demo(BookRepository repository) {
         return (args) -> {
             // save a few books
-            repository.save(new Book(null, null, null, Language.English));
-            repository.save(new Book(null, null, null, Language.Spanish));
-            repository.save(new Book(null, null, null, Language.Portuguese));
-            repository.save(new Book(null, null, null, Language.Portuguese));
-            repository.save(new Book(null, null, null, Language.Portuguese));
+
+            /*
+
+            System.out.println("\n\nP ERSONAL PRINT\n!\n\n aa\n");
+            repository.save(new Book(null, null, "Title1", Language.English));
+            repository.save(new Book(null, null, "Title2", Language.Spanish));
+            repository.save(new Book(null, null, "Title3", Language.Portuguese));
+            repository.save(new Book(null, null, "Title4", Language.Portuguese));
+            repository.save(new Book(null, null, "Title5", Language.Portuguese));
+
+             */
 
             // fetch all customers
             log.info("Books found with findAll():");

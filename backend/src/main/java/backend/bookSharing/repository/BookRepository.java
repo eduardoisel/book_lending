@@ -1,14 +1,13 @@
 package backend.bookSharing.repository;
 
 import backend.bookSharing.repository.entities.book.Book;
-import backend.bookSharing.repository.entities.book.Language;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.List;
-import org.springframework.stereotype.Component;
+//import org.springframework.data.repository.query.ValueExpressionDelegate
 
-@Component
-public interface BookRepository extends CrudRepository<Book, Integer> {
+@EnableJpaRepositories
+public interface BookRepository extends JpaRepository<Book, Integer> {
 
     //Book findByIsbn10(Integer isbn_10);
 

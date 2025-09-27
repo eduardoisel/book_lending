@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 
+@Entity
 public class Lend {
     @EmbeddedId
     private LendId lendId;
