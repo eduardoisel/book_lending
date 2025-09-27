@@ -20,16 +20,15 @@ CREATE type REGION_ENUM as ENUM(
 --could be table instead of enum
 
 CREATE TABLE Region(
-    name varchar(50) primary key,
+    name varchar(50) primary key
 );
 
 
 CREATE TABLE App_User(
     id serial primary key NOT NULL,
-    region varchar(50) references Region(name) NOT NULL,
+    region varchar(50) references Region(name) NOT NULL,--reg REGION_ENUM NOT NULL,
     email varchar(70) UNIQUE NOT NULL,
-    --reg REGION_ENUM NOT NULL,
-    password varchar(50) NOT NULL, --- change to hash
+    password varchar(50) NOT NULL --- change to hash
 );
 
 CREATE type LANGUAGE as ENUM(

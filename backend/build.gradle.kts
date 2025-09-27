@@ -1,3 +1,6 @@
+import java.util.LinkedList
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
     id("java")
     id("org.springframework.boot") version "3.3.3"
@@ -18,8 +21,19 @@ java {
 group = "backend.bookSharing"
 version = "1.0-SNAPSHOT"
 
+val list: LinkedList<String> = LinkedList<String>()
+list.add("src/main/resources") //is default
+
 repositories {
     mavenCentral()
+}
+
+sourceSets {
+    main {
+        resources {
+            setSrcDirs(list)
+        }
+    }
 }
 
 dependencies {
@@ -35,7 +49,7 @@ dependencies {
     //implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
-   // implementation("org.springframework.hateoas:spring-hateoas:2.3.3")
+    // implementation("org.springframework.hateoas:spring-hateoas:2.3.3")
 
     // To get password encode
     //api("org.springframework.security:spring-security-core:6.3.2")
@@ -60,4 +74,36 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.named<BootRun>("bootRun") {
+    //should not be necessary with application.properties
+    environment("DB_URL", "jdbc:postgresql://localhost:5433/db?user=dbuser&password=changeit")
+    dependsOn("dbAppWait")
+    finalizedBy("dbAppDown")
+}
+
+task<Exec>("dbAppUp") {
+    commandLine(
+        "docker",
+        "compose",
+        "-p",
+        "book-lend",
+        "-f",
+        "./docker-compose.yml",
+        "up",
+        "-d",
+        "--build",
+        "book-lending-app",
+    )
+}
+
+task<Exec>("dbAppWait") {
+    commandLine("docker", "exec", "book-lending-container", "/app/bin/wait-for-postgres.sh", "localhost")
+
+    dependsOn("dbAppUp")
+}
+
+task<Exec>("dbAppDown") {
+    commandLine("docker", "compose", "-p", "book-lend", "-f", "./docker-compose.yml", "pause", "book-lending-app")
 }

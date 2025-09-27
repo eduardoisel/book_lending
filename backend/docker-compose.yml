@@ -1,0 +1,12 @@
+services:
+  book-lending-app:
+    container_name: book-lending-container
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=changeit
+      - POSTGRES_DB=db
+    ports:
+      - "5433:5432"
