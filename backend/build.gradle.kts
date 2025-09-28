@@ -51,10 +51,6 @@ dependencies {
     // To get password encode
     //api("org.springframework.security:spring-security-core:6.3.2")
 
-    //TODO CHECK inclusion interferes more with app, seems it conflicts with other jpa dep as it includes another version of this
-    // https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa
-    //implementation("org.springframework.data:spring-data-jpa:3.5.4")
-
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.5.6")
 

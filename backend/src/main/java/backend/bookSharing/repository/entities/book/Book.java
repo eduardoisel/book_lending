@@ -7,9 +7,23 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Entity
 public class Book {
+
+    public static enum Language {
+        English,
+        Portuguese,
+        Spanish,
+        French,
+        German,
+        Russian,
+        Japanese,
+        Italian,
+        Hebrew;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +40,10 @@ public class Book {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "lang")
+    @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private Language language;
+
+    public Book() {}
 
     public Book(Integer isbn_10, Long isbn_13, String title, Language language){
         this.isbn_10 = isbn_10;
