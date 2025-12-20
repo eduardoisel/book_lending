@@ -1,4 +1,4 @@
-package backend.bookSharing.repository.entities.book;
+package backend.bookSharing.repository.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
@@ -43,7 +45,10 @@ public class Book {
     @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private Language language;
 
-    public Book() {}
+    @OneToMany(mappedBy = "book") //note: mapped by string value is from owned class book reference name member
+    private List<Owned> ownersList;
+
+    public Book(){} //seems to be necessary for hibernate
 
     public Book(Integer isbn_10, Long isbn_13, String title, Language language){
         this.isbn_10 = isbn_10;
@@ -78,4 +83,13 @@ public class Book {
     public Language getLanguage() {
         return language;
     }
+
+    /**
+     *
+     * @return Every owner at once. Probably better to change that later
+     */
+    public List<User> getOwners(){
+        return ownersList.stream().map(Owned::getUser).toList();
+    }
+
 }

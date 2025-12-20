@@ -1,6 +1,6 @@
 package backend.bookSharing.repository;
 
-import backend.bookSharing.repository.entities.book.Book;
+import backend.bookSharing.repository.entities.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 

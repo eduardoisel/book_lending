@@ -1,8 +1,6 @@
-package backend.bookSharing.repository.entities.lend;
+package backend.bookSharing.repository.entities;
 
-import backend.bookSharing.repository.entities.owned.OwnedId;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.OneToOne;
 
 @Embeddable
 public class LendId {

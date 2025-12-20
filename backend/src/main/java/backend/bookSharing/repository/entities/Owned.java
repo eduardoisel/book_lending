@@ -1,7 +1,5 @@
-package backend.bookSharing.repository.entities.owned;
+package backend.bookSharing.repository.entities;
 
-import backend.bookSharing.repository.entities.book.Book;
-import backend.bookSharing.repository.entities.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -21,5 +19,13 @@ public class Owned {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @MapsId("owned_book_id")
     private Book book;
+
+    public User getUser(){
+        return user;
+    }
+
+    public Book getBook(){
+        return book;
+    }
 
 }

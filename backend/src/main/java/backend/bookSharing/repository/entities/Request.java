@@ -1,6 +1,5 @@
-package backend.bookSharing.repository.entities.request;
+package backend.bookSharing.repository.entities;
 
-import backend.bookSharing.repository.entities.owned.Owned;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;

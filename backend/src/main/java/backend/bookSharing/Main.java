@@ -1,13 +1,11 @@
 package backend.bookSharing;
 
 import backend.bookSharing.repository.BookRepository;
-import backend.bookSharing.repository.entities.book.Book;
+import backend.bookSharing.repository.entities.Book;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Main {
@@ -19,7 +17,8 @@ public class Main {
     }
 
 
-    @Bean
+    //runs on start if bean is not commented
+    //@Bean
     public CommandLineRunner demo(BookRepository repository) {
         return (args) -> {
             // save a few books
@@ -41,15 +40,6 @@ public class Main {
                 log.info(book.toString());
             });
             log.info("");
-
-            /*
-            log.info("Books found with findByLanguage():");
-            repository.findByLanguage(Language.Portuguese).forEach(book -> {
-                log.info(book.toString());
-            });
-
-            log.info("");
-             */
 
         };
     }

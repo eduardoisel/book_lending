@@ -15,8 +15,16 @@ public class Region {
     @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
     private List<User> belongs;
 
+    public Region(){} //seems to be necessary for hibernate
+
     public Region(String name){
         this.name = name;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format("Region[name='%s']", name);
     }
 
 

@@ -1,6 +1,9 @@
 package backend.bookSharing.services;
 
 import backend.bookSharing.repository.BookRepository;
+import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.User;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,5 +21,8 @@ public class BookService {
         return repo.count();
     }
 
+    public List<User> getOwnersOfBook(Integer bookId){
+        return repo.getReferenceById(bookId).getOwners();
+    }
 
 }
