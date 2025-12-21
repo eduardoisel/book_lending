@@ -1,7 +1,7 @@
 package backend.bookSharing.services;
 
 import backend.bookSharing.repository.BookRepository;
-import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.User;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class BookService {
     }
 
     public List<User> getOwnersOfBook(Integer bookId){
-        return repo.getReferenceById(bookId).getOwners();
+        return repo.getReferenceById(bookId).getOwners().stream().map(Owned::getUser).toList();
     }
 
 }

@@ -45,8 +45,8 @@ public class Book {
     @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private Language language;
 
-    @OneToMany(mappedBy = "book") //note: mapped by string value is from owned class book reference name member
-    private List<Owned> ownersList;
+    @OneToMany(mappedBy = "book") //note: mapped by string value is from owned class Owned reference name field
+    private List<Owned> owners;
 
     public Book(){} //seems to be necessary for hibernate
 
@@ -84,12 +84,8 @@ public class Book {
         return language;
     }
 
-    /**
-     *
-     * @return Every owner at once. Probably better to change that later
-     */
-    public List<User> getOwners(){
-        return ownersList.stream().map(Owned::getUser).toList();
+    public List<Owned> getOwners() {
+        return owners;
     }
 
 }

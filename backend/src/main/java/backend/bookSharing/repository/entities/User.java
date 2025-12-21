@@ -28,7 +28,7 @@ public class User {
     private Region region;
 
     @OneToMany(mappedBy = "user") //note: mapped by string value is from owned class user reference name member
-    private List<Owned> ownedList;
+    private List<Owned> owned;
 
     public User(){} //seems to be necessary for hibernate
 
@@ -47,10 +47,10 @@ public class User {
     }
 
     /**
-     * @return Every owned book at once. Probably better to change that later
+     * @return Every owned book at once?
      */
-    public List<Book> getOwners(){
-        return ownedList.stream().map(Owned::getBook).toList();
+    public List<Owned> getOwned(){
+        return owned;
     }
 
 }

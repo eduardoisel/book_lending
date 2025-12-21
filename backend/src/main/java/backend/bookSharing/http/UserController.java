@@ -27,6 +27,14 @@ public class UserController {
         return ResponseEntity.status(200).body(String.format("Books owned: %s \n", service.getOwnedBooks(userId).toString()));
     }
 
+    @GetMapping("owned/{userId}/requests/{bookId}")
+    public ResponseEntity<?> bookRequests(@PathVariable Integer userId, @PathVariable Integer bookId) {
+        return ResponseEntity.status(200).body(String.format("Requests of book: %s \n", service.getRequestsOfBook(userId, bookId).toString()));
+    }
 
+    @GetMapping("owned/{userId}/lend/{bookId}")
+    public ResponseEntity<?> bookLend(@PathVariable Integer userId, @PathVariable Integer bookId) {
+        return ResponseEntity.status(200).body(String.format("Current lend of book: %s \n", service.getLendOfBook(userId, bookId).toString()));
+    }
 
 }

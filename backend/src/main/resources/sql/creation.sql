@@ -73,7 +73,7 @@ CREATE TABLE Request(
 
 --- Accepted requests would go here
 CREATE TABLE Lend(
-    requester_user_id integer NOT NULL,
+    requester_user_id integer references App_User(id) NOT NULL,
     requested_user_id integer NOT NULL,
     requested_book_id integer NOT NULL,
     foreign key (requested_user_id, requested_book_id) references Owned(user_id, book_id),

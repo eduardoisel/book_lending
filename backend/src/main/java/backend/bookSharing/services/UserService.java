@@ -2,8 +2,12 @@ package backend.bookSharing.services;
 
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.Lend;
+import backend.bookSharing.repository.entities.Owned;
+import backend.bookSharing.repository.entities.Request;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +25,19 @@ public class UserService {
     }
 
     public List<Book> getOwnedBooks(Integer userId){
-        return repo.getReferenceById(userId).getOwners();
+        return repo.getReferenceById(userId).getOwned().stream().map(Owned::getBook).toList();
+    }
+
+    public List<Request> getRequestsOfBook(Integer ownerId, Integer bookId){
+        return repo.getReferenceById(ownerId).getOwned()
+                .stream().filter(owned -> owned.getBook().getId().equals(bookId)).toList().getFirst()
+                .getRequests().stream().toList();
+    }
+
+    public Lend getLendOfBook(Integer ownerId, Integer bookId){
+        return repo.getReferenceById(ownerId).getOwned()
+                .stream().filter(owned -> owned.getBook().getId().equals(bookId)).toList().getFirst()
+                .getLend();
     }
 
 }
