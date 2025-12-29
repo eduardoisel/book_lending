@@ -16,3 +16,9 @@ allow any realistic way for these cases to be actually verified.
 
 Postgres is the chosen database. Its related files can be found [here](./src/main/resources/sql).
 
+## Foreign API
+
+To avoid users placing possibly bad information about books themselves, a foreign API about books is used.
+https://openlibrary.org/dev/docs/api/search was used due to being free. https://developer.api.oclc.org is bigger and 
+therefore preferable, but requires authentication given only to some organizations.
+

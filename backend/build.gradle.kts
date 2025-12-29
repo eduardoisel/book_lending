@@ -64,6 +64,17 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     */
 
+
+
+
+
+
+    // https://mvnrepository.com/artifact/io.vavr/vavr
+    implementation("io.vavr:vavr:0.11.0")
+
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.13.2")
 }
 
 tasks.test {

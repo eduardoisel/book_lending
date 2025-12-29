@@ -5,16 +5,23 @@ import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Lend;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
 
     @Autowired
     private final UserRepository repo;
+
+    @PersistenceContext private EntityManager em;
 
     public UserService(UserRepository userRepository){
         this.repo = userRepository;
@@ -39,5 +46,6 @@ public class UserService {
                 .stream().filter(owned -> owned.getBook().getId().equals(bookId)).toList().getFirst()
                 .getLend();
     }
+
 
 }

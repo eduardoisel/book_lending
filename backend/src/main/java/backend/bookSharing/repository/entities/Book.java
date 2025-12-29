@@ -24,18 +24,20 @@ public class Book {
         Russian,
         Japanese,
         Italian,
-        Hebrew;
+        Hebrew,
+        Hungarian,
+        Danish
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(unique = false, nullable = true)
-    private Integer isbn_10;
+    @Column(unique = false, nullable = true, name = "isbn_10")
+    private Integer isbnTen;
 
-    @Column(unique = false, nullable = true)
-    private Long isbn_13;
+    @Column(unique = false, nullable = true, name = "isbn_13")
+    private Long isbnThirteen;
 
     @Column(length = 100, unique = false, nullable = false)
     private String title;
@@ -51,8 +53,8 @@ public class Book {
     public Book(){} //seems to be necessary for hibernate
 
     public Book(Integer isbn_10, Long isbn_13, String title, Language language){
-        this.isbn_10 = isbn_10;
-        this.isbn_13 = isbn_13;
+        this.isbnTen = isbn_10;
+        this.isbnThirteen = isbn_13;
         this.title = title;
         this.language = language;
     }
@@ -61,19 +63,19 @@ public class Book {
     public String toString() {
         return String.format(
                 "Book[id='%d', isbn_10='%d', isbn_13='%d', title='%s', language='%s']",
-                id, isbn_10, isbn_13, title, language.toString());
+                id, isbnTen, isbnThirteen, title, language.toString());
     }
 
     public Integer getId() {
         return id;
     }
 
-    public Integer getIsbn_10() {
-        return isbn_10;
+    public Integer getIsbnTen() {
+        return isbnTen;
     }
 
-    public Long getIsbn_13() {
-        return isbn_13;
+    public Long getIsbnThirteen() {
+        return isbnThirteen;
     }
 
     public String getTitle() {

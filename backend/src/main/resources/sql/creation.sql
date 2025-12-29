@@ -40,7 +40,9 @@ CREATE type LANGUAGE as ENUM(
  'Russian',
  'Japanese',
  'Italian',
- 'Hebrew'
+ 'Hebrew',
+ 'Hungarian',
+ 'Danish'
 );
 
 --- either isbn 10 or isbn_13 may be required to not be null
