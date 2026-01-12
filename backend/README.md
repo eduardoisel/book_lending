@@ -12,6 +12,21 @@ harassment through any communication in the server or adding fake books. The dam
 to their owners after the time limit will also be added, even if in this person to person lending framework may not 
 allow any realistic way for these cases to be actually verified.
 
+## Tools chosen and its uses
+
+Usage of gradle (if you have not heard of it, think of it as an alternative to maven) to run a java
+server, with spring to handle http in and out requests, along with dependency injection, and jakarta to translate 
+database information into easily accessible java classes.
+
+A postgres database is set up to start with docker commands.
+
+## How to run this code
+
+An instance of this server can be started with gradlew bootRun. Due to configuring the [gradle file](./build.gradle.kts)
+to do so, a postgres database will start (created if needed) automatically. Stopping the database however, is only done
+automatically if the code aborts due to an exception. When forcing the server to stop manually, the step to shut down 
+the database is skipped
+
 ## Database
 
 Postgres is the chosen database. Its related files can be found [here](./src/main/resources/sql).
@@ -22,3 +37,51 @@ To avoid users placing possibly bad information about books themselves, a foreig
 https://openlibrary.org/dev/docs/api/search was used due to being free. https://developer.api.oclc.org is bigger and 
 therefore preferable, but requires authentication given only to some organizations.
 
+## Project structure
+
+```
+└── 📁src
+    └── 📁main
+        └── 📁docker
+            ├── Dockerfile
+        └── 📁java
+            └── 📁backend
+                └── 📁bookSharing
+                    └── 📁http
+                    └── 📁repository
+                        └── 📁entities
+                    └── 📁services
+                        └── 📁book
+                            └── 📁api
+                        └── 📁user
+                            └── 📁services
+                    ├── Main.java
+        └── 📁resources
+            └── 📁sql
+                ├── creation.sql
+            ├── application.properties
+    └── 📁test
+```
+
+Above is the structure of the src folder. The main and test folders are standard, while the resources/sql and docker 
+folders serve for automation of the database creation, that can be activated with gradle.
+
+### BookSharing
+
+There are three main folders in this structure, the repository, the services and http. 
+
+The base is the repository structure, which contains the database entities as classes, the translation being done with 
+jakarta, and the base repository CRUD actions, something the spring does automatically by implementing specific 
+interfaces with our generics.
+
+Next step is the services folder, with the power of defining the restrictions on how to interact with the repository
+data, such as defining transaction levels and making use of foreign APIs (used here to get information of books through
+their isbn).
+
+The last step is http, which will read and parse the data of receiving http requests and making use of the services 
+layer to answer valid requests.
+
+Outside of these folders is the main file. This has the boilerplate code to start a spring server app, but it's called to
+attention that any component spring cannot create by itself will be supplemented with bean annotated methods. At this 
+stage, the example of defining the validity time of the tokens is done here, and any such information that may be changed
+should be placed here for ease of change.

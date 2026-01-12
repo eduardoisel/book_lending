@@ -31,6 +31,14 @@ CREATE TABLE App_User(
     password varchar(50) NOT NULL --- change to hash
 );
 
+-- not necessary if we limit amount of sessions for an account to one. Then delete table and change values to user
+CREATE TABLE Token(
+    token_validation varchar(256) primary key,
+    user_id int references App_User(id),
+    created_at timestamp not null DEFAULT now(),
+    last_used_at timestamp not null DEFAULT now()
+);
+
 CREATE type LANGUAGE as ENUM(
  'English',
  'Portuguese',

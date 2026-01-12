@@ -1,6 +1,7 @@
 package backend.bookSharing.http;
 
-import backend.bookSharing.services.UserService;
+import backend.bookSharing.services.user.UserService;
+import backend.bookSharing.services.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private final UserService service;
 
     public UserController(UserService userService) {
         this.service = userService;

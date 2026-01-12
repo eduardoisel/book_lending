@@ -30,6 +30,9 @@ public class User {
     @OneToMany(mappedBy = "user") //note: mapped by string value is from owned class user reference name member
     private List<Owned> owned;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true) //note: mapped by string value is from owned class user reference name member
+    private List<Token> tokens;
+
     public User(){} //seems to be necessary for hibernate
 
     public User(Region region, String email, String password) {

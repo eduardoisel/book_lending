@@ -2,15 +2,25 @@ package backend.bookSharing;
 
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.Token;
+import backend.bookSharing.services.user.services.TokenValidation;
+import java.time.Duration;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Main {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);
+
+
+    @Bean
+    public TokenValidation tokenValidationBean(){
+        return new TokenValidation(Duration.ofHours(10), Duration.ofMinutes(30));
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);

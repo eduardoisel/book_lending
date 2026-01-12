@@ -10,6 +10,7 @@ plugins {
 
     //not for this gradle, only groovy?
     //id ("nebula.lint") version "17.8.0"
+    //kotlin("jvm")
 }
 
 java {
@@ -48,8 +49,11 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
     // implementation("org.springframework.hateoas:spring-hateoas:2.3.3")
 
-    // To get password encode
-    //api("org.springframework.security:spring-security-core:6.3.2")
+    //org.gradle.kotlin.dsl.DependencyHandlerScope. // To get password encode //api("org.springframework.security:spring-security-core:6.3.2")
+
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.5.6")

@@ -11,6 +11,8 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,8 @@ public class BookServiceImpl implements BookService{
     }
 
     public List<User> getOwnersOfBook(Integer bookId){
+
+        repo.findAll(PageRequest.of(1, 20)).getSort();
         return repo.getReferenceById(bookId).getOwners().stream().map(Owned::getUser).toList();
     }
 
@@ -48,7 +52,6 @@ public class BookServiceImpl implements BookService{
                 return Optional.of(new BookAdditionError.Isbn10InUse());
         }
 
-        Long.valueOf("9788702347036");
         if (!isIsbn10 && repo.findByIsbnThirteen(Long.valueOf(isbn)) != null){
             return Optional.of(new BookAdditionError.Isbn13InUse());
         }
