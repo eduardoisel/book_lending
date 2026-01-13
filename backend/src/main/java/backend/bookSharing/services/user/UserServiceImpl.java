@@ -1,60 +1,92 @@
 package backend.bookSharing.services.user;
 
+import backend.bookSharing.repository.RegionRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Lend;
 import backend.bookSharing.repository.entities.Owned;
+import backend.bookSharing.repository.entities.Region;
 import backend.bookSharing.repository.entities.Request;
+import backend.bookSharing.repository.entities.User;
+import backend.bookSharing.services.user.services.PasswordValidation;
 import io.vavr.control.Either;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    private final UserRepository repo;
+    private final UserRepository userRepo;
 
-    @PersistenceContext private EntityManager em;
+    @Autowired
+    private final RegionRepository regionRepo;
 
-    public UserServiceImpl(UserRepository userRepository){
-        this.repo = userRepository;
+    //@Autowired
+    private final PasswordValidation passwordValidation;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           RegionRepository regionRepository,
+                           PasswordValidation passwordValidation) {
+        this.userRepo = userRepository;
+        this.passwordValidation = passwordValidation;
+        this.regionRepo = regionRepository;
     }
 
-    public long bookCount(){
-        return repo.count();
+    public long bookCount() {
+        return userRepo.count();
     }
 
     @Override
-    public List<Book> getOwnedBooks(Integer userId){
-        return repo.getReferenceById(userId).getOwned().stream().map(Owned::getBook).toList();
+    public List<Book> getOwnedBooks(Integer userId) {
+        return userRepo.getReferenceById(userId).getOwned().stream().map(Owned::getBook).toList();
     }
 
     @Override
-    public List<Request> getRequestsOfBook(Integer ownerId, Integer bookId){
-        return repo.getReferenceById(ownerId).getOwned()
+    public List<Request> getRequestsOfBook(Integer ownerId, Integer bookId) {
+        return userRepo.getReferenceById(ownerId).getOwned()
                 .stream().filter(owned -> owned.getBook().getId().equals(bookId)).toList().getFirst()
                 .getRequests().stream().toList();
     }
 
     @Override
-    public Lend getLendOfBook(Integer ownerId, Integer bookId){
-        return repo.getReferenceById(ownerId).getOwned()
+    public Lend getLendOfBook(Integer ownerId, Integer bookId) {
+        return userRepo.getReferenceById(ownerId).getOwned()
                 .stream().filter(owned -> owned.getBook().getId().equals(bookId)).toList().getFirst()
                 .getLend();
     }
 
     @Override
-    @Transactional(transactionManager = "aa", isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     //@jakarta.transaction.Transactional
     public Either<UserCreationError, Integer> createUser(String email, String password) {
 
-        return null;
+        if (passwordValidation.isSafePassword(password)){
+            return Either.left(new UserCreationError.WeakPassword());
+        }
+
+        Optional<User> emailSearch = userRepo.findByEmail(email);
+
+        if (emailSearch.isPresent()) {
+            return Either.left(new UserCreationError.EmailInUse());
+        }
+
+        User created = userRepo.save(new User(
+                new Region("Portugal"),
+                email,
+                passwordValidation.passwordEncoding(password)
+        ));
+
+        return Either.right(created.getId());
     }
 
 

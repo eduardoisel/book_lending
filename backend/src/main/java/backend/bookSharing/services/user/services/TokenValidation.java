@@ -7,7 +7,6 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
-import kotlin.text.Charsets;
 
 public class TokenValidation {
     //private Integer maxNumberOfTokensPerUser = config.maxTokensPerUser;
@@ -52,7 +51,7 @@ public class TokenValidation {
 
     private String hash(String input) {
         return Base64.getUrlEncoder().encodeToString(
-                messageDigest.digest(Charsets.UTF_8.encode(input).array())
+                messageDigest.digest(input.getBytes())
         );
     }
 

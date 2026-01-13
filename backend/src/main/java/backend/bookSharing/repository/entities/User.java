@@ -36,6 +36,7 @@ public class User {
     public User(){} //seems to be necessary for hibernate
 
     public User(Region region, String email, String password) {
+        this.region = region;
         this.email = email;
         this.password = password;
     }
@@ -56,4 +57,18 @@ public class User {
         return owned;
     }
 
+    /**
+     * @return Every owned book at once?
+     */
+    public Integer getId(){
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
 }

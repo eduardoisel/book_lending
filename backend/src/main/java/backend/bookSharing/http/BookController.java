@@ -1,9 +1,8 @@
 package backend.bookSharing.http;
 
+import backend.bookSharing.http.data.IsbnBody;
 import backend.bookSharing.services.book.BookAdditionError;
 import backend.bookSharing.services.book.BookService;
-import io.vavr.control.Either;
-import io.vavr.control.Option;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
