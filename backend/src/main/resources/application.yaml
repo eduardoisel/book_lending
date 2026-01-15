@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    hikari: ## default connection pool
+      connectionTimeout: 2000
+      maximumPoolSize: 5
+    ## PostgreSQL
+    url: jdbc:postgresql://localhost:5433/db
+    username: dbuser
+    password: changeit
