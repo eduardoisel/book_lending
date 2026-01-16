@@ -4,11 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
@@ -33,9 +35,11 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    //not unique, can be null
     @Column(unique = false, nullable = true, name = "isbn_10")
     private Integer isbnTen;
 
+    //not unique, can be null
     @Column(unique = false, nullable = true, name = "isbn_13")
     private Long isbnThirteen;
 
@@ -47,8 +51,9 @@ public class Book {
     @JdbcType(value = PostgreSQLEnumJdbcType.class)
     private Language language;
 
-    @OneToMany(mappedBy = "book") //note: mapped by string value is from owned class Owned reference name field
-    private List<Owned> owners;
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY) //note: mapped by string value is from owned class Owned reference name field
+    @BatchSize(size = 20)
+    private List<Owned> owners; //private Set<Owned> owners;
 
     public Book(){} //seems to be necessary for hibernate
 

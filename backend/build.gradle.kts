@@ -6,6 +6,7 @@ plugins {
     id("org.springframework.boot") version "3.3.3"
     id("io.spring.dependency-management") version "1.1.7"
 
+    //id("com.gorylenko.gradle-git-properties") version "2.5.4" // https://docs.spring.io/spring-boot/how-to/build.html#howto.build.generate-git-info
     checkstyle
 
     //not for this gradle, only groovy?
@@ -47,12 +48,11 @@ dependencies {
     //implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
-    // implementation("org.springframework.hateoas:spring-hateoas:2.3.3")
+    // implementation("org.springframework.hateoas:spring-hateoas:3.0.1")
 
     //org.gradle.kotlin.dsl.DependencyHandlerScope. // To get password encode //api("org.springframework.security:spring-security-core:6.3.2")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
-    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
@@ -60,17 +60,22 @@ dependencies {
 
     implementation("org.postgresql:postgresql:42.7.2")
 
-    /*
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
+    testImplementation("org.springframework.boot:spring-boot-testcontainers:3.5.7")
+
+
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    testImplementation("org.springframework.boot:spring-boot-starter-test:3.5.7")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    */
 
 
 
 
+    //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")   https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html#appendix.configuration-metadata.annotation-processor
 
 
     // https://mvnrepository.com/artifact/io.vavr/vavr
@@ -79,6 +84,21 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation("com.google.code.gson:gson:2.13.2")
+
+
+    /* Do not exist for 3.x.x, use if upgrading to 4
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-data-jpa-test
+    testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache-test
+    implementation("org.springframework.boot:spring-boot-starter-cache-test:4.0.0")
+     */
+}
+
+//https://docs.spring.io/spring-boot/how-to/build.html
+springBoot{
+    buildInfo()
 }
 
 tasks.test {

@@ -15,6 +15,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         this.regionRepo = regionRepository;
     }
 
+    @ConfigurationProperties
     public long bookCount() {
         return userRepo.count();
     }
@@ -70,8 +72,10 @@ public class UserServiceImpl implements UserService {
     //@jakarta.transaction.Transactional
     public Either<UserCreationError, Integer> createUser(String email, String password) {
 
-        if (passwordValidation.isSafePassword(password)){
-            return Either.left(new UserCreationError.WeakPassword());
+        try {
+            passwordValidation.isSafePassword(password);
+        } catch (Exception e) {
+            return Either.left(new UserCreationError.WeakPassword()); //todo communicate more specific
         }
 
         Optional<User> emailSearch = userRepo.findByEmail(email);
@@ -87,6 +91,16 @@ public class UserServiceImpl implements UserService {
         ));
 
         return Either.right(created.getId());
+    }
+
+    @Override
+    public Either<UserAuthenticationError, String> login(String email, String password) {
+        return null;
+    }
+
+    @Override
+    public Optional<LogoutError> logout(String token) {
+        return Optional.empty();
     }
 
 

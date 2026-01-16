@@ -47,8 +47,8 @@ public class Main {
     }
 
     @Bean
-    public TokenValidation tokenValidationBean(){
-        return new TokenValidation(Duration.ofHours(10), Duration.ofMinutes(30));
+    public TokenValidation.TokenValidTime tokenValidationBean(){
+        return new TokenValidation.TokenValidTime(Duration.ofHours(10), Duration.ofMinutes(30));
     }
 
     public static void main(String[] args) {

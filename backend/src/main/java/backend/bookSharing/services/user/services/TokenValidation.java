@@ -1,29 +1,55 @@
 package backend.bookSharing.services.user.services;
 
 import backend.bookSharing.repository.entities.Token;
+import java.security.InvalidParameterException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TokenValidation {
     //private Integer maxNumberOfTokensPerUser = config.maxTokensPerUser;
 
+    public static class TokenValidTime{
+        private final Duration tokenTtl;
+
+        private final Duration tokenTtlRolling;
+
+        /**
+         * @param tokenTtl Total time the token can be valid since creation. Must be positive
+         * @param tokenTtlRolling Total time the token can be valid since it was last used. Must be positive
+         *
+         * @throws  InvalidParameterException if any are negative
+         */
+        public TokenValidTime(Duration tokenTtl, Duration tokenTtlRolling){
+
+            if (tokenTtl.isNegative()){
+                throw new InvalidParameterException("Token time to live cannot be negative");
+            }
+
+            if (tokenTtlRolling.isNegative()){
+                throw new InvalidParameterException("Token rolling time to live cannot be negative");
+            }
+
+            this.tokenTtl = tokenTtl;
+            this.tokenTtlRolling = tokenTtlRolling;
+        }
+    }
     private final Duration tokenTtl;
 
     private final Duration tokenTtlRolling;
 
-    private final Integer tokenSizeInBytes = 256; //todo not make it hard coded
+    private static final Integer tokenSizeInBytes = 256; //dependent on usage os sha-256
 
-    /**
-     * @param tokenTtl Total time the token can be valid since creation
-     * @param tokenTtlRolling Total time the token can be valid since it was last used
-     */
-    public TokenValidation(Duration tokenTtl, Duration tokenTtlRolling) {
-        this.tokenTtl = tokenTtl;
-        this.tokenTtlRolling = tokenTtlRolling;
+    public TokenValidation(TokenValidTime tokenValidTime) {
+
+        this.tokenTtl = tokenValidTime.tokenTtl;
+        this.tokenTtlRolling = tokenValidTime.tokenTtlRolling;
+
     }
 
     //not created in methods to ensure anything that may cause exception to happen as quickly as possible.

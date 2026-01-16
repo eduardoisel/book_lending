@@ -1,6 +1,7 @@
 package backend.bookSharing.repository.entities;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
@@ -57,9 +59,6 @@ public class User {
         return owned;
     }
 
-    /**
-     * @return Every owned book at once?
-     */
     public Integer getId(){
         return id;
     }
