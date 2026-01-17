@@ -3,7 +3,7 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     id("java")
-    id("org.springframework.boot") version "3.3.3"
+    id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
 
     //id("com.gorylenko.gradle-git-properties") version "2.5.4" // https://docs.spring.io/spring-boot/how-to/build.html#howto.build.generate-git-info
@@ -13,6 +13,12 @@ plugins {
     //id ("nebula.lint") version "17.8.0"
     //kotlin("jvm")
 }
+
+//dependencyManagement {
+//    imports {
+//        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+//    }
+//}
 
 java {
     toolchain {
@@ -56,21 +62,21 @@ dependencies {
 
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.5.6")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     implementation("org.postgresql:postgresql:42.7.2")
 
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
-    testImplementation("org.springframework.boot:spring-boot-testcontainers:3.5.7")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
 
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    //testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.5.7")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 
 
@@ -92,7 +98,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache-test
-    implementation("org.springframework.boot:spring-boot-starter-cache-test:4.0.0")
+    implementation("org.springframework.boot:spring-boot-starter-cache-test")
      */
 }
 

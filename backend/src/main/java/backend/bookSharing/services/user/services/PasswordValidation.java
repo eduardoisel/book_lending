@@ -86,15 +86,15 @@ public class PasswordValidation {
             throw new InsufficientSizeException();
         }
 
-        if (!password.matches("[a-z]+")){
+        if (!password.matches(".*[a-z].*")){
             throw new NoLowerCaseException();
         }
 
-        if (!password.matches("[A-Z]+")){
+        if (!password.matches(".*[A-Z].*")){
             throw new NoUpperCaseException();
         }
 
-        if (!password.matches("[!$%^&*()_+|~=`´{}:\";'\\<>?,./]+")){
+        if (!password.matches(".*[!$%^&*()_+|~=`´{}:\";'\\\\<>?,./].*")){
             throw new NoSpecialCharException();
         }
 

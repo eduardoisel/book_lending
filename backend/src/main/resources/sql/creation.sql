@@ -1,24 +1,3 @@
---- if is done by personal lending proximity to one another would be preferred
---- to research more specific locations, enum is probably not enough
-CREATE type REGION_ENUM as ENUM(
- 'England',
- 'Portugal',
- 'Spain',
- 'France',
- 'Germany',
- 'Russia',
- 'Japan',
- 'Italy',
- 'Israel',
- 'Sweden',
- 'USA',
- 'China',
- 'Brasil',
- 'Equador'
-);
-
---could be table instead of enum
-
 CREATE TABLE Region(
     name varchar(50) primary key
 );

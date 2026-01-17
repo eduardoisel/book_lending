@@ -56,7 +56,7 @@ public class BookServiceImpl implements BookService{
             return Optional.of(new BookAdditionError.Isbn13InUse());
         }
 
-        em.persist(bookApi.getBook(isbn));
+        repo.save(bookApi.getBook(isbn));
 
         return Optional.empty();
 

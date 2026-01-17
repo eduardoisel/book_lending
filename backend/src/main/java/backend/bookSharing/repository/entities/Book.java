@@ -11,8 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+//import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Entity
 public class Book {
@@ -48,7 +49,7 @@ public class Book {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "lang")
-    @JdbcType(value = PostgreSQLEnumJdbcType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Language language;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY) //note: mapped by string value is from owned class Owned reference name field
