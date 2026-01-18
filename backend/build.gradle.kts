@@ -11,7 +11,6 @@ plugins {
 
     //not for this gradle, only groovy?
     //id ("nebula.lint") version "17.8.0"
-    //kotlin("jvm")
 }
 
 //dependencyManagement {
@@ -51,10 +50,10 @@ dependencies {
 
     //automatic documentation
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    //implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
 
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
-    // implementation("org.springframework.hateoas:spring-hateoas:3.0.1")
+    //implementation("org.springframework.hateoas:spring-hateoas")
 
     //org.gradle.kotlin.dsl.DependencyHandlerScope. // To get password encode //api("org.springframework.security:spring-security-core:6.3.2")
 
@@ -69,9 +68,12 @@ dependencies {
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.1")
+    // Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-junit-jupiter
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
 
 
-    //testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("io.rest-assured:rest-assured:6.0.0") // NEW, requires version specification?
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -86,20 +88,16 @@ dependencies {
 
     // https://mvnrepository.com/artifact/io.vavr/vavr
     implementation("io.vavr:vavr:0.11.0")
-
-
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation("com.google.code.gson:gson:2.13.2")
 
-
-    /* Do not exist for 3.x.x, use if upgrading to 4
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-data-jpa-test
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache-test
     implementation("org.springframework.boot:spring-boot-starter-cache-test")
-     */
+
 }
 
 //https://docs.spring.io/spring-boot/how-to/build.html
@@ -110,6 +108,16 @@ springBoot{
 tasks.test {
     useJUnitPlatform()
 }
+
+
+/*
+ * https://github.com/mkyong/spring-boot/tree/master/spring-data-jpa-postgresql
+ *
+ * Project above uses postgres without sql file for initialization?
+ *
+ * https://docs.spring.io/spring-boot/how-to/data-initialization.html
+ * Should be involved with this property
+ */
 
 tasks.named<BootRun>("bootRun") {
     //should not be necessary with application.properties

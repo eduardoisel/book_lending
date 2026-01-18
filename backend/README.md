@@ -12,13 +12,16 @@ harassment through any communication in the server or adding fake books. The dam
 to their owners after the time limit will also be added, even if in this person to person lending framework may not 
 allow any realistic way for these cases to be actually verified.
 
-## Tools chosen and its uses
-
-Usage of gradle (if you have not heard of it, think of it as an alternative to maven) to run a java
-server, with spring to handle http in and out requests, along with dependency injection, and jakarta to translate 
-database information into easily accessible java classes.
-
-A postgres database is set up to start with docker commands.
+## Technologies used:
+Technologies used:
+* Spring Boot 4.0.1
+* Spring Data JPA (Hibernate 7)
+* PostgreSQL (latest version)
+* Gradle kotlin
+* Java 21
+* JUnit 5
+* Docker
+* [Test containers](https://testcontainers.com/)
 
 ## How to run this code
 
