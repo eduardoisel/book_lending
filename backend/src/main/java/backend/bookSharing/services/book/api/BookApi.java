@@ -1,8 +1,9 @@
 package backend.bookSharing.services.book.api;
 
 import backend.bookSharing.repository.entities.Book;
+import org.jspecify.annotations.NonNull;
 
-public interface Api {
+public interface BookApi {
 
     /**
      *
@@ -10,5 +11,5 @@ public interface Api {
      *
      * @return Book information from the API
      */
-    public Book getBook(String isbn);
+    public Book getBook(@NonNull String isbn);
 }

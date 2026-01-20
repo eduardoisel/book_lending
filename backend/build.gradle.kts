@@ -11,6 +11,9 @@ plugins {
 
     //not for this gradle, only groovy?
     //id ("nebula.lint") version "17.8.0"
+
+    id("io.freefair.lombok") version "9.2.0"
+
 }
 
 //dependencyManagement {
@@ -46,6 +49,12 @@ sourceSets {
 dependencies {
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
 
+    // https://www.geeksforgeeks.org/advance-java/using-lombok-to-reduce-boilerplate-code-in-spring-boot/ extra
+    // From https://medium.com/@dulanjayasandaruwan1998/spring-doesnt-recommend-autowired-anymore-05fc05309dad
+    // test replacing all autowired
+    // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
+    implementation("org.projectlombok:lombok")//:1.18.42
+
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     //automatic documentation
@@ -56,6 +65,9 @@ dependencies {
     //implementation("org.springframework.hateoas:spring-hateoas")
 
     //org.gradle.kotlin.dsl.DependencyHandlerScope. // To get password encode //api("org.springframework.security:spring-security-core:6.3.2")
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
 

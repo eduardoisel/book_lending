@@ -1,22 +1,17 @@
 package backend.bookSharing.repository;
 
+import backend.bookSharing.DatabaseTest;
+import backend.bookSharing.TestData;
 import backend.bookSharing.repository.entities.Book;
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Container;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
-@Testcontainers
-@DataJpaTest
-@TestPropertySource(properties = {"spring.jpa.hibernate.ddl-auto=create-drop"})
-public class BookRepositoryTest{
+public class BookRepositoryTest extends DatabaseTest {
 
     @Container
     @ServiceConnection
@@ -31,7 +26,7 @@ public class BookRepositoryTest{
      */
     @Test
     public void createAndSearchTest(){
-        Book b = new Book(123456789, null, "test", Book.Language.Portuguese);
+        Book b = TestData.databaseBooks[0];
 
         assertEquals(0, bookRepository.count());
 
@@ -43,7 +38,7 @@ public class BookRepositoryTest{
 
     @Test
     public void deletionTest(){
-        Book temporaryInsert = new Book(123456789, null, "test", Book.Language.Portuguese);
+        Book temporaryInsert = new Book("0123456789", null, "test", Book.Language.Portuguese);
 
         bookRepository.save(temporaryInsert);
 
@@ -54,7 +49,7 @@ public class BookRepositoryTest{
 
     @Test
     public void findByIsbn10Test(){
-        Integer isbn10 = 123456789;
+        String isbn10 = "0123456789";
 
         Book inserted = new Book(isbn10, null, "test", Book.Language.Portuguese);
 
@@ -73,7 +68,7 @@ public class BookRepositoryTest{
 
     @Test
     public void findByIsbn13Test(){
-        Long isbn13 = 1234567890L;
+        String isbn13 = "1234567890321";
 
         Book inserted = new Book(null, isbn13, "test", Book.Language.Portuguese);
 

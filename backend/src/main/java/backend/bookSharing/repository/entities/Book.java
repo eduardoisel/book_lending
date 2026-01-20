@@ -13,7 +13,6 @@ import java.util.List;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-//import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 @Entity
 public class Book {
@@ -37,12 +36,12 @@ public class Book {
     private Integer id;
 
     //not unique, can be null
-    @Column(unique = false, nullable = true, name = "isbn_10")
-    private Integer isbnTen;
+    @Column(unique = false, nullable = true, name = "isbn_10", length = 10)
+    private String isbnTen;
 
     //not unique, can be null
-    @Column(unique = false, nullable = true, name = "isbn_13")
-    private Long isbnThirteen;
+    @Column(unique = false, nullable = true, name = "isbn_13", length = 13)
+    private String isbnThirteen;
 
     @Column(length = 100, unique = false, nullable = false)
     private String title;
@@ -58,7 +57,7 @@ public class Book {
 
     public Book(){} //seems to be necessary for hibernate
 
-    public Book(Integer isbn_10, Long isbn_13, String title, Language language){
+    public Book(String isbn_10, String isbn_13, String title, Language language){
         this.isbnTen = isbn_10;
         this.isbnThirteen = isbn_13;
         this.title = title;
@@ -68,7 +67,7 @@ public class Book {
     @Override
     public String toString() {
         return String.format(
-                "Book[id='%d', isbn_10='%d', isbn_13='%d', title='%s', language='%s']",
+                "Book[id='%d', isbn_10='%s', isbn_13='%s', title='%s', language='%s']",
                 id, isbnTen, isbnThirteen, title, language.toString());
     }
 
@@ -76,11 +75,11 @@ public class Book {
         return id;
     }
 
-    public Integer getIsbnTen() {
+    public String getIsbnTen() {
         return isbnTen;
     }
 
-    public Long getIsbnThirteen() {
+    public String getIsbnThirteen() {
         return isbnThirteen;
     }
 

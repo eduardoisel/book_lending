@@ -15,9 +15,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  */
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    Book findByIsbnTen(Integer isbn_10);
+    Book findByIsbnTen(String  isbn_10);
 
-    Book findByIsbnThirteen(Long isbn_13);
+    Book findByIsbnThirteen(String isbn_13);
 
     //List<Book> findByLanguage(Language language);
 }

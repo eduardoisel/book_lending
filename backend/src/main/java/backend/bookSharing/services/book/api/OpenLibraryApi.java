@@ -9,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
  * This is the only one that seems completely free World cat, the biggest one, had a free xml option for non organizations,
  * but it seems to have been removed. If this idea actually is used consider trying to change the API
  */
-public class OpenLibraryApi implements Api {
+public class OpenLibraryApi implements BookApi {
 
     //allows automatic following of redirects. Needed for the specific url used
     private final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
@@ -60,6 +61,12 @@ public class OpenLibraryApi implements Api {
 
         String serialized = null;
         try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 404){
+                return null;
+            }
+
             serialized = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
             throw new RuntimeException(e); //circumvent throws being added to method signature. todo search for better way
@@ -79,17 +86,17 @@ public class OpenLibraryApi implements Api {
         String title = (String) stringMap.get("title");
 
         ArrayList<String> isbn10 = ((ArrayList<String>) stringMap.get("isbn_10"));
-        Integer isbn_10 = null;
+        String isbn_10 = null;
 
         if (isbn10 != null){
-            isbn_10 = Integer.valueOf(isbn10.getFirst());
+            isbn_10 = isbn10.getFirst();
         }
 
         ArrayList<String> isbn13 = ((ArrayList<String>) stringMap.get("isbn_13"));
-        Long isbn_13 = null;
+        String isbn_13 = null;
 
         if (isbn13 != null){
-            isbn_13 = Long.valueOf(isbn13.getFirst());
+            isbn_13 = isbn13.getFirst();
         }
 
         return new Book(isbn_10, isbn_13, title, isoIdToLanguage(language[language.length - 1]));

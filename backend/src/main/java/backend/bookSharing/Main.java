@@ -83,21 +83,4 @@ public class Main {
         };
     }
 
-    //@Bean
-    public CommandLineRunner dem(BookRepository repository) {
-        return (args) -> {
-            // save a few books
-
-            repository.save(new Book(1234567899, null, "Title1", Book.Language.English));
-
-            System.out.println("\n\n Book saved\n\n");
-
-            Book b = repository.findByIsbnTen(1234567899);
-            System.out.printf("Is b null: %b\n", b == null);
-
-            Book nu = repository.findByIsbnTen(1234567899);
-            System.out.printf("Is nu null: %b", nu == null); if (nu != null){System.out.printf("id: %d\n", nu.getId());}
-
-        };
-    }
 }

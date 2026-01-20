@@ -4,6 +4,7 @@ import backend.bookSharing.http.data.IsbnBody;
 import backend.bookSharing.services.book.BookAdditionError;
 import backend.bookSharing.services.book.BookService;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/books")
+//@RequiredArgsConstructor
 public class BookController {
 
     @Autowired
-    private BookService service;
+    private final BookService service;
 
     public BookController(BookService bookService) {
         this.service = bookService;
@@ -44,10 +46,10 @@ public class BookController {
         }
 
         if (result.get() instanceof BookAdditionError.Isbn10InUse){
-            return ResponseEntity.status(200).body("Isbn 10 number already in use");
+            return ResponseEntity.status(400).body("Isbn 10 number already in use");
         }
 
-        return ResponseEntity.status(200).body("Isbn 13 number already in use");
+        return ResponseEntity.status(400).body("Isbn 13 number already in use");
     }
 
 
