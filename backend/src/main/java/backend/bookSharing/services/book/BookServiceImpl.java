@@ -6,25 +6,19 @@ import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.api.BookApi;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService{
 
-    @Autowired
     private final BookRepository repo;
 
-    @Autowired
     private final BookApi bookApi;
-
-    public BookServiceImpl(BookRepository bookRepository, BookApi api){
-        this.repo = bookRepository;
-        this.bookApi = api;
-    }
 
     public long bookCount(){
         return repo.count();

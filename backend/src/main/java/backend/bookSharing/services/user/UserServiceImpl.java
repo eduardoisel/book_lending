@@ -10,38 +10,23 @@ import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import io.vavr.control.Either;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private final UserRepository userRepo;
 
-    @Autowired
     private final RegionRepository regionRepo;
 
-    //@Autowired
     private final PasswordValidation passwordValidation;
-
-    @PersistenceContext
-    private EntityManager em;
-
-    public UserServiceImpl(UserRepository userRepository,
-                           RegionRepository regionRepository,
-                           PasswordValidation passwordValidation) {
-        this.userRepo = userRepository;
-        this.passwordValidation = passwordValidation;
-        this.regionRepo = regionRepository;
-    }
 
     @ConfigurationProperties
     public long bookCount() {
