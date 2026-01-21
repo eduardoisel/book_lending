@@ -17,6 +17,7 @@ public class MockBookApi implements BookApi {
 
         if (isbn.length() == 13) {
             Optional<Book> b = Arrays.stream(TestData.allBooks)
+                    .filter(book -> book.getIsbnThirteen() != null) // avoid NullPointerException
                     .filter(book -> book.getIsbnThirteen().equals(isbn)).findFirst();
 
             if (b.isEmpty()){
@@ -28,6 +29,7 @@ public class MockBookApi implements BookApi {
         }
 
         Optional<Book> b = Arrays.stream(TestData.allBooks)
+                .filter(book -> book.getIsbnTen() != null) // avoid NullPointerException
                 .filter(book -> book.getIsbnTen().equals(isbn)).findFirst();
 
         if (b.isEmpty()){

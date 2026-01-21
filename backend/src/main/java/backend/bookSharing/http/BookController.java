@@ -16,15 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/books")
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class BookController {
 
-    @Autowired
     private final BookService service;
-
-    public BookController(BookService bookService) {
-        this.service = bookService;
-    }
 
     @GetMapping("hello")
     public ResponseEntity<?> helloWorld() {

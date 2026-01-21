@@ -4,8 +4,6 @@ import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.api.BookApi;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

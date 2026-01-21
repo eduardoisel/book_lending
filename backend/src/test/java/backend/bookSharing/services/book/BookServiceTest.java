@@ -32,7 +32,7 @@ public class BookServiceTest extends ServiceTestBase {
 
         assertFalse(repeatIsbn13Entry.isEmpty());
 
-        assertInstanceOf(BookAdditionError.Isbn10InUse.class, repeatIsbn13Entry.get());
+        assertInstanceOf(BookAdditionError.Isbn13InUse.class, repeatIsbn13Entry.get());
 
     }
 
