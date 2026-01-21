@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.web.SecurityFilterChain;
 
 @SpringBootApplication
+//@EnableJpaRepositories
 public class Main {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);

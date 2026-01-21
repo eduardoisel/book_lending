@@ -6,8 +6,10 @@ import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class TestData {
 
@@ -70,6 +72,7 @@ public class TestData {
             new ClearPasswordUsers(regions[2], "us@gmail.com", "password3"),
     };
 
-    //public static User[] users = (User[]) Arrays.stream(clearPasswordUsers).map(ClearPasswordUsers::toUser).toArray();
+    public static Object[] users = Arrays.stream(clearPasswordUsers)
+            .map(ClearPasswordUsers::toUser).toArray();
 
 }

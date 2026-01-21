@@ -13,7 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     //Streamable<User> findByFirstnameContaining(String firstname);
     //List<User> findByRegion(Region region);
 
-    //
-    @Modifying(clearAutomatically = true)
+    //@Modifying(clearAutomatically = true)
     Optional<User> findByEmail(String email);
 }
