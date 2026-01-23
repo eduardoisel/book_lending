@@ -26,7 +26,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void createAndSearchTest(){
-        User savedUser = (User) TestData.users[0];
+        User savedUser = TestData.users.getFirst();
 
         assertEquals(0, userRepository.count());
         userRepository.save(savedUser);
@@ -42,7 +42,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void deletionTest(){
-        User temporaryInsert = (User) TestData.users[1];
+        User temporaryInsert = TestData.users.get(1);
 
         userRepository.save(temporaryInsert);
 
@@ -53,7 +53,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void findByEmail(){
-        User inserted = (User) TestData.users[2];
+        User inserted = TestData.users.get(2);
 
         userRepository.save(inserted);
 

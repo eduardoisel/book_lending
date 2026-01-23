@@ -5,7 +5,7 @@ CREATE TABLE Region(
 
 CREATE TABLE App_User(
     id serial primary key NOT NULL,
-    region varchar(50) references Region(name) NOT NULL,--reg REGION_ENUM NOT NULL,
+    region varchar(50) references Region(name) NOT NULL,
     email varchar(70) UNIQUE NOT NULL,
     password varchar(256) NOT NULL
 );
@@ -37,7 +37,7 @@ CREATE type LANGUAGE as ENUM(
 CREATE TABLE Book(
     id serial primary key NOT NULL,
     isbn_10 varchar(10) CHECK(isbn_10 ~ '^[0-9]*$'),
-    isbn_13 bigint varchar(13) check(isbn_13 ~ '^[0-9]*$') , --
+    isbn_13 varchar(13) check(isbn_13 ~ '^[0-9]*$') ,
     title varchar(100) NOT NULL, --maybe not necessary if info found by isbn; also see size
     lang LANGUAGE NOT NULL
 );

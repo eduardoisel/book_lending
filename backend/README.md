@@ -22,13 +22,28 @@ Technologies used:
 * JUnit 5
 * Docker
 * [Test containers](https://testcontainers.com/)
+* [Either transaction rollback](https://github.com/emedina/transactional-either-spring-boot/blob/main/README.md)
 
 ## How to run this code
 
 An instance of this server can be started with gradlew bootRun. Due to configuring the [gradle file](./build.gradle.kts)
 to do so, a postgres database will start (created if needed) automatically. Stopping the database however, is only done
 automatically if the code aborts due to an exception. When forcing the server to stop manually, the step to shut down 
-the database is skipped
+the database is skipped.
+
+When avoiding gradle to start and stop the database, use
+
+```
+docker compose -p book-lend -f ./docker-compose.yml up -d --build book-lending-app
+```
+
+to create the image, along with creating and start the container (uses already created), and
+
+```
+docker compose -p book-lend -f ./docker-compose.yml pause book-lending-app
+```
+
+to shut that container down.
 
 ## Database
 

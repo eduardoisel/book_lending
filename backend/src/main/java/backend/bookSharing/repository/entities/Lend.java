@@ -17,7 +17,6 @@ public class Lend {
             @JoinColumn(name = "requested_book_id", referencedColumnName = "book_id")}) //without it uses field name for part of joinColumn name
     private Owned lent;
 
-    @Temporal(TemporalType.TIMESTAMP) //may be unnecessary?
     private Timestamp date;
 
     private Timestamp return_limit;

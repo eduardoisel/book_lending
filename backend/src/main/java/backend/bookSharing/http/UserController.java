@@ -1,6 +1,7 @@
 package backend.bookSharing.http;
 
 import backend.bookSharing.http.data.UserCreation;
+import backend.bookSharing.services.user.UserAuthenticationError;
 import backend.bookSharing.services.user.UserCreationError;
 import backend.bookSharing.services.user.UserService;
 import io.vavr.control.Either;
@@ -57,5 +58,25 @@ public class UserController {
                 .status(200)
                 .body(String.format("Id of user: %s \n", result.get()));
     }
+
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestBody UserCreation body){
+
+        Either<UserAuthenticationError, String> result = service.login(body.email, body.password);
+
+        if (result.isLeft()){
+            UserAuthenticationError error = result.getLeft();
+
+            if (error instanceof UserAuthenticationError.UserOrPasswordAreInvalid){
+                return ResponseEntity.status(400).body("User not recognized");
+            }
+
+        }
+
+        return ResponseEntity
+                .status(200)
+                .body(String.format("Token: %s \n", result.get()));
+    }
+
 
 }

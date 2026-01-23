@@ -1,6 +1,8 @@
 package backend.bookSharing.repository.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -17,15 +19,17 @@ import java.sql.Timestamp;
 public class Token {
 
     @Id
-    @JoinColumn(name = "token_validation")
+    @Column(name = "token_validation")
     private String token;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "created_at", insertable = false)
     private Timestamp created_date;
 
+    @Column(name = "last_used_at", insertable = false)
     private Timestamp last_used;
 
     public Token() {

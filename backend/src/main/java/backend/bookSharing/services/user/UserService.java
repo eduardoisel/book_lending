@@ -2,6 +2,7 @@ package backend.bookSharing.services.user;
 
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Lend;
+import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
 import com.sun.istack.NotNull;
 import io.vavr.control.Either;
@@ -29,6 +30,14 @@ public interface UserService {
     public Either<UserAuthenticationError, String> login(String email, String password);
 
     public Optional<LogoutError> logout(String token);
+
+    /**
+     * TEMPORARY, no auth
+     *
+     * @param isbn
+     * @return
+     */
+    Optional<Owned> addOwner(String isbn, String token);
 
 
 }

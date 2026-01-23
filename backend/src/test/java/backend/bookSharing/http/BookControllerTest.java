@@ -1,27 +1,37 @@
 package backend.bookSharing.http;
 
+import backend.bookSharing.ControllerTestBase;
+import static io.restassured.RestAssured.given;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.Matchers.*;
 
 //import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
-@SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.properties")
-@Transactional
-//@AutoConfigureMockMvc
-public class BookControllerTest {
+
+
+public class BookControllerTest extends ControllerTestBase {
 
     @Autowired
     private BookController controller;
 
-    //@MockBean
-    //private ExternalApiClient externalApiClient;
 
     @Test
     public void getBooksTest(){
+
+    }
+
+    @Test
+    void testFindAll() {
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/books/hello")
+                .then()
+                .statusCode(200);
 
     }
 }

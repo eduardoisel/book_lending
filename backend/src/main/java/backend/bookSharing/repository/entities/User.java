@@ -11,20 +11,26 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import lombok.Getter;
 
 @Entity()
 @Table(name = "App_User")
 public class User {
 
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Getter
     @Column(unique = true)
     private String email;
 
+    @Getter
+    @Column(length = 550)
     private String password;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "region") //assumes region_name without
     private Region region;
@@ -48,10 +54,6 @@ public class User {
         return String.format("User[id='%d', email='%s']", id, email);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     /**
      * @return Every owned book at once?
      */
@@ -59,15 +61,4 @@ public class User {
         return owned;
     }
 
-    public Integer getId(){
-        return id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Region getRegion() {
-        return region;
-    }
 }

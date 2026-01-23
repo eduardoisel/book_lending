@@ -26,7 +26,7 @@ public class PasswordValidation {
 
     // todo use
     public byte[] getNextSalt() {
-        byte[] salt = new byte[16];
+        byte[] salt = new byte[16]; // TODO database row needs to be at least size of array. Search spring for possible automation
         secureRandom.nextBytes(salt);
         return salt;
     }

@@ -55,6 +55,8 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
     implementation("org.projectlombok:lombok")//:1.18.42
 
+    implementation("io.github.emedina:transactional-either-spring-boot:1.0.0")
+
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     //automatic documentation
@@ -133,7 +135,7 @@ tasks.test {
 
 tasks.named<BootRun>("bootRun") {
     //should not be necessary with application.properties
-    environment("DB_URL", "jdbc:postgresql://localhost:5433/db?user=dbuser&password=changeit")
+    mainClass.set("backend.bookSharing.Main")
     dependsOn("dbAppWait")
     finalizedBy("dbAppDown")
 }

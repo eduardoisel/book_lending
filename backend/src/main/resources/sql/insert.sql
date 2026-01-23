@@ -13,8 +13,3 @@ insert into REGION (name) VALUES
      ('China'),
      ('Brasil'),
      ('Equador');
-
-insert into APP_USER (email, region, password) VALUES
-    ( 'email1@gmail.com', 'Portugal', 'pass'),
-    ('email2@gmail.com', 'Portugal', 'pass'),
-    ('email3@gmail.com', 'Portugal', 'pass');

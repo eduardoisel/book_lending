@@ -1,5 +1,6 @@
 package backend.bookSharing.services.book;
 
+import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.User;
 import io.vavr.control.Either;
 import java.util.List;

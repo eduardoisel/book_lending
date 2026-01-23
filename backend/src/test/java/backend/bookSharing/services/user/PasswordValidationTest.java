@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 //@ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -93,6 +90,17 @@ public class PasswordValidationTest {
         } catch (Exception e) {
             fail("Threw exception, should have passed");
         }
+    }
+
+    @Test
+    public void encodingAndMatchingTest(){
+        String password = "test_password1";
+
+        String encodedPassword = passwordValidation.passwordEncoding(password);
+
+        //assertEquals(passwordValidation.passwordEncoding(password), encodedPassword);
+
+        assertTrue(passwordValidation.validatePassword(password, encodedPassword));
     }
 
 }

@@ -1,8 +1,12 @@
 package backend.bookSharing;
 
 import backend.bookSharing.repository.BookRepository;
+import backend.bookSharing.repository.TokenRepository;
 import backend.bookSharing.repository.UserRepository;
+import backend.bookSharing.repository.entities.Token;
+import backend.bookSharing.services.user.services.TokenValidation;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,13 +40,26 @@ abstract public class ServiceTestBase {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @Autowired
+    private TokenValidation tokenValidation;
+
+    protected List<Token> tokens;
+
 
     @BeforeEach
     public void insertData(){
 
         bookRepository.saveAllAndFlush(Arrays.stream(TestData.databaseBooks).toList());
 
-        //userRepository.saveAll(Arrays.stream(TestData.users).toList());
+        userRepository.saveAllAndFlush(TestData.users);
+
+        tokens = tokenRepository
+                .saveAllAndFlush(TestData.users
+                        .stream().map(u -> new Token(tokenValidation.generateTokenValue(), u)).toList()
+                );
 
     }
 }

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class TestData {
 
@@ -46,25 +45,15 @@ public class TestData {
             new Region("USA"),
     };
 
-    private static PasswordValidation passwordValidation = new PasswordValidation();
+    private static final PasswordValidation passwordValidation = new PasswordValidation();
 
-    public static class ClearPasswordUsers{
+    public record ClearPasswordUsers(Region region, String email, String clearPassword) {
 
-        public final Region region;
+        public User toUser() {
+                return new User(this.region, this.email, passwordValidation.passwordEncoding(this.clearPassword));
+            }
 
-        public final String email, clearPassword;
-
-        public ClearPasswordUsers(Region region, String email, String clearPassword){
-            this.region = region;
-            this.email = email;
-            this.clearPassword = clearPassword;
         }
-
-        public User toUser(){
-            return new User(this.region, this.email, passwordValidation.passwordEncoding(this.clearPassword));
-        }
-
-    }
 
     public static ClearPasswordUsers[] clearPasswordUsers = {
             new ClearPasswordUsers(regions[0], "portugal@gmail.com", "password1"),
@@ -72,7 +61,7 @@ public class TestData {
             new ClearPasswordUsers(regions[2], "us@gmail.com", "password3"),
     };
 
-    public static Object[] users = Arrays.stream(clearPasswordUsers)
-            .map(ClearPasswordUsers::toUser).toArray();
+    public static List<User> users = Arrays.stream(clearPasswordUsers)
+            .map(ClearPasswordUsers::toUser).toList();
 
 }

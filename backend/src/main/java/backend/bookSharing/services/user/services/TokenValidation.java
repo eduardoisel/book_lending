@@ -43,7 +43,7 @@ public class TokenValidation {
 
     private final Duration tokenTtlRolling;
 
-    private static final Integer tokenSizeInBytes = 256; //dependent on usage os sha-256
+    private static final Integer tokenSizeInBytes = 256; //token given to user
 
     public TokenValidation(TokenValidTime tokenValidTime) {
 

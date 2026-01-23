@@ -35,17 +35,21 @@ public class BookController {
     public ResponseEntity<?> postBook(@RequestBody IsbnBody body) {
         Optional<BookAdditionError> result = service.addBookFromApi(body.isbn);
 
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
             return ResponseEntity.status(201).body("");
         }
 
-        if (result.get() instanceof BookAdditionError.Isbn10InUse){
+        if (result.get() instanceof BookAdditionError.Isbn10InUse) {
             return ResponseEntity.status(400).body("Isbn 10 number already in use");
         }
 
         return ResponseEntity.status(400).body("Isbn 13 number already in use");
     }
 
+    @PostMapping("/addAsOwner")
+    public ResponseEntity<?> addAsOwner(@RequestBody IsbnBody body, Integer userId) {
+        return null; // todo
+    }
 
 
 }
