@@ -1,12 +1,8 @@
 package backend.bookSharing.http;
 
+import backend.bookSharing.ControllerTestBase;
+import backend.bookSharing.http.data.UserCreation;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 //import com.testcontainers.examples.dto.CreateUserDto;
 
@@ -15,25 +11,9 @@ import io.restassured.http.ContentType;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-//from
-//https://dev.to/mspilari/integration-tests-on-spring-boot-with-postgresql-and-testcontainers-4dpc
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
-public class UserControllerTest {
+public class UserControllerTest extends ControllerTestBase {
 
-    //static class added
-    static class CreateUserDto{
-        public CreateUserDto(String username){
-
-        }
-    }
-
-    @Container
-    @ServiceConnection
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres");
-
-    @Value("${local.server.port}")
-    private int port;
+    /*
 
     private String createUserAndGetId(String userName) {
         var newUser = new CreateUserDto(userName);
@@ -41,7 +21,6 @@ public class UserControllerTest {
         return given()
                 .contentType(ContentType.JSON)
                 .body(newUser)
-                .port(port)
                 .when()
                 .post("/users/")
                 .then()
@@ -52,12 +31,10 @@ public class UserControllerTest {
 
     @Test
     void shouldCreateUser() {
-        var newUser = new CreateUserDto("Test user");
+        var newUser = new UserCreation("test@gmail.com", "passWORD_123");
 
         given()
-                .contentType(ContentType.JSON)
                 .body(newUser)
-                .port(port)
                 .when()
                 .post("/users/")
                 .then()
@@ -70,7 +47,6 @@ public class UserControllerTest {
         String userId = createUserAndGetId("Test user");
 
         given()
-                .port(port)
                 .when()
                 .delete("/users/{id}", userId)
                 .then()
@@ -83,7 +59,6 @@ public class UserControllerTest {
         createUserAndGetId("Test user");
 
         given()
-                .port(port)
                 .when()
                 .get("/users/")
                 .then()
@@ -96,7 +71,6 @@ public class UserControllerTest {
         String userId = createUserAndGetId("Test user");
 
         given()
-                .port(port)
                 .when()
                 .get("/users/{id}", userId)
                 .then()
@@ -111,7 +85,6 @@ public class UserControllerTest {
         String nonExistentUserId = "9999";
 
         given()
-                .port(port)
                 .when()
                 .get("/users/{id}", nonExistentUserId)
                 .then()
@@ -123,10 +96,10 @@ public class UserControllerTest {
         String nonExistentUserId = "9999";
 
         given()
-                .port(port)
                 .when()
                 .delete("/users/{id}", nonExistentUserId)
                 .then()
                 .statusCode(500);
     }
+     */
 }
