@@ -19,7 +19,7 @@ import java.sql.Timestamp;
 public class Token {
 
     @Id
-    @Column(name = "token_validation")
+    @Column(name = "token_validation", length = 256)
     private String token;
 
     @ManyToOne

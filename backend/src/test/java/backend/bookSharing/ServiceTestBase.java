@@ -1,6 +1,7 @@
 package backend.bookSharing;
 
 import backend.bookSharing.repository.BookRepository;
+import backend.bookSharing.repository.RegionRepository;
 import backend.bookSharing.repository.TokenRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Token;
@@ -17,6 +18,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
+import org.springframework.mock.env.*;
+
 /*
  Cannot inherit from Database with data
  */
@@ -32,7 +35,10 @@ abstract public class ServiceTestBase {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer container = new PostgreSQLContainer("postgres:18-bookworm");
+    static PostgreSQLContainer container = new PostgreSQLContainer("postgres");
+
+    @Autowired
+    private RegionRepository regionRepository;
 
     @Autowired
     private BookRepository bookRepository;
@@ -46,7 +52,6 @@ abstract public class ServiceTestBase {
     @Autowired
     private TokenValidation tokenValidation;
 
-    protected List<Token> tokens;
 
 
     @BeforeEach
@@ -54,12 +59,13 @@ abstract public class ServiceTestBase {
 
         bookRepository.saveAllAndFlush(Arrays.stream(TestData.databaseBooks).toList());
 
+        regionRepository.saveAll(Arrays.stream(TestData.regions).toList());
+
         userRepository.saveAllAndFlush(TestData.users);
 
-        tokens = tokenRepository
-                .saveAllAndFlush(TestData.users
-                        .stream().map(u -> new Token(tokenValidation.generateTokenValue(), u)).toList()
-                );
+        tokenRepository.saveAllAndFlush(TestData.tokens);
+
+        //userRepository.
 
     }
 }

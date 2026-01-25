@@ -10,17 +10,12 @@ plugins {
     checkstyle
 
     //not for this gradle, only groovy?
-    //id ("nebula.lint") version "17.8.0"
+    //id ("nebula.lint") version "17.8.0" // https://www.javacodegeeks.com/intro-to-gradle-lint-plugin.html
 
     id("io.freefair.lombok") version "9.2.0"
 
 }
 
-//dependencyManagement {
-//    imports {
-//        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-//    }
-//}
 
 java {
     toolchain {
@@ -46,6 +41,7 @@ sourceSets {
     }
 }
 
+//https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
 dependencies {
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
 
@@ -55,6 +51,7 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
     implementation("org.projectlombok:lombok")//:1.18.42
 
+    //https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html
     implementation("io.github.emedina:transactional-either-spring-boot:1.0.0")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -66,16 +63,20 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
     //implementation("org.springframework.hateoas:spring-hateoas")
 
-    //org.gradle.kotlin.dsl.DependencyHandlerScope. // To get password encode //api("org.springframework.security:spring-security-core:6.3.2")
-
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
 
+    //@WithMockUser https://docs.spring.io/spring-boot/how-to/testing.html //see
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+
 
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache
+    implementation("org.springframework.boot:spring-boot-starter-cache")
 
     implementation("org.postgresql:postgresql:42.7.2")
 
@@ -110,7 +111,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache-test
-    implementation("org.springframework.boot:spring-boot-starter-cache-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
 
 }
 

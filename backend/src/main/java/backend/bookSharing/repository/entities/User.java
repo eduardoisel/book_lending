@@ -27,7 +27,7 @@ public class User {
     private String email;
 
     @Getter
-    @Column(length = 550)
+    @Column(length = 256)
     private String password;
 
     @Getter

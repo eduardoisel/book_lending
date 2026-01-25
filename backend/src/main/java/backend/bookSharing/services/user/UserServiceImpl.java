@@ -22,7 +22,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +68,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
     //@jakarta.transaction.Transactional
     public Either<UserCreationError, Integer> createUser(String email, String password) {
 
@@ -120,8 +118,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<LogoutError> logout(String token) {
-        return Optional.empty();
+    public Either<LogoutError, Void> logout(String token) {
+        return Either.right(Void.TYPE.cast(this));
     }
 
     @Override

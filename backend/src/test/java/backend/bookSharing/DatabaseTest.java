@@ -21,5 +21,5 @@ abstract public class DatabaseTest{
 
     @Container
     @ServiceConnection
-    static protected PostgreSQLContainer container = new PostgreSQLContainer("postgres:18-bookworm");
+    static protected PostgreSQLContainer container = new PostgreSQLContainer("postgres");
 }

@@ -9,8 +9,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +28,7 @@ public class BookServiceImpl implements BookService{
         return repo.getReferenceById(bookId).getOwners().stream().map(Owned::getUser).toList();
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+
     public Optional<BookAdditionError> addBookFromApi(String isbn){
 
         boolean isIsbn10 = isbn.length() == 10;

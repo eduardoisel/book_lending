@@ -2,9 +2,12 @@ package backend.bookSharing;
 
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Region;
+import backend.bookSharing.repository.entities.Token;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
+import backend.bookSharing.services.user.services.TokenValidation;
 import java.lang.reflect.Array;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,6 +58,17 @@ public class TestData {
 
         }
 
+    private static final TokenValidation tokenValidation =
+            new TokenValidation(new TokenValidation.TokenValidTime(Duration.ofDays(1), Duration.ofDays(1)));
+
+    public record ClearToken(String clearToken, User user) {
+
+        public Token toToken() {
+            return new Token(tokenValidation.createTokenValidationInformation(this.clearToken), user);
+        }
+
+    }
+
     public static ClearPasswordUsers[] clearPasswordUsers = {
             new ClearPasswordUsers(regions[0], "portugal@gmail.com", "password1"),
             new ClearPasswordUsers(regions[1], "england@gmail.com", "password2"),
@@ -63,5 +77,14 @@ public class TestData {
 
     public static List<User> users = Arrays.stream(clearPasswordUsers)
             .map(ClearPasswordUsers::toUser).toList();
+
+    public static ClearToken clearTokens[] = {
+            new ClearToken(tokenValidation.generateTokenValue(), users.getFirst()),
+            new ClearToken(tokenValidation.generateTokenValue(), users.get(1)),
+            new ClearToken(tokenValidation.generateTokenValue(), users.get(2)),
+    };
+
+    public static List<Token> tokens = Arrays.stream(clearTokens)
+            .map(ClearToken::toToken).toList();
 
 }

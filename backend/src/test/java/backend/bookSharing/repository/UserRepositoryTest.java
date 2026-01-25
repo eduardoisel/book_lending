@@ -8,9 +8,14 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Transactional
+@Rollback
 public class UserRepositoryTest extends DatabaseTest {
 
     @Autowired
@@ -42,7 +47,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void deletionTest(){
-        User temporaryInsert = TestData.users.get(1);
+        User temporaryInsert = TestData.users.get(0);
 
         userRepository.save(temporaryInsert);
 
@@ -53,7 +58,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void findByEmail(){
-        User inserted = TestData.users.get(2);
+        User inserted = TestData.users.get(0);
 
         userRepository.save(inserted);
 

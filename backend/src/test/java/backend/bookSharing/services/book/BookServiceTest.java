@@ -6,7 +6,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 public class BookServiceTest extends ServiceTestBase {
 
     @Autowired
@@ -14,6 +16,16 @@ public class BookServiceTest extends ServiceTestBase {
 
     @Test
     public void addBookFromApiTest(){
+
+        Optional<BookAdditionError> success = service
+                .addBookFromApi(TestData.booksExclusiveFromApi[0].getIsbnTen());
+
+        assertTrue(success.isEmpty());
+
+    }
+
+    @Test
+    public void addRepeatedBookToApi(){
 
         Optional<BookAdditionError> success = service
                 .addBookFromApi(TestData.booksExclusiveFromApi[0].getIsbnTen());

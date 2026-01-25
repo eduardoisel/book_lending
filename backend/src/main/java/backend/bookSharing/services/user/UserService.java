@@ -8,6 +8,8 @@ import com.sun.istack.NotNull;
 import io.vavr.control.Either;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Actions related to a user (e.g. authentication, creation and updates of user, searches about users or books of user)
@@ -19,17 +21,24 @@ public interface UserService {
 
     public long bookCount();
 
+    @Transactional
     public List<Book> getOwnedBooks(Integer userId);
 
+    @Transactional
     public List<Request> getRequestsOfBook(Integer ownerId, Integer bookId);
 
+    @Transactional
     public Lend getLendOfBook(Integer ownerId, Integer bookId);
 
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public Either<UserCreationError, Integer> createUser(String email, @NotNull String password);
 
+    @Transactional
     public Either<UserAuthenticationError, String> login(String email, String password);
 
-    public Optional<LogoutError> logout(String token);
+    @Transactional
+    public Either<LogoutError, Void> logout(String token);
 
     /**
      * TEMPORARY, no auth
@@ -37,6 +46,7 @@ public interface UserService {
      * @param isbn
      * @return
      */
+    @Transactional
     Optional<Owned> addOwner(String isbn, String token);
 
 
