@@ -77,9 +77,7 @@ public class UserController {
                 .status(200)
                 .body(String.format("Token: %s \n", result.get()));
     }
-
-<<<<<<< Updated upstream
-=======
+    
     /*
     todo change parameter input
      */
@@ -146,6 +144,5 @@ public class UserController {
                 .status(200)
                 .body(String.format("Should not succeed: %s \n", result.get()));
     }
->>>>>>> Stashed changes
 
 }
