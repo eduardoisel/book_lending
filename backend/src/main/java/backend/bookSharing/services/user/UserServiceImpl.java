@@ -148,4 +148,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public Either<UserAuthenticationError, String> tempAddRegionAndFailure() {
+        regionRepo.save(new Region("If seen configuration does not work"));
+
+        return Either.left(new UserAuthenticationError.UserOrPasswordAreInvalid());
+    }
+
 }

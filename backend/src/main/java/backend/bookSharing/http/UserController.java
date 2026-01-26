@@ -78,5 +78,74 @@ public class UserController {
                 .body(String.format("Token: %s \n", result.get()));
     }
 
+<<<<<<< Updated upstream
+=======
+    /*
+    todo change parameter input
+     */
+    @DeleteMapping("logout")
+    public ResponseEntity<?> logout(@RequestBody String token){
+
+        Either<LogoutError, Void> result = service.logout(token);
+
+        if (result.isLeft()){
+            LogoutError error = result.getLeft();
+
+            if (error instanceof LogoutError.TokenInvalidForAuthentication){
+                return ResponseEntity.status(400).body("User not recognized");
+            }
+
+        }
+
+        return ResponseEntity
+                .status(200)
+                .body(String.format("Token: %s \n", result.get()));
+    }
+
+    @PostMapping("bookOwned/{isbn}")
+    public ResponseEntity<?> addBookOwned(@PathVariable String isbn, @RequestHeader(value = "Authorization", required = true) String token){
+
+        Either<OwnerShipAdditionError, Owned> result = service.addOwner(isbn, token);
+
+        if (result.isLeft()){
+            OwnerShipAdditionError error = result.getLeft();
+
+            if (error instanceof OwnerShipAdditionError.UserAuthenticationInvalid){
+                return ResponseEntity.status(401).body("User not recognized");
+            }
+
+            if (error instanceof OwnerShipAdditionError.BookNotFound){
+                return ResponseEntity.status(404).body("Book from isbn not recognized");
+            }
+
+            if (error instanceof OwnerShipAdditionError.AlreadyMarkedAsOwned){
+                return ResponseEntity.status(400).body("User already marked book as owned");
+            }
+
+        }
+
+        return ResponseEntity
+                .status(200)
+                .body(String.format("Added as owned: %s \n", result.get()));
+    }
+
+    @PostMapping("temporary")
+    public ResponseEntity<?> temp(){
+
+        Either<UserAuthenticationError, String> result = service.tempAddRegionAndFailure();
+
+        if (result.isLeft()){
+            UserAuthenticationError error = result.getLeft();
+
+            if (error != null){
+                return ResponseEntity.status(400).body("Check if deleted on dbeaver");
+            }
+        }
+
+        return ResponseEntity
+                .status(200)
+                .body(String.format("Should not succeed: %s \n", result.get()));
+    }
+>>>>>>> Stashed changes
 
 }

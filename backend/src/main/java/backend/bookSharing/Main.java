@@ -21,6 +21,12 @@ public class Main {
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);
 
 
+    @Primary
+    @Bean
+    public AnnotationTransactionAttributeSource primaryTransactionAttributeSource() {
+        return new AnnotationTransactionAttributeSource(new SpringTransactionAnnotationParserWithEither());
+    }
+
     private static class EmptySecurityFilterChain implements SecurityFilterChain{
 
         @Override

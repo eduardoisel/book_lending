@@ -50,4 +50,7 @@ public interface UserService {
     Optional<Owned> addOwner(String isbn, String token);
 
 
+    @Transactional
+    public Either<UserAuthenticationError, String> tempAddRegionAndFailure();
+
 }
