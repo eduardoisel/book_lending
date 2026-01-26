@@ -5,8 +5,11 @@ import backend.bookSharing.repository.entities.Lend;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
+import backend.bookSharing.services.user.failures.LogoutError;
+import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
+import backend.bookSharing.services.user.failures.UserAuthenticationError;
+import backend.bookSharing.services.user.failures.UserCreationError;
 import com.sun.istack.NotNull;
-import io.vavr.control.Either;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import org.springframework.transaction.annotation.Isolation;
@@ -40,13 +43,13 @@ public interface UserService {
     public User checkAuthentication(String token);
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public Either<UserCreationError, Integer> createUser(String email, @NotNull String password);
+    public Integer createUser(String email, @NotNull String password) throws UserCreationError;
 
     @Transactional
-    public Either<UserAuthenticationError, String> login(String email, String password);
+    public String login(String email, String password) throws UserAuthenticationError;
 
     @Transactional
-    public Either<LogoutError, Void> logout(String token);
+    public void logout(String token) throws LogoutError;
 
     /**
      * TEMPORARY, no auth
@@ -55,7 +58,7 @@ public interface UserService {
      * @return
      */
     @Transactional
-    Either<OwnerShipAdditionError,Owned> addOwner(String isbn, String token);
+    Owned addOwner(String isbn, String token) throws OwnerShipAdditionError;
 
 
 }

@@ -1,6 +1,6 @@
-package backend.bookSharing.services.user;
+package backend.bookSharing.services.user.failures;
 
-public class UserAuthenticationError {
+public class UserAuthenticationError extends Exception {
 
     private UserAuthenticationError(){}
 

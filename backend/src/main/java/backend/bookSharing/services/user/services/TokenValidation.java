@@ -101,21 +101,22 @@ public class TokenValidation {
      *
      * @param now   Input instant of when it expired, placed for ease of testing
      * @param token token information
-     * @return True if yet to expire.
+     * @return True if expired.
      */
     public Boolean hasTokenExpired(Instant now, Token token) {
-        //Duration d = Duration.ofHours(6);d.minus(1, TemporalUnit)
-        //Period p = Period.ZERO.withDays(1);
 
-        now.minus(tokenTtl);
+        Instant ttlExpireDate = token.getCreatedDate().toInstant().plus(tokenTtl);
+        Instant ttlRollExpireDate = token.getLastUsed().toInstant().plus(tokenTtlRolling);
 
+        /*
         boolean basicCheck = token.getCreatedDate().toInstant().isAfter(now);
-        boolean ttl = token.getCreatedDate().toInstant().plus(tokenTtl).isAfter(now);
-        boolean tokenTtlBool = token.getLastUsed().toInstant().plus(tokenTtlRolling).isAfter(now);
+        boolean ttl = ttlExpireDate.isBefore(now);
+        boolean tokenTtlBool = ttlRollExpireDate.isBefore(now);
+        */
 
         return token.getCreatedDate().toInstant().isAfter(now)
-                && token.getCreatedDate().toInstant().plus(tokenTtl).isAfter(now)
-                && token.getLastUsed().toInstant().plus(tokenTtlRolling).isAfter(now);
+                || ttlExpireDate.isBefore(now)
+                || ttlRollExpireDate.isBefore(now);
     }
 
 

@@ -1,7 +1,7 @@
 package backend.bookSharing.http;
 
 import backend.bookSharing.http.data.IsbnBody;
-import backend.bookSharing.services.book.BookAdditionError;
+import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.BookService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -33,23 +33,23 @@ public class BookController {
 
     @PostMapping("/addBook/isbn")
     public ResponseEntity<?> postBook(@RequestBody IsbnBody body) {
-        Optional<BookAdditionError> result = service.addBookFromApi(body.isbn);
 
-        if (result.isEmpty()) {
-            return ResponseEntity.status(201).body("");
+        try {
+            service.addBookFromApi(body.isbn);
+
+            return ResponseEntity.status(400).body("Isbn 13 number already in use");
+
+        } catch (BookAdditionError error) {
+
+            if (error instanceof BookAdditionError.Isbn10InUse) {
+                return ResponseEntity.status(400).body("Isbn 10 number already in use");
+            }
+
+            throw new RuntimeException("Should not be here");
         }
 
-        if (result.get() instanceof BookAdditionError.Isbn10InUse) {
-            return ResponseEntity.status(400).body("Isbn 10 number already in use");
-        }
-
-        return ResponseEntity.status(400).body("Isbn 13 number already in use");
     }
 
-    @PostMapping("/addAsOwner")
-    public ResponseEntity<?> addAsOwner(@RequestBody IsbnBody body, Integer userId) {
-        return null; // todo
-    }
 
 
 }

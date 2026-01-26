@@ -1,10 +1,8 @@
 package backend.bookSharing.services.book;
 
-import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.User;
-import io.vavr.control.Either;
+import backend.bookSharing.services.book.failures.BookAdditionError;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +18,6 @@ public interface BookService {
     List<User> getOwnersOfBook(Integer bookId);
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    Optional<BookAdditionError> addBookFromApi(String isbn);
+    void addBookFromApi(String isbn) throws BookAdditionError;
 
 }

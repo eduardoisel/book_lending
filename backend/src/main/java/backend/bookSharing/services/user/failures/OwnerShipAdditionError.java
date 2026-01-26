@@ -1,6 +1,6 @@
-package backend.bookSharing.services.user;
+package backend.bookSharing.services.user.failures;
 
-public class OwnerShipAdditionError {
+public class OwnerShipAdditionError extends  Exception{
 
     private OwnerShipAdditionError(){}
 

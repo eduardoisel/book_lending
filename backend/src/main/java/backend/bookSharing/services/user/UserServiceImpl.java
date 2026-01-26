@@ -13,9 +13,11 @@ import backend.bookSharing.repository.entities.Region;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.Token;
 import backend.bookSharing.repository.entities.User;
+import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
+import backend.bookSharing.services.user.failures.UserAuthenticationError;
+import backend.bookSharing.services.user.failures.UserCreationError;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import backend.bookSharing.services.user.services.TokenValidation;
-import io.vavr.control.Either;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -23,7 +25,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 
 @Service
 @RequiredArgsConstructor
@@ -70,19 +71,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User checkAuthentication(String token) {
 
-        if (!tokenValidation.canBeToken(token)){
+        if (!tokenValidation.canBeToken(token)) {
             return null;
         }
 
         Optional<Token> searchedToken = tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
 
-        if (searchedToken.isEmpty()){
+        if (searchedToken.isEmpty()) {
             return null;
         }
 
         Token retrievedToken = searchedToken.get();
 
-        if (tokenValidation.hasTokenExpired(Instant.now(), retrievedToken)){
+        if (tokenValidation.hasTokenExpired(Instant.now(), retrievedToken)) {
             tokenRepo.delete(retrievedToken);
             return null;
         }
@@ -94,18 +95,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Either<UserCreationError, Integer> createUser(String email, String password) {
+    public Integer createUser(String email, String password) throws UserCreationError {
 
         try {
             passwordValidation.isSafePassword(password);
         } catch (Exception e) {
-            return Either.left(new UserCreationError.WeakPassword()); //todo communicate more specific
+            throw new UserCreationError.WeakPassword(); //todo communicate more specific
         }
 
         Optional<User> emailSearch = userRepo.findByEmail(email);
 
         if (emailSearch.isPresent()) {
-            return Either.left(new UserCreationError.EmailInUse());
+            throw new UserCreationError.EmailInUse();
         }
 
         User created = userRepo.save(new User(
@@ -114,22 +115,22 @@ public class UserServiceImpl implements UserService {
                 passwordValidation.passwordEncoding(password)
         ));
 
-        return Either.right(created.getId());
+        return created.getId();
     }
 
     @Override
-    public Either<UserAuthenticationError, String> login(String email, String password) {
+    public String login(String email, String password) throws UserAuthenticationError{
 
         Optional<User> searchedUser = userRepo.findByEmail(email);
 
         if (searchedUser.isEmpty()) {
-            return Either.left(new UserAuthenticationError.UserOrPasswordAreInvalid());
+            throw new UserAuthenticationError.UserOrPasswordAreInvalid();
         }
 
         User user = searchedUser.get();
 
         if (!passwordValidation.validatePassword(password, user.getPassword())) {
-            return Either.left(new UserAuthenticationError.UserOrPasswordAreInvalid());
+            throw new UserAuthenticationError.UserOrPasswordAreInvalid();
         }
 
         String token = tokenValidation.generateTokenValue();
@@ -138,22 +139,22 @@ public class UserServiceImpl implements UserService {
 
         tokenRepo.save(createdToken);
 
-        return Either.right(token);
+        return token;
 
     }
 
     @Override
-    public Either<LogoutError, Void> logout(String token) {
-        return Either.right(Void.TYPE.cast(this));
+    public void logout(String token) {
+        return; // todo do
     }
 
     @Override
-    public Either<OwnerShipAdditionError, Owned> addOwner(String isbn, String token) {
+    public Owned addOwner(String isbn, String token) throws OwnerShipAdditionError {
 
         User user = checkAuthentication(token);
 
         if (user == null){
-            return Either.left(new OwnerShipAdditionError.UserAuthenticationInvalid());
+            throw new OwnerShipAdditionError.UserAuthenticationInvalid();
         }
 
         boolean isIsbn10 = isbn.length() == 10;
@@ -167,16 +168,16 @@ public class UserServiceImpl implements UserService {
         }
 
         if (searchedBook == null) {
-            return Either.left(new OwnerShipAdditionError.BookNotFound());
+            throw new OwnerShipAdditionError.BookNotFound();
         }
 
         OwnedId ownedId = new OwnedId(user.getId(), searchedBook.getId());
 
-        if (ownedRepo.findById(ownedId).isPresent()){
-            return Either.left(new OwnerShipAdditionError.AlreadyMarkedAsOwned());
+        if (ownedRepo.findById(ownedId).isPresent()) {
+            throw new OwnerShipAdditionError.AlreadyMarkedAsOwned();
         }
 
-        return Either.right(ownedRepo.save(new Owned(ownedId)));
+        return ownedRepo.save(new Owned(ownedId)); // todo see exception. Jakarta is probably wrong
 
     }
 

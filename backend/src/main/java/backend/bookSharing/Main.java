@@ -3,8 +3,6 @@ package backend.bookSharing;
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.services.user.services.TokenValidation;
-import com.emedina.transactional.config.TransactionManagerConfigWithEither;
-import com.emedina.transactional.support.SpringTransactionAnnotationParserWithEither;
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;

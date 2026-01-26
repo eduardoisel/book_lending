@@ -1,6 +1,6 @@
-package backend.bookSharing.services.user;
+package backend.bookSharing.services.user.failures;
 
-public class UserCreationError {
+public class UserCreationError extends Exception{
 
     /**
      * Password is not safe enough. Exact requirements to be defined

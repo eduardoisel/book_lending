@@ -22,7 +22,6 @@ Technologies used:
 * JUnit 5
 * Docker
 * [Test containers](https://testcontainers.com/)
-* [Either transaction rollback](https://github.com/emedina/transactional-either-spring-boot/blob/main/README.md)
 
 ## How to run this code
 

@@ -2,6 +2,7 @@ package backend.bookSharing.services.book;
 
 import backend.bookSharing.ServiceTestBase;
 import backend.bookSharing.TestData;
+import backend.bookSharing.services.book.failures.BookAdditionError;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;

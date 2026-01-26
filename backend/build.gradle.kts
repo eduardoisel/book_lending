@@ -51,9 +51,6 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
     implementation("org.projectlombok:lombok")//:1.18.42
 
-    //https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html
-    implementation("io.github.emedina:transactional-either-spring-boot:1.0.0")
-
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     //automatic documentation
@@ -96,13 +93,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 
-
-
     //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")   https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html#appendix.configuration-metadata.annotation-processor
 
-
-    // https://mvnrepository.com/artifact/io.vavr/vavr
-    implementation("io.vavr:vavr:0.11.0")
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation("com.google.code.gson:gson:2.13.2")
 
