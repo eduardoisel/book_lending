@@ -8,6 +8,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity()
 @Table(name = "Token")
@@ -22,6 +24,7 @@ public class Token {
     @Column(name = "token_validation", length = 256)
     private String token;
 
+    @Getter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -29,6 +32,7 @@ public class Token {
     @Column(name = "created_at", insertable = false)
     private Timestamp created_date;
 
+    @Setter
     @Column(name = "last_used_at", insertable = false)
     private Timestamp last_used;
 
@@ -59,10 +63,6 @@ public class Token {
         return token;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public Timestamp getCreatedDate() {
         return created_date;
     }
@@ -71,7 +71,4 @@ public class Token {
         return last_used;
     }
 
-    public void setLast_used(Timestamp last_used) {
-        this.last_used = last_used;
-    }
 }

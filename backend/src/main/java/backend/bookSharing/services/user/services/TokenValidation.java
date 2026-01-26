@@ -109,9 +109,13 @@ public class TokenValidation {
 
         now.minus(tokenTtl);
 
+        boolean basicCheck = token.getCreatedDate().toInstant().isAfter(now);
+        boolean ttl = token.getCreatedDate().toInstant().plus(tokenTtl).isAfter(now);
+        boolean tokenTtlBool = token.getLastUsed().toInstant().plus(tokenTtlRolling).isAfter(now);
+
         return token.getCreatedDate().toInstant().isAfter(now)
-                && token.getCreatedDate().toInstant().minus(tokenTtl).isAfter(now)
-                && token.getLastUsed().toInstant().minus(tokenTtlRolling).isAfter(now);
+                && token.getCreatedDate().toInstant().plus(tokenTtl).isAfter(now)
+                && token.getLastUsed().toInstant().plus(tokenTtlRolling).isAfter(now);
     }
 
 

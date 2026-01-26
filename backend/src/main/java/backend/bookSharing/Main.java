@@ -3,6 +3,8 @@ package backend.bookSharing;
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.services.user.services.TokenValidation;
+import com.emedina.transactional.config.TransactionManagerConfigWithEither;
+import com.emedina.transactional.support.SpringTransactionAnnotationParserWithEither;
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
@@ -12,10 +14,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 
 @SpringBootApplication
-//@EnableJpaRepositories
+@EnableJpaRepositories()
 public class Main {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Main.class);
@@ -49,7 +54,7 @@ public class Main {
 
     @Bean
     public TokenValidation.TokenValidTime tokenValidationBean(){
-        return new TokenValidation.TokenValidTime(Duration.ofHours(10), Duration.ofMinutes(30));
+        return new TokenValidation.TokenValidTime(Duration.ofSeconds(10), Duration.ofMinutes(30));
     }
 
     public static void main(String[] args) {

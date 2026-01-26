@@ -16,14 +16,14 @@ import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import backend.bookSharing.services.user.services.TokenValidation;
 import io.vavr.control.Either;
-import io.vavr.control.Try;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +68,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //@jakarta.transaction.Transactional
+    public User checkAuthentication(String token) {
+
+        if (!tokenValidation.canBeToken(token)){
+            return null;
+        }
+
+        Optional<Token> searchedToken = tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
+
+        if (searchedToken.isEmpty()){
+            return null;
+        }
+
+        Token retrievedToken = searchedToken.get();
+
+        if (tokenValidation.hasTokenExpired(Instant.now(), retrievedToken)){
+            tokenRepo.delete(retrievedToken);
+            return null;
+        }
+
+        retrievedToken.setLast_used(Timestamp.from(Instant.now()));
+
+        return tokenRepo.save(retrievedToken).getUser();
+
+    }
+
+    @Override
     public Either<UserCreationError, Integer> createUser(String email, String password) {
 
         try {
@@ -123,7 +148,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<Owned> addOwner(String isbn, String token) {
+    public Either<OwnerShipAdditionError, Owned> addOwner(String isbn, String token) {
+
+        User user = checkAuthentication(token);
+
+        if (user == null){
+            return Either.left(new OwnerShipAdditionError.UserAuthenticationInvalid());
+        }
 
         boolean isIsbn10 = isbn.length() == 10;
 
@@ -135,15 +166,17 @@ public class UserServiceImpl implements UserService {
             searchedBook = bookRepo.findByIsbnThirteen(isbn);
         }
 
-        Token searchedToken = tokenRepo.findById(tokenValidation.createTokenValidationInformation(token)).get();
-
-        User user = userRepo.findById(searchedToken.getUser().getId()).get();
-
         if (searchedBook == null) {
-            return Optional.empty();
+            return Either.left(new OwnerShipAdditionError.BookNotFound());
         }
 
-        return Optional.of(ownedRepo.save(new Owned(new OwnedId(user.getId(), searchedBook.getId()))));
+        OwnedId ownedId = new OwnedId(user.getId(), searchedBook.getId());
+
+        if (ownedRepo.findById(ownedId).isPresent()){
+            return Either.left(new OwnerShipAdditionError.AlreadyMarkedAsOwned());
+        }
+
+        return Either.right(ownedRepo.save(new Owned(ownedId)));
 
     }
 

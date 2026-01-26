@@ -7,8 +7,8 @@ its microservices and data classes.
 
 The interfaces use 2 classes on its return type; Optional and io.vavr Either. 
 
-Either is either of type left or right, with left being chosen as the one to return the reason for failure of
-the action, and right returning whatever is necessary to return on success.
+Either is of type left or right, with left being chosen as the one to return the reason for failure of
+the action, and right returning whatever is necessary to return on success. Returning left does rollback on method.
 
 If success of an action does not need to return anything, Optional class is used, only having something to return on
 failure.
