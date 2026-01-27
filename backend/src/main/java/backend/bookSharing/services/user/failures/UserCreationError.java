@@ -1,6 +1,8 @@
 package backend.bookSharing.services.user.failures;
 
-public class UserCreationError extends Exception{
+public abstract sealed class UserCreationError extends Exception permits UserCreationError.EmailInUse, UserCreationError.WeakPassword{
+
+    private UserCreationError(){}
 
     /**
      * Password is not safe enough. Exact requirements to be defined

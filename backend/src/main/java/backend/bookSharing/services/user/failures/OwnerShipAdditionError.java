@@ -1,6 +1,6 @@
 package backend.bookSharing.services.user.failures;
 
-public class OwnerShipAdditionError extends  Exception{
+public sealed abstract class OwnerShipAdditionError extends Exception permits OwnerShipAdditionError.UserAuthenticationInvalid, OwnerShipAdditionError.AlreadyMarkedAsOwned, OwnerShipAdditionError.BookNotFound{
 
     private OwnerShipAdditionError(){}
 

@@ -6,6 +6,8 @@ spring:
       hibernate:
         format_sql: true
 
+    hibernate:
+      ddl-auto: validate
   datasource:
     hikari: ## default connection pool
       connectionTimeout: 2000

@@ -52,7 +52,7 @@ public class Main {
 
     @Bean
     public TokenValidation.TokenValidTime tokenValidationBean(){
-        return new TokenValidation.TokenValidTime(Duration.ofSeconds(10), Duration.ofMinutes(30));
+        return new TokenValidation.TokenValidTime(Duration.ofHours(10), Duration.ofMinutes(30));
     }
 
     public static void main(String[] args) {

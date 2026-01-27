@@ -3,7 +3,6 @@ package backend.bookSharing.http;
 import backend.bookSharing.http.data.IsbnBody;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.BookService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,11 +40,16 @@ public class BookController {
 
         } catch (BookAdditionError error) {
 
-            if (error instanceof BookAdditionError.Isbn10InUse) {
-                return ResponseEntity.status(400).body("Isbn 10 number already in use");
+            switch (error){
+                case BookAdditionError.Isbn10InUse isbn10InUse -> {
+                    return ResponseEntity.status(400).body("Isbn 10 number already in use");
+                }
+
+                case BookAdditionError.Isbn13InUse isbn13InUse -> {
+                    return ResponseEntity.status(400).body("Isbn 10 number already in use");
+                }
             }
 
-            throw new RuntimeException("Should not be here");
         }
 
     }

@@ -46,21 +46,17 @@ public class UserController {
         try {
             Integer result = service.createUser(body.email, body.password);
 
-            return ResponseEntity
-                    .status(200)
-                    .body(String.format("Id of user: %s \n", result));
+            return ResponseEntity.status(200).body(String.format("Id of user: %s \n", result));
 
         } catch (UserCreationError error) {
 
-            if (error instanceof UserCreationError.WeakPassword) {
-                return ResponseEntity.status(400).body("Password is weak. Todo add ways to inform requirements");
-            }
+            return switch (error) {
+                case UserCreationError.WeakPassword weakPassword ->
+                        ResponseEntity.status(400).body("Password is weak. Todo add ways to inform requirements");
+                case UserCreationError.EmailInUse emailInUse ->
+                        ResponseEntity.status(400).body("Email is already in use for this service.");
+            };
 
-            if (error instanceof UserCreationError.EmailInUse) {
-                return ResponseEntity.status(400).body("Email is already in use for this service.");
-            }
-
-            throw new RuntimeException("Should not be here");
         }
 
     }
@@ -70,17 +66,14 @@ public class UserController {
         try {
             String result = service.login(body.email, body.password);
 
-            return ResponseEntity
-                    .status(200)
-                    .body(String.format("Token: %s \n", result));
+            return ResponseEntity.status(200).body(String.format("Token: %s \n", result));
 
         } catch (UserAuthenticationError error) {
 
-            if (error instanceof UserAuthenticationError.UserOrPasswordAreInvalid) {
-                return ResponseEntity.status(400).body("User not recognized");
-            }
-
-            throw new RuntimeException("Should not be here");
+            return switch (error) {
+                case UserAuthenticationError.UserOrPasswordAreInvalid userOrPasswordAreInvalid ->
+                        ResponseEntity.status(400).body("User not recognized");
+            };
 
         }
 
@@ -94,17 +87,15 @@ public class UserController {
         try {
             service.logout(token);
 
-            return ResponseEntity
-                    .status(200)
-                    .body("Deleted token");
+            return ResponseEntity.status(200).body("Deleted token");
 
         } catch (LogoutError error) {
 
-            if (error instanceof LogoutError.TokenInvalidForAuthentication) {
-                return ResponseEntity.status(400).body("User not recognized");
-            }
+            return switch (error) {
+                case LogoutError.TokenInvalidForAuthentication tokenInvalidForAuthentication ->
+                        ResponseEntity.status(400).body("User not recognized");
+            };
 
-            throw new RuntimeException("Should not be here");
         }
 
     }
@@ -115,23 +106,20 @@ public class UserController {
         try {
             Owned result = service.addOwner(isbn, token);
 
-            return ResponseEntity
-                    .status(200)
-                    .body(String.format("Added as owned: %s \n", result));
+            return ResponseEntity.status(200).body(String.format("Added as owned: %s \n", result));
 
         } catch (OwnerShipAdditionError error) {
-            switch (error) {
-                case OwnerShipAdditionError.UserAuthenticationInvalid userAuthenticationInvalid -> {
-                    return ResponseEntity.status(401).body("User not recognized");
-                }
-                case OwnerShipAdditionError.BookNotFound bookNotFound -> {
-                    return ResponseEntity.status(404).body("Book from isbn not recognized");
-                }
-                case OwnerShipAdditionError.AlreadyMarkedAsOwned alreadyMarkedAsOwned -> {
-                    return ResponseEntity.status(400).body("User already marked book as owned");
-                }
-                default -> throw new RuntimeException("Should not get here");
-            }
+            return switch (error) {
+                case OwnerShipAdditionError.UserAuthenticationInvalid userAuthenticationInvalid ->
+                        ResponseEntity.status(401).body("User not recognized");
+
+                case OwnerShipAdditionError.BookNotFound bookNotFound ->
+                        ResponseEntity.status(404).body("Book from isbn not recognized");
+
+                case OwnerShipAdditionError.AlreadyMarkedAsOwned alreadyMarkedAsOwned ->
+                        ResponseEntity.status(400).body("User already marked book as owned");
+
+            };
 
         }
 

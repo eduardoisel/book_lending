@@ -13,6 +13,7 @@ import backend.bookSharing.repository.entities.Region;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.Token;
 import backend.bookSharing.repository.entities.User;
+import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
-        retrievedToken.setLast_used(Timestamp.from(Instant.now()));
+        retrievedToken.setLast_used(Timestamp.from(Instant.now())); // to update tokenRollingTtl
 
         return tokenRepo.save(retrievedToken).getUser();
 
@@ -144,8 +145,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void logout(String token) {
-        return; // todo do
+    public void logout(String token) throws LogoutError {
+        if (!tokenValidation.canBeToken(token)) {
+            throw new LogoutError.TokenInvalidForAuthentication();
+        }
+
+        Optional<Token> searchedToken = tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
+
+        if (searchedToken.isEmpty()) {
+            throw new LogoutError.TokenInvalidForAuthentication();
+        }
+
+        tokenRepo.delete(searchedToken.get());
+
     }
 
     @Override

@@ -92,6 +92,13 @@ public class TokenValidation {
     }
 
 
+    /**
+     *
+     * Quick check of token itself to see if it is a token
+     *
+     * @param token the user given by token
+     * @return
+     */
     public Boolean canBeToken(String token) {
         return Base64.getUrlDecoder().decode(token).length == tokenSizeInBytes;
     }
