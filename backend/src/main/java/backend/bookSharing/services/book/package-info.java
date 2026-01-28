@@ -1,4 +1,4 @@
-@NonNullApi
+@NullMarked
 package backend.bookSharing.services.book;
 
-import org.springframework.lang.NonNullApi;
+import org.jspecify.annotations.NullMarked;

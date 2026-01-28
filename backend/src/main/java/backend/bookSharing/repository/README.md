@@ -1,0 +1,22 @@
+# Hibernate mapping
+
+## One-to-many relations
+
+Although it's mostly not used, fields from OneToOne, OneToMany and ManyToOne are placed. As far as i understand it is
+impossible to do pagination with these fields, as a way to retrieve only partial information. Since the amount of tokens
+associated to a user ought not to be more than 5 at any time, as long as code is set to delete older tokens that user 
+may not delete by doing logout. This relation is the most appropriate to use OneToMany relation.
+
+## Postgres enum
+
+The base of this [database structure](../../../../resources/sql/creation.sql) is mostly basic, with the values translating
+to String, numbers or java dates directly. The exception here is the usage of postgres enum for the [book's language](./entities/Book.java),
+which requires more specialized annotations. Check [this site](https://www.baeldung.com/java-enums-jpa-postgresql)
+if you want to downgrade the spring version, and consequently the hibernate version. Otherwise, substitute the sql file
+to use a simple text for that field.
+
+# JPA repositories
+
+The implementation is done by the spring framework. As is seen on some of the interfaces, it is possible to add extra 
+methods specific to the entity. Use [this official guide](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
+to explore what is possible.
