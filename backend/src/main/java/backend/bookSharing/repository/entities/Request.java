@@ -1,10 +1,17 @@
 package backend.bookSharing.repository.entities;
 
-import jakarta.persistence.*;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import java.sql.Timestamp;
-import java.time.Duration;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class Request {
 
@@ -21,33 +28,37 @@ public class Request {
 
     private Integer duration;
 
-    public Request(){} //todo check if necessary
+    public Request(){}
 
+    /**
+     * Constructor that sets id, date and duration. Does not set {@link ManyToOne} {@link Owned relation}
+     * @param id
+     * @param date
+     * @param duration
+     */
     public Request(RequestId id, Timestamp date, Integer duration){
         this.requestId = id;
         this.date = date;
         this.duration = duration;
     }
 
+    /**
+     * Constructor sets all fields, including {@link ManyToOne} relationship
+     * @param owned requested book
+     * @param requesterId id of user requesting book
+     * @param date
+     * @param duration
+     */
+    public Request(Owned owned, Integer requesterId, Timestamp date, Integer duration){
+        this.requestId = new RequestId(owned.getId(), requesterId);
+        this.date = date;
+        this.duration = duration;
+        this.owned = owned;
+    }
+
     @Override
     public String toString() {
         return String.format("Request[id='%s', date='%s', duration='%d']", requestId, date, duration);
-    }
-
-    public Owned getOwned(){
-        return this.owned;
-    }
-
-    public Timestamp getDate() {
-        return date;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public RequestId id(){
-        return requestId;
     }
 
 }

@@ -11,10 +11,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Entity()
 @Table(name = "App_User")
+@EqualsAndHashCode
 public class User {
 
     @Getter

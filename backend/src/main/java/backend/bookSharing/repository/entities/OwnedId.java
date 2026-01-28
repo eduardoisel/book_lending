@@ -1,12 +1,18 @@
 package backend.bookSharing.repository.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.IdClass;
+import lombok.EqualsAndHashCode;
 
 @Embeddable
+@EqualsAndHashCode
 public class OwnedId {
 
+    @Column(name = "user_id")
     private Integer owned_user_id;
 
+    @Column(name = "book_id")
     private Integer owned_book_id;
 
     public OwnedId(){

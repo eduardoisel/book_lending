@@ -2,7 +2,9 @@ package backend.bookSharing.repository.entities;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class LendId {
 
@@ -17,11 +19,4 @@ public class LendId {
         this.requester_user_id = requesterUserId;
     }
 
-    public Integer getRequester_user_id() {
-        return requester_user_id;
-    }
-
-    public OwnedId getLent() {
-        return lent;
-    }
 }

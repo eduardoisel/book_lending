@@ -1,8 +1,9 @@
 package backend.bookSharing.repository.entities;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class RequestId {
 
@@ -24,15 +25,6 @@ public class RequestId {
         return String.format(
                 "RequestId[owner_user_id='%d', book_id='%d', requester_user_id='%d']",
                 requested.getOwned_user_id(), requested.getOwnedBook_id(), requester_user_id);
-    }
-
-
-    public Integer getRequester_user_id() {
-        return this.requester_user_id;
-    }
-
-    public OwnedId getRequested(){
-        return this.requested;
     }
 
 }

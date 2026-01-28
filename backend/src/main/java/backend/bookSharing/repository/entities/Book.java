@@ -10,11 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+@Getter
 @Entity
+@EqualsAndHashCode
 public class Book {
 
     public static enum Language {
@@ -69,30 +73,6 @@ public class Book {
         return String.format(
                 "Book[id='%d', isbn_10='%s', isbn_13='%s', title='%s', language='%s']",
                 id, isbnTen, isbnThirteen, title, language.toString());
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getIsbnTen() {
-        return isbnTen;
-    }
-
-    public String getIsbnThirteen() {
-        return isbnThirteen;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Language getLanguage() {
-        return language;
-    }
-
-    public List<Owned> getOwners() {
-        return owners;
     }
 
 }

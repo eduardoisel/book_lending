@@ -17,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Actions related to a user (e.g. authentication, creation and updates of user, searches about users or books of user)
- *
- * Note: if {@link org.springframework.lang.NonNullApi} annotation package level is not working, all objects given and received are to be assumed that
- * cannot be null
  */
 public interface UserService {
 
@@ -52,7 +49,6 @@ public interface UserService {
     public void logout(String token) throws LogoutError;
 
     /**
-     * TEMPORARY, no auth
      *
      * @param isbn
      * @return

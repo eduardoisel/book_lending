@@ -8,7 +8,6 @@ import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Lend;
 import backend.bookSharing.repository.entities.Owned;
-import backend.bookSharing.repository.entities.OwnedId;
 import backend.bookSharing.repository.entities.Region;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.Token;
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Request> getRequestsOfBook(Integer ownerId, Integer bookId) {
-        return userRepo.getReferenceById(ownerId).getOwned()
+         return userRepo.getReferenceById(ownerId).getOwned()
                 .stream().filter(owned -> owned.getBook().getId().equals(bookId)).toList().getFirst()
                 .getRequests().stream().toList();
     }
@@ -120,7 +119,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(String email, String password) throws UserAuthenticationError{
+    public String login(String email, String password) throws UserAuthenticationError {
 
         Optional<User> searchedUser = userRepo.findByEmail(email);
 
@@ -165,7 +164,7 @@ public class UserServiceImpl implements UserService {
 
         User user = checkAuthentication(token);
 
-        if (user == null){
+        if (user == null) {
             throw new OwnerShipAdditionError.UserAuthenticationInvalid();
         }
 
@@ -183,13 +182,13 @@ public class UserServiceImpl implements UserService {
             throw new OwnerShipAdditionError.BookNotFound();
         }
 
-        OwnedId ownedId = new OwnedId(user.getId(), searchedBook.getId());
+        Owned toInsert = new Owned(user, searchedBook);
 
-        if (ownedRepo.findById(ownedId).isPresent()) {
+        if (ownedRepo.findById(toInsert.getId()).isPresent()) {
             throw new OwnerShipAdditionError.AlreadyMarkedAsOwned();
         }
 
-        return ownedRepo.save(new Owned(ownedId)); // todo see exception. Jakarta is probably wrong
+        return ownedRepo.save(toInsert);
 
     }
 
