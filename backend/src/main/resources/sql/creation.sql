@@ -7,7 +7,8 @@ CREATE TABLE App_User(
     id serial primary key NOT NULL,
     region varchar(50) references Region(name) NOT NULL,
     email varchar(70) UNIQUE NOT NULL,
-    password varchar(256) NOT NULL
+    hash varchar(256) NOT NULL,
+    salt varchar(2) NOT NULL
 );
 
 -- not necessary if we limit amount of sessions for an account to one. Then delete table and change values to user

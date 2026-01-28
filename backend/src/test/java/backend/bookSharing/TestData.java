@@ -53,10 +53,11 @@ public class TestData {
     public record ClearPasswordUsers(Region region, String email, String clearPassword) {
 
         public User toUser() {
-                return new User(this.region, this.email, passwordValidation.passwordEncoding(this.clearPassword));
-            }
-
+            String salt = passwordValidation.getSalt();
+            return new User(this.region, this.email, passwordValidation.passwordEncoding(this.clearPassword, salt), salt);
         }
+
+    }
 
     private static final TokenValidation tokenValidation =
             new TokenValidation(new TokenValidation.TokenValidTime(Duration.ofDays(1), Duration.ofDays(1)));

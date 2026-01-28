@@ -1,6 +1,7 @@
 package backend.bookSharing.repository.entities;
 
 
+import backend.bookSharing.utils.PasswordValidationInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,25 +15,28 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+@Getter
 @Entity()
 @Table(name = "App_User")
 @EqualsAndHashCode
 public class User {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Getter
     @Column(unique = true)
     private String email;
 
-    @Getter
-    @Column(length = 256)
-    private String password;
+    /**
+     * hash(?) of clear password and salt
+     */
+    @Column(length = 256, nullable = false)
+    private String hash;
 
-    @Getter
+    @Column(length = 2, nullable = false)
+    private String salt;
+
     @ManyToOne
     @JoinColumn(name = "region") //assumes region_name without
     private Region region;
@@ -45,22 +49,20 @@ public class User {
 
     public User(){} //seems to be necessary for hibernate
 
-    public User(Region region, String email, String password) {
+    public User(Region region, String email, String hash, String salt) {
         this.region = region;
         this.email = email;
-        this.password = password;
+        this.hash = hash;
+        this.salt = salt;
+    }
+
+    public PasswordValidationInfo getValidationInfo(){
+        return new PasswordValidationInfo(hash, salt);
     }
 
     @Override
     public String toString() {
         return String.format("User[id='%d', email='%s']", id, email);
-    }
-
-    /**
-     * @return Every owned book at once?
-     */
-    public List<Owned> getOwned(){
-        return owned;
     }
 
 }

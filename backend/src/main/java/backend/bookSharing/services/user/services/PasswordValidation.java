@@ -1,15 +1,15 @@
 package backend.bookSharing.services.user.services;
 
+import backend.bookSharing.utils.PasswordValidationInfo;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Base64;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-/*
-    todo change to use salt
- */
 public class PasswordValidation {
 
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -24,29 +24,29 @@ public class PasswordValidation {
         }
     }
 
-    // todo use
-    public byte[] getNextSalt() {
-        byte[] salt = new byte[16]; // TODO database row needs to be at least size of array. Search spring for possible automation
+    public String getSalt() {
+        byte[] salt = new byte[2]; // TODO database needs to be at least size of array. Search for possible automation
         secureRandom.nextBytes(salt);
-        return salt;
+        return new String(salt, StandardCharsets.UTF_8);
     }
 
 
     public Boolean validatePassword(
             String password,
-            String validationInfo
+            PasswordValidationInfo validationInfo
     ) {
-        return passwordEncoder.matches(password, validationInfo);
+        return passwordEncoder.matches(password + validationInfo.salt(), validationInfo.hash());
     }
 
     /**
      * Encodes password as a way to avoid saving raw passwords on server side.
      *
      * @param password raw password
+     * @param salt
      * @return Hashed password
      */
-    public String passwordEncoding(String password) {
-        return passwordEncoder.encode(password);
+    public String passwordEncoding(String password, String salt) {
+        return passwordEncoder.encode(password + salt);
     }
 
 

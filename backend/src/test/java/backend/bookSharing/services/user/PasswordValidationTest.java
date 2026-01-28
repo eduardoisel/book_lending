@@ -2,21 +2,17 @@ package backend.bookSharing.services.user;
 
 import backend.bookSharing.services.user.services.PasswordValidation;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-//@ExtendWith(SpringExtension.class)
-@SpringBootTest
-//@ContextConfiguration(classes = PasswordValidation.class)
-//@ComponentScan("backend.bookSharing.services.user.services")
+import backend.bookSharing.utils.PasswordValidationInfo;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class PasswordValidationTest {
 
     //import org.junit.Test;
 
     @Autowired
-    PasswordValidation passwordValidation;// = new PasswordValidation();
+    PasswordValidation passwordValidation = new PasswordValidation();
 
     @Test
     public void failureBySize() {
@@ -95,12 +91,13 @@ public class PasswordValidationTest {
     @Test
     public void encodingAndMatchingTest(){
         String password = "test_password1";
+        String salt = passwordValidation.getSalt();
 
-        String encodedPassword = passwordValidation.passwordEncoding(password);
+        String encodedPassword = passwordValidation.passwordEncoding(password, salt);
 
         //assertEquals(passwordValidation.passwordEncoding(password), encodedPassword);
 
-        assertTrue(passwordValidation.validatePassword(password, encodedPassword));
+        assertTrue(passwordValidation.validatePassword(password, new PasswordValidationInfo(encodedPassword, salt)));
     }
 
 }

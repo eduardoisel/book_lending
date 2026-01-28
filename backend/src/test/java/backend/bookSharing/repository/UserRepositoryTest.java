@@ -41,7 +41,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
         assertEquals(savedUser.getEmail(), foundUser.getEmail());
 
-        assertEquals(savedUser.getPassword(), foundUser.getPassword());
+        assertEquals(savedUser.getHash(), foundUser.getHash());
 
     }
 
@@ -69,7 +69,7 @@ public class UserRepositoryTest extends DatabaseTest {
         User found = searched.get();
 
         assertEquals(inserted.getEmail(), found.getEmail());
-        assertEquals(inserted.getPassword(), found.getPassword());
+        assertEquals(inserted.getHash(), found.getHash());
         assertEquals(inserted.getRegion(), found.getRegion());
 
     }

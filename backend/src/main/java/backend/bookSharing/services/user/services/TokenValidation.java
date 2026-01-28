@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TokenValidation {
-    //private Integer maxNumberOfTokensPerUser = config.maxTokensPerUser;
 
     public static class TokenValidTime{
         private final Duration tokenTtl;
@@ -51,9 +50,6 @@ public class TokenValidation {
         this.tokenTtlRolling = tokenValidTime.tokenTtlRolling;
 
     }
-
-    //not created in methods to ensure anything that may cause exception to happen as quickly as possible.
-    // In the end should be substituted by unit tests.
 
     private final MessageDigest messageDigest;
 
