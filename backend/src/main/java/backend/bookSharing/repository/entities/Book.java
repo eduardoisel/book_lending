@@ -1,5 +1,6 @@
 package backend.bookSharing.repository.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -19,6 +21,7 @@ import org.hibernate.type.SqlTypes;
 @Getter
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Book {
 
     public static enum Language {
@@ -55,11 +58,10 @@ public class Book {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Language language;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY) //note: mapped by string value is from owned class Owned reference name field
     @BatchSize(size = 20)
     private List<Owned> owners; //private Set<Owned> owners;
-
-    public Book(){} //seems to be necessary for hibernate
 
     public Book(String isbn_10, String isbn_13, String title, Language language){
         this.isbnTen = isbn_10;

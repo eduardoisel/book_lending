@@ -7,11 +7,13 @@ import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
+import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
-import com.sun.istack.NotNull;
+import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import jakarta.annotation.Nullable;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,38 +22,47 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface UserService {
 
-    public long bookCount();
+    @Transactional
+    Page<Book> getOwnedBooks(Integer userId, Integer pageNumber) throws UserOwnershipSearchError;
 
     @Transactional
-    public List<Book> getOwnedBooks(Integer userId);
-
-    @Transactional
-    public List<Request> getRequestsOfBook(Integer ownerId, Integer bookId);
-
-    @Transactional
-    public Lend getLendOfBook(Integer ownerId, Integer bookId);
+    Page<Request> getRequestsOfBook(Integer ownerId, Integer bookId, Integer pageNumber) throws OwnershipRequestSearchError;
 
     /**
      * @return a {@link User} that may be null. Is specifically not either to avoid rollback on failure, as on failure
      * token is to be removed unless it did not exist in the first place
      */
     @Transactional
-    @Nullable
-    public User checkAuthentication(String token);
+    @Nullable User checkAuthentication(String token);
 
+    /**
+     * @param email identifying email of {@link User}
+     * @param password password of {@link User}
+     * @return id of user
+     */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public Integer createUser(String email, @NotNull String password) throws UserCreationError;
+    Integer createUser(String email, String password) throws UserCreationError;
 
+    /**
+     * Authentication through authentication token
+     * @param email identifying email of {@link User}
+     * @param password password of {@link User}
+     * @return login token
+     */
     @Transactional
-    public String login(String email, String password) throws UserAuthenticationError;
+    String login(String email, String password) throws UserAuthenticationError;
 
+    /**
+     * @param token authentication token of {@link User} logging out
+     */
     @Transactional
-    public void logout(String token) throws LogoutError;
+    void logout(String token) throws LogoutError;
 
     /**
      *
-     * @param isbn
-     * @return
+     * @param isbn isbn 10 or 13 from book
+     * @param token authentication token of {@link User} doing action
+     * @return created {@link Owned} instance. Can be changed to void
      */
     @Transactional
     Owned addOwner(String isbn, String token) throws OwnerShipAdditionError;

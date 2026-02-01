@@ -4,8 +4,9 @@ import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
+import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 public interface BookService {
 
-    long bookCount();
-
     @Transactional
-    List<User> getOwnersOfBook(Integer bookId);
+    Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     void addBookFromApi(String isbn) throws BookAdditionError;

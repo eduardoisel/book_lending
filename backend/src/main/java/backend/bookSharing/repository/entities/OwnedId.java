@@ -2,38 +2,30 @@ package backend.bookSharing.repository.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.IdClass;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Embeddable
 @EqualsAndHashCode
+@NoArgsConstructor
 public class OwnedId {
 
     @Column(name = "user_id")
-    private Integer owned_user_id;
+    private Integer userId;
 
     @Column(name = "book_id")
-    private Integer owned_book_id;
-
-    public OwnedId(){
-
-    }
+    private Integer bookId;
 
     public OwnedId(Integer user_id, Integer book_id){
-        this.owned_user_id = user_id;
-        this.owned_book_id = book_id;
+        this.userId = user_id;
+        this.bookId = book_id;
     }
 
     @Override
     public String toString(){
-        return String.format("OwnedId[user_id='%d', book_id='%d']", owned_user_id, owned_book_id);
+        return String.format("OwnedId[userId='%d', bookId='%d']", userId, bookId);
     }
 
-    public Integer getOwned_user_id() {
-        return owned_user_id;
-    }
-
-    public Integer getOwnedBook_id() {
-        return owned_book_id;
-    }
 }

@@ -1,13 +1,19 @@
 package backend.bookSharing.http;
 
 import backend.bookSharing.http.data.UserCreation;
+import backend.bookSharing.http.returns.ListedData;
+import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
+import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
+import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
 import backend.bookSharing.services.user.UserService;
+import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,20 +32,41 @@ public class UserController {
 
     private final UserService service;
 
-
     @GetMapping("owned/{userId}")
-    public ResponseEntity<?> bookOwners(@PathVariable Integer userId) {
-        return ResponseEntity.status(200).body(String.format("Books owned: %s \n", service.getOwnedBooks(userId).toString()));
+    public ResponseEntity<?> bookOwners(@PathVariable Integer userId, @RequestParam(required = false, defaultValue = "0") Integer page) {
+
+        try {
+            Page<Book> search = service.getOwnedBooks(userId, page);
+
+            return ResponseEntity.status(200)
+                    .body(new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious()));
+
+        }catch (UserOwnershipSearchError _){
+            return ResponseEntity.status(400).body("User does not exist");
+        }
+
     }
 
+    /**
+     *  Gets requests of book owned by user
+     * @param userId
+     * @param bookId
+     * @param page
+     * @return
+     */
     @GetMapping("owned/{userId}/requests/{bookId}")
-    public ResponseEntity<?> bookRequests(@PathVariable Integer userId, @PathVariable Integer bookId) {
-        return ResponseEntity.status(200).body(String.format("Requests of book: %s \n", service.getRequestsOfBook(userId, bookId).toString()));
-    }
+    public ResponseEntity<?> bookRequests(@PathVariable Integer userId, @PathVariable Integer bookId, @RequestParam(required = false, defaultValue = "0") Integer page) {
 
-    @GetMapping("owned/{userId}/lend/{bookId}")
-    public ResponseEntity<?> bookLend(@PathVariable Integer userId, @PathVariable Integer bookId) {
-        return ResponseEntity.status(200).body(String.format("Current lend of book: %s \n", service.getLendOfBook(userId, bookId).toString()));
+        try {
+            Page<Request> search = service.getRequestsOfBook(userId, bookId, page);
+
+            return ResponseEntity.status(200)
+                    .body(new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious()));
+
+        }catch (OwnershipRequestSearchError _){
+            return ResponseEntity.status(400).body("User does own the book");
+        }
+
     }
 
     @PostMapping("createUser")

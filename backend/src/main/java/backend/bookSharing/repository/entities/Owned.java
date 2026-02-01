@@ -1,5 +1,6 @@
 package backend.bookSharing.repository.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -11,11 +12,14 @@ import jakarta.persistence.OneToOne;
 import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @EqualsAndHashCode
+@NoArgsConstructor
 public class Owned{
 
     @EmbeddedId
@@ -33,29 +37,18 @@ public class Owned{
     @JoinColumn(nullable = false, name = "book_id", referencedColumnName = "id")
     private Book book;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owned") //note: mapped by string value is from owned class Request field name
     private Set<Request> requests;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "lent") //note: mapped by string value is from owned class Lend field name
     private Lend lend;
 
-
-    public Owned(){
-
-    }
-
-    /**
-     * Constructor sets only id, nothing more. Works for searching, but insert also needs {@link ManyToOne} to be set
-     * @param id id of entity
-     */
-    public Owned(OwnedId id){
-        this.id = id;
-    }
-
     /**
      * Constructor sets id and {@link ManyToOne} relationships
-     * @param user
-     * @param book
+     * @param user owner of book
+     * @param book is the book in question
      */
     public Owned(User user, Book book){
         this.user = user;

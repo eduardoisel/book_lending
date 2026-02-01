@@ -15,12 +15,13 @@ import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.api.BookApi;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
+import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import backend.bookSharing.services.user.UserService;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -42,16 +43,24 @@ public class BookServiceImpl implements BookService {
 
     private final BookApi bookApi;
 
-    public long bookCount() {
-        return bookRepo.count();
+    public Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError {
+
+        Book book = isbn.length() == 10 ?  bookRepo.findByIsbnTen(isbn): bookRepo.findByIsbnThirteen(isbn);
+
+        if (book == null) {
+            throw new BookOwnersSearchError.BookNotFound();
+        }
+
+        Page<Owned> ownedPage = ownedRepo.findByBookId(
+                book.getId(),
+                PageRequest.of(
+                        pageNumber,
+                        20 //, Sort.by("book_id")
+                ));
+
+        return ownedPage.map(Owned::getUser);
+
     }
-
-    public List<User> getOwnersOfBook(Integer bookId) {
-
-        bookRepo.findAll(PageRequest.of(1, 20)).getSort();
-        return bookRepo.getReferenceById(bookId).getOwners().stream().map(Owned::getUser).toList();
-    }
-
 
     public void addBookFromApi(String isbn) throws BookAdditionError {
 
@@ -81,19 +90,11 @@ public class BookServiceImpl implements BookService {
         User owner = userRepo.findByEmail(ownerEmail)
                 .orElseThrow((Supplier<BookRequestError>) BookRequestError.OwnershipNotFound::new);
 
-        if (requester.getId().equals(owner.getId())){
+        if (requester.getId().equals(owner.getId())) {
             throw new BookRequestError.CannotRequestFromSelf();
         }
 
-        boolean isIsbn10 = isbn.length() == 10;
-
-        Book searchedBook;
-
-        if (isIsbn10) {
-            searchedBook = bookRepo.findByIsbnTen(isbn);
-        } else {
-            searchedBook = bookRepo.findByIsbnThirteen(isbn);
-        }
+        Book searchedBook = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
 
         if (searchedBook == null) {
             throw new BookRequestError.OwnershipNotFound();
@@ -113,36 +114,32 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void lendBook(String isbn, String receiverEmail, String token) throws BookLendError {
-        User requester = userService.checkAuthentication(token);
+        User lender = userService.checkAuthentication(token);
 
-        if (requester == null) {
+        if (lender == null) {
             throw new BookLendError.UserAuthenticationInvalid();
         }
 
-        User owner = userRepo.findByEmail(receiverEmail)
+        User requester = userRepo.findByEmail(receiverEmail)
                 .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
-        boolean isIsbn10 = isbn.length() == 10;
-
-        Book book;
-
-        if (isIsbn10) {
-            book = bookRepo.findByIsbnTen(isbn);
-        } else {
-            book = bookRepo.findByIsbnThirteen(isbn);
-        }
+        Book book = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
 
         if (book == null) {
             throw new BookLendError.RequestNotFound();
         }
 
-        OwnedId ownedIdCheck = new OwnedId(owner.getId(), book.getId());
+        OwnedId ownedIdCheck = new OwnedId(lender.getId(), book.getId());
 
         //use if error message change to specify where went wrong (i.e. no book, no of ownership of book instead of no request)
-        //ownedRepo.findById(ownedIdCheck).orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
+        ownedRepo.findById(ownedIdCheck).orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
         Request request = requestRepo.findById(new RequestId(ownedIdCheck, requester.getId()))
                 .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
+
+        if (lendRepo.existsById(ownedIdCheck)){
+            throw new BookLendError.AlreadyLent();
+        }
 
         lendRepo.save(new Lend(request)); //mark book as lent
 

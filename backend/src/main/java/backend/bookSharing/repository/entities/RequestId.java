@@ -1,30 +1,30 @@
 package backend.bookSharing.repository.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
+@NoArgsConstructor
 public class RequestId {
 
     private OwnedId requested;
 
-    private Integer requester_user_id;
+    @Column(name = "requester_user_id")
+    private Integer userId;
 
-    public RequestId(){
-
-    }
-
-    public RequestId(OwnedId requested, Integer requester_user_id){
+    public RequestId(OwnedId requested, Integer userId){
         this.requested = requested;
-        this.requester_user_id = requester_user_id;
+        this.userId = userId;
     }
 
     @Override
     public String toString(){
         return String.format(
-                "RequestId[owner_user_id='%d', book_id='%d', requester_user_id='%d']",
-                requested.getOwned_user_id(), requested.getOwnedBook_id(), requester_user_id);
+                "RequestId[ownedId='%s', requesterUserId='%d']",
+                requested.toString(), userId);
     }
 
 }

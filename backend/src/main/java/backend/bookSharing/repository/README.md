@@ -20,3 +20,18 @@ to use a simple text for that field.
 The implementation is done by the spring framework. As is seen on some of the interfaces, it is possible to add extra 
 methods specific to the entity. Use [this official guide](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
 to explore what is possible.
+
+# Json stringify for http
+
+These entities may be shared directly to the server users. Annotations were used on fields that should not ever leave the
+backend, but most importantly on one-to-many fields, to avoid recursive loops.
+If in entity book one-to-many relation to ownership was not ignored, it would stringify the Owned entity, which would
+stringify Book, which would again stringify its ownership field.
+
+The alternative to these annotations is to never put these classes directly in the body, creating for each a new class
+with only the necessary fields.
+
+# lombok
+
+Lombok is used do avoid boilerplate code, including every getter and setter for each field, along with no argument 
+constructors [necessary for jakarta](https://www.baeldung.com/jpa-no-argument-constructor-entity-class)

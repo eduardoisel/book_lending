@@ -1,7 +1,5 @@
 package backend.bookSharing.http.data;
 
-import org.springframework.lang.NonNullApi;
-
 /**
  *
  * @param isbn book identifier, either 10 or 13 numbers

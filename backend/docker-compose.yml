@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: src/main/docker/Dockerfile
+    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
     environment:
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=changeit

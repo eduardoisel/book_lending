@@ -10,6 +10,8 @@ public abstract sealed class BookLendError extends Exception permits BookLendErr
 
     /**
      * A book can only be lent if it is not being currently lent to another
+     *
+     * Note: this is more restrictive than database model, which allows for multiple lends of the same book.
      */
     public static final class AlreadyLent extends BookLendError{}
 }

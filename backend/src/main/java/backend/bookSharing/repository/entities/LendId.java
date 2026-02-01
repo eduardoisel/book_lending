@@ -1,22 +1,31 @@
 package backend.bookSharing.repository.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Embeddable
-public class LendId {
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+public class LendId{
 
-    private OwnedId lent;
+    //public OwnedId lent;
 
-    private Integer requester_user_id;
+    @Column(name = "lent_user_id")
+    public Integer lentUserId;
 
-    public LendId(){} //todo check if necessary
+    @Column(name = "lent_book_id")
+    public Integer lentBookId;
 
-    public LendId(OwnedId lent, Integer requesterUserId) {
-        this.lent = lent;
-        this.requester_user_id = requesterUserId;
+    public LendId(Integer lentUserId, Integer lentBookId) {
+        //this.lent = lent;
+        this.lentBookId = lentBookId;
+        this.lentUserId = lentUserId;
     }
 
 }

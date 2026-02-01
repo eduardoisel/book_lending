@@ -2,8 +2,10 @@ package backend.bookSharing.repository.entities;
 
 
 import backend.bookSharing.utils.PasswordValidationInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,11 +16,13 @@ import jakarta.persistence.Table;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity()
 @Table(name = "App_User")
 @EqualsAndHashCode
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -31,9 +35,11 @@ public class User {
     /**
      * hash(?) of clear password and salt
      */
+    @JsonIgnore
     @Column(length = 256, nullable = false)
     private String hash;
 
+    @JsonIgnore
     @Column(length = 2, nullable = false)
     private String salt;
 
@@ -41,13 +47,13 @@ public class User {
     @JoinColumn(name = "region") //assumes region_name without
     private Region region;
 
-    @OneToMany(mappedBy = "user") //note: mapped by string value is from owned class user reference name member
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) //note: mapped by string value is from owned class user reference name member
     private List<Owned> owned;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true) //note: mapped by string value is from owned class user reference name member
     private List<Token> tokens;
-
-    public User(){} //seems to be necessary for hibernate
 
     public User(Region region, String email, String hash, String salt) {
         this.region = region;
@@ -56,6 +62,7 @@ public class User {
         this.salt = salt;
     }
 
+    @JsonIgnore
     public PasswordValidationInfo getValidationInfo(){
         return new PasswordValidationInfo(hash, salt);
     }
