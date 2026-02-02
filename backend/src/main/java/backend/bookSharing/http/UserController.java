@@ -12,6 +12,8 @@ import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
 import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,14 @@ public class UserController {
 
     private final UserService service;
 
+    /**
+     * Get list of books owned by a user
+     * @param userId id of user in question
+     * @param page page number. First is 0
+     * @return on success status 200 and info in body
+     */
     @GetMapping("owned/{userId}")
-    public ResponseEntity<?> bookOwners(@PathVariable Integer userId, @RequestParam(required = false, defaultValue = "0") Integer page) {
+    public ResponseEntity<?> booksOwned(@PathVariable Integer userId, @RequestParam(required = false, defaultValue = "0") Integer page) {
 
         try {
             Page<Book> search = service.getOwnedBooks(userId, page);
@@ -49,11 +57,15 @@ public class UserController {
 
     /**
      *  Gets requests of book owned by user
-     * @param userId
-     * @param bookId
-     * @param page
-     * @return
+     * @param userId id of user that owns the book
+     * @param bookId id of owned book
+     * @param page pagination parameter. First page is 0
+     * @return success or failure
      */
+    @Operation(responses = {
+            @ApiResponse(responseCode = "400", description = "User does not own book"),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved instances of requests of owned book by user")
+    })
     @GetMapping("owned/{userId}/requests/{bookId}")
     public ResponseEntity<?> bookRequests(@PathVariable Integer userId, @PathVariable Integer bookId, @RequestParam(required = false, defaultValue = "0") Integer page) {
 
@@ -64,17 +76,24 @@ public class UserController {
                     .body(new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious()));
 
         }catch (OwnershipRequestSearchError _){
-            return ResponseEntity.status(400).body("User does own the book");
+            return ResponseEntity.status(400).body("User does not own the book");
         }
 
     }
 
+    /**
+     * @param body information necessary to create user
+     */
+    @Operation(responses = {
+            @ApiResponse(responseCode = "410", description = "Password not up to requirement"),
+            @ApiResponse(responseCode = "400", description = "Repeat email")
+    })
     @PostMapping("createUser")
     public ResponseEntity<?> createUser(@RequestBody UserCreation body) {
         try {
             Integer result = service.createUser(body.email, body.password);
 
-            return ResponseEntity.status(200).body(String.format("Id of user: %s \n", result));
+            return ResponseEntity.status(201).body(String.format("Id of user: %s \n", result));
 
         } catch (UserCreationError error) {
 
@@ -94,7 +113,7 @@ public class UserController {
         try {
             String result = service.login(body.email, body.password);
 
-            return ResponseEntity.status(200).body(String.format("Token: %s \n", result));
+            return ResponseEntity.status(201).body(String.format("Token: %s \n", result));
 
         } catch (UserAuthenticationError error) {
 

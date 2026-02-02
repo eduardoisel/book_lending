@@ -16,12 +16,35 @@ allow any realistic way for these cases to be actually verified.
 Technologies used:
 * Spring Boot 4.0.1
 * Spring Data JPA (Hibernate 7)
-* PostgreSQL (latest version)
 * Gradle kotlin
 * Java 21
 * JUnit 5
-* Docker
+* Docker for database (latest PostgresSQL version)
 * [Test containers](https://testcontainers.com/)
+* [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring 
+
+### About spring docs
+
+Access on browser the base url for the server used in the code plus the value found in springdoc.swagger-ui.path of the
+[spring properties file](./src/main/resources/application.yaml). This will give you a page with every available endpoint
+of your API. If this file is up to date, this project should use http://localhost:8080/swagger-ui.html by default.
+
+https://deepwiki.com/springdoc/springdoc-openapi/8.3-javadoc-integration
+
+### Javadoc
+
+Gradle was set up so the javadoc documentation of the code is used. This project did it with uses gradle, but 
+documentation shows example for [maven](https://springdoc.org/#javadoc-support). Javadoc may not cover well all
+instances of the API documentation. For example, if your method on a rest controller returns ResponseEntity directly, 
+and handles exceptions directly, I can assure from personal experience the browser documentation does not translate all
+possible return statuses. For this you may use Open-API's (comes from transitive dependencies) 
+[Operation annotation](https://github.com/OAI/OpenAPI-Specification/blob/3.0.4/versions/2.0.md#operation-object) to add
+documentation besides javadoc.
+
+Whether it is actually necessary at any time to use OpenApi is beyond my knowledge. After all, spring can be structured
+to use [controllerAdvice](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html) 
+to handle apart the exceptions. Spring has a lot of tools, and there may be some spring-docs can translate to 
+documentation better.
 
 ## How to run this code
 

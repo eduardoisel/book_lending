@@ -7,7 +7,6 @@ import backend.bookSharing.repository.RequestRepository;
 import backend.bookSharing.repository.TokenRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
-import backend.bookSharing.repository.entities.Lend;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.OwnedId;
 import backend.bookSharing.repository.entities.Region;
@@ -24,7 +23,6 @@ import backend.bookSharing.services.user.services.PasswordValidation;
 import backend.bookSharing.services.user.services.TokenValidation;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -182,8 +180,6 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new OwnerShipAdditionError.UserAuthenticationInvalid();
         }
-
-        boolean isIsbn10 = isbn.length() == 10;
 
         Book searchedBook = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
 

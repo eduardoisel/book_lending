@@ -14,6 +14,8 @@ plugins {
 
     id("io.freefair.lombok") version "9.2.0"
 
+    java
+//    `java-library`
 }
 
 
@@ -43,6 +45,21 @@ sourceSets {
 
 //https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
 dependencies {
+    // automatic documentation
+    // https://springdoc.org/faq.html#_what_is_the_compatibility_matrix_of_springdoc_openapi_with_spring_boot
+    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
+
+    // https://springdoc.org/#spring-security-support
+    // Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.1")
+
+    //below use javadoc (normal java documentation of classes and functions as documentation for swagger ui
+    runtimeOnly("com.github.therapi:therapi-runtime-javadoc:0.15.0")
+    java{
+        annotationProcessor("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
+    }
+
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
 
     // https://www.geeksforgeeks.org/advance-java/using-lombok-to-reduce-boilerplate-code-in-spring-boot/ extra
@@ -52,10 +69,6 @@ dependencies {
     implementation("org.projectlombok:lombok")//:1.18.42
 
     implementation("org.springframework.boot:spring-boot-starter-web")
-
-    //automatic documentation
-    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
 
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
     //implementation("org.springframework.hateoas:spring-hateoas")
@@ -133,7 +146,7 @@ tasks.named<BootRun>("bootRun") {
     finalizedBy("dbAppDown")
 }
 
-task<Exec>("dbAppUp") {
+tasks.register<Exec>("dbAppUp", fun Exec.() {
     commandLine(
         "docker",
         "compose",
@@ -146,14 +159,14 @@ task<Exec>("dbAppUp") {
         "--build",
         "book-lending-app",
     )
-}
+})
 
-task<Exec>("dbAppWait") {
+tasks.register<Exec>("dbAppWait", fun Exec.() {
     commandLine("docker", "exec", "book-lending-container", "/app/bin/wait-for-postgres.sh", "localhost")
 
     dependsOn("dbAppUp")
-}
+})
 
-task<Exec>("dbAppDown") {
+tasks.register<Exec>("dbAppDown", fun Exec.() {
     commandLine("docker", "compose", "-p", "book-lend", "-f", "./docker-compose.yml", "pause", "book-lending-app")
-}
+})
