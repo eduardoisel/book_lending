@@ -20,7 +20,7 @@ public interface BookService {
     Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    void addBookFromApi(String isbn) throws BookAdditionError;
+    Book addBookFromApi(String isbn) throws BookAdditionError;
 
     /**
      *

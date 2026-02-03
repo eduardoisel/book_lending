@@ -1,5 +1,6 @@
-package backend.bookSharing;
+package backend.bookSharing.http;
 
+import backend.bookSharing.services.ServiceTestBase;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;

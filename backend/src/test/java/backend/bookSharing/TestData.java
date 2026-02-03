@@ -13,6 +13,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/*
+ Warning: Inserting instance twice even after unit test is completed, even though database can be seen to roll
+ back by using repo count method, will lead to exception being thrown
+ */
 public class TestData {
 
     static <T> T[] concatWithCollection(T[] array1, T[] array2) {
@@ -27,7 +31,7 @@ public class TestData {
     }
 
 
-    public static Book[] databaseBooks = {
+    public static final Book[] databaseBooks = {
             new Book("0345296052", "9780345296054", "The Fellowship of the Ring", Book.Language.English), //does not have language on openLibrary API, but only on json? https://openlibrary.org/works/OL27513W/The_Fellowship_of_the_Ring?edition=key%3A/books/OL24373119M
             new Book("0553573403", null, "A Game of Thrones", Book.Language.English),
             new Book(null, "9789896419936", "A Muralha", Book.Language.Portuguese), //had the book
@@ -35,6 +39,10 @@ public class TestData {
             new Book(null, "9788702347036", "Eventyret om ringen", Book.Language.Danish),
             new Book(null, "9780316312486", "One Dark Window", Book.Language.English),
     };
+
+//    public static Book getDatabaseBooks(int id) {
+//
+//    }
 
     public static Book[] booksExclusiveFromApi = {
             new Book("1234567890", "1234567890321", "Test book", Book.Language.English),
@@ -79,7 +87,7 @@ public class TestData {
     public static List<User> users = Arrays.stream(clearPasswordUsers)
             .map(ClearPasswordUsers::toUser).toList();
 
-    public static ClearToken clearTokens[] = {
+    public static ClearToken[] clearTokens = {
             new ClearToken(tokenValidation.generateTokenValue(), users.getFirst()),
             new ClearToken(tokenValidation.generateTokenValue(), users.get(1)),
             new ClearToken(tokenValidation.generateTokenValue(), users.get(2)),
@@ -87,5 +95,23 @@ public class TestData {
 
     public static List<Token> tokens = Arrays.stream(clearTokens)
             .map(ClearToken::toToken).toList();
+
+    public static Book duplicate(Book book){
+        return new Book(
+                book.getIsbnTen(),
+                book.getIsbnThirteen(),
+                book.getTitle(),
+                book.getLanguage()
+        );
+    }
+
+    public static User duplicate(User user){
+        return new User(
+                user.getRegion(),
+                user.getEmail(),
+                user.getHash(),
+                user.getSalt()
+        );
+    }
 
 }

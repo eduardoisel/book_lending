@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
 
     public Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError {
 
-        Book book = isbn.length() == 10 ?  bookRepo.findByIsbnTen(isbn): bookRepo.findByIsbnThirteen(isbn);
+        Book book = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
 
         if (book == null) {
             throw new BookOwnersSearchError.BookNotFound();
@@ -62,7 +62,7 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    public void addBookFromApi(String isbn) throws BookAdditionError {
+    public Book addBookFromApi(String isbn) throws BookAdditionError {
 
         boolean isIsbn10 = isbn.length() == 10;
 
@@ -74,7 +74,13 @@ public class BookServiceImpl implements BookService {
             throw new BookAdditionError.Isbn13InUse();
         }
 
-        bookRepo.save(bookApi.getBook(isbn));
+        Book book = bookApi.getBook(isbn);
+
+        if (book == null) {
+            throw new BookAdditionError.BookNotFound();
+        }
+
+        return bookRepo.save(book);
 
     }
 
@@ -137,7 +143,7 @@ public class BookServiceImpl implements BookService {
         Request request = requestRepo.findById(new RequestId(ownedIdCheck, requester.getId()))
                 .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
-        if (lendRepo.existsById(ownedIdCheck)){
+        if (lendRepo.existsById(ownedIdCheck)) {
             throw new BookLendError.AlreadyLent();
         }
 

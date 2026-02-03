@@ -1,6 +1,5 @@
 package backend.bookSharing.repository;
 
-import backend.bookSharing.DatabaseTest;
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.entities.User;
 import java.util.Arrays;
@@ -8,21 +7,21 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Transactional
-@Rollback
 public class UserRepositoryTest extends DatabaseTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final RegionRepository regionRepository;
 
     @Autowired
-    private RegionRepository regionRepository;
+    public UserRepositoryTest(UserRepository userRepository, RegionRepository regionRepository) {
+        this.userRepository = userRepository;
+        this.regionRepository = regionRepository;
+    }
 
     @BeforeEach
     public void insertRegions(){
@@ -31,26 +30,26 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void createAndSearchTest(){
-        User savedUser = TestData.users.getFirst();
+        User savedUser = TestData.duplicate(TestData.users.getFirst());
 
         assertEquals(0, userRepository.count());
-        userRepository.save(savedUser);
+        userRepository.saveAndFlush(savedUser);
         assertEquals(1, userRepository.count());
 
         User foundUser = userRepository.findAll().getFirst();
 
         assertEquals(savedUser.getEmail(), foundUser.getEmail());
-
         assertEquals(savedUser.getHash(), foundUser.getHash());
 
     }
 
     @Test
     public void deletionTest(){
-        User temporaryInsert = TestData.users.get(0);
+        assertEquals(0, userRepository.count());
+
+        User temporaryInsert = TestData.duplicate(TestData.users.getFirst());
 
         userRepository.save(temporaryInsert);
-
         userRepository.delete(temporaryInsert);
 
         assertEquals(0, userRepository.count());
@@ -58,7 +57,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
     @Test
     public void findByEmail(){
-        User inserted = TestData.users.get(0);
+        User inserted = TestData.duplicate(TestData.clearPasswordUsers[0].toUser());
 
         userRepository.save(inserted);
 

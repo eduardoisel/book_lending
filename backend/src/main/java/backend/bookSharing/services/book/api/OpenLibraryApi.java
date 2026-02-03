@@ -9,31 +9,33 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import lombok.NonNull;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
-@Component
 /**
- * Chosen this API from https://www.vinzius.com/post/free-and-paid-api-isbn/
+ * Chosen this API from <a href="https://www.vinzius.com/post/free-and-paid-api-isbn/">vinzius.com</a>
  * This is the only one that seems completely free World cat, the biggest one, had a free xml option for non organizations,
  * but it seems to have been removed. If this idea actually is used consider trying to change the API
+ *
+ * Spring has already json parser {@link JsonMapper}, todo update code to use it, remove gson dependency
  */
+@Component
 public class OpenLibraryApi implements BookApi {
-
     //allows automatic following of redirects. Needed for the specific url used
     private final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
 
     /*
-      * used https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes for languages string
-      * as indicated in https://openlibrary.org/dev/docs/api/search to be used the ISO norm above,
-      * and https://openlibrary.org/search.json?q=the+lord+of+the+rings shows them being used
+     * used https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes for languages string
+     * as indicated in https://openlibrary.org/dev/docs/api/search to be used the ISO norm above,
+     * and https://openlibrary.org/search.json?q=the+lord+of+the+rings shows them being used
      */
 
     /**
      * @param lang three character string from ISO_639
      * @return Enum representing Language
      */
-    private final Book.Language isoIdToLanguage(String lang){
+    private Book.Language isoIdToLanguage(String lang){
         return switch (lang) {
             case "eng" -> Book.Language.English;
             case "por" -> Book.Language.Portuguese;
@@ -51,7 +53,7 @@ public class OpenLibraryApi implements BookApi {
         };
     }
 
-    public final Book getBook(String isbn) {
+    public final Book getBook(@NonNull String isbn) {
         //https://openlibrary.org/dev/docs/api/books
         String url = "https://openlibrary.org/isbn/%s.json".formatted(isbn);
 
@@ -105,3 +107,5 @@ public class OpenLibraryApi implements BookApi {
 
 
 }
+
+

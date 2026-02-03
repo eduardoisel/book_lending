@@ -1,6 +1,5 @@
 package backend.bookSharing.repository;
 
-import backend.bookSharing.DatabaseTest;
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.entities.Book;
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,30 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class BookRepositoryTest extends DatabaseTest {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    /*
-    Tests both creation and search at the same time unfortunately
-     */
+    @Autowired
+    public BookRepositoryTest(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
     @Test
     public void createAndSearchTest(){
-        Book b = TestData.databaseBooks[0];
+        Book b = TestData.duplicate(TestData.databaseBooks[0]);
 
         assertEquals(0, bookRepository.count());
-
         bookRepository.save(b);
-
         assertEquals(1, bookRepository.count());
 
     }
 
     @Test
     public void deletionTest(){
-        Book temporaryInsert = new Book("0123456789", null, "test", Book.Language.Portuguese);
+        Book temporaryInsert = TestData.duplicate(TestData.databaseBooks[0]);
 
         bookRepository.save(temporaryInsert);
-
         bookRepository.delete(temporaryInsert);
         assertEquals(0, bookRepository.count());
     }

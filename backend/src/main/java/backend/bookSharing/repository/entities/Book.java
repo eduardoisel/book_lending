@@ -24,7 +24,7 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor
 public class Book {
 
-    public static enum Language {
+    public enum Language {
         English,
         Portuguese,
         Spanish,

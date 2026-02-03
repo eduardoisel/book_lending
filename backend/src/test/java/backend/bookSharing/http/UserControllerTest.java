@@ -1,15 +1,7 @@
 package backend.bookSharing.http;
 
-import backend.bookSharing.ControllerTestBase;
-import backend.bookSharing.http.data.UserCreation;
-import org.junit.jupiter.api.Test;
-
 //import com.testcontainers.examples.dto.CreateUserDto;
 
-import io.restassured.http.ContentType;
-
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
 
 public class UserControllerTest extends ControllerTestBase {
 

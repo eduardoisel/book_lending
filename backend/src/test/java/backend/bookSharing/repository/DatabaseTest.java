@@ -1,7 +1,7 @@
-package backend.bookSharing;
+package backend.bookSharing.repository;
 
-import backend.bookSharing.repository.UserRepositoryTest;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Container;
@@ -9,10 +9,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 /**
- * Base class for tests that only use the database
- *
- * Todo / warning: each test can affect the other. change {@link UserRepositoryTest} to use the same user and only the
- * first will pass
+ * Base class for tests that only use the database, as {@link DataJpaTest} conflicts with {@link SpringBootTest}
  */
 @Testcontainers
 @DataJpaTest

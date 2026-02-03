@@ -14,8 +14,6 @@ plugins {
 
     id("io.freefair.lombok") version "9.2.0"
 
-    java
-//    `java-library`
 }
 
 
