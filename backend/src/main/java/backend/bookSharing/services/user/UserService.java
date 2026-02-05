@@ -1,7 +1,6 @@
 package backend.bookSharing.services.user;
 
 import backend.bookSharing.repository.entities.Book;
-import backend.bookSharing.repository.entities.Lend;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
@@ -12,7 +11,6 @@ import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import jakarta.annotation.Nullable;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;

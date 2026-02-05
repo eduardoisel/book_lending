@@ -1,16 +1,38 @@
 # About this project
 
-This project is for personal training of server backend technologies, focusing on 
-using a database with JPA access and spring.
+This project is for personal training of server backend technologies, focusing on using a database with 
+JPA with spring tools as much as possible.
 
-The provided service from this server is of an app where users can borrow physical books from each other temporarily.
-Anyone is free to announce to the server books they are willing to lend, which other users can request for a limited 
-time. Some capabilities to browse books are to be added.
+I have done my best to comment my code, so I believe it is a good example to see what spring can automate for other people
+starting out. That being said, I have not explained basic concepts such as dependency injection. If you do not understand
+why created classes are never instantiated explicitly on code, you should not look to this project yet. 
+[I advise reading the official documentation](https://docs.spring.io/spring-framework/reference/core.html).
+
+## TODO
 
 Admin user capabilities may also be added, allowing special operations like suspending/banning users, such as 
 harassment through any communication in the server or adding fake books. The damaging books or failing to return them
 to their owners after the time limit will also be added, even if in this person to person lending framework may not 
 allow any realistic way for these cases to be actually verified.
+
+Testing framework is still being developed, as there are kinks with test containers to be solved.
+
+Http capabilities are underdeveloped. Looking into adding cache and possibly using hateoas.
+
+A real implementation of this service would also use better tools to judge the proximity of users, as this is a service
+about physically lending books. Unless it just saves user input coordinates and judge distance by ignoring actual
+terrain such as oceans, a significant external service would be needed.
+
+Smaller things to solve on current code may be marked with todo text. 
+
+## Conversion to maven
+
+If you do not like gradle you will need to
+
+* Change the dependencies, see [here](https://docs.gradle.org/current/userguide/migrating_from_maven.html#migmvn:migrating_deps) to understand the relation
+* Find equivalent plugins for maven, [here are spring equivalents](https://docs.spring.io/spring-boot/maven-plugin/getting-started.html)
+* Activate usage of javadoc for API documentation, see more of this file
+* Substitute gradle automatic docker with maven equivalent or just use commands on file below
 
 ## Technologies used:
 Technologies used:
@@ -22,6 +44,10 @@ Technologies used:
 * Docker for database (latest PostgresSQL version)
 * [Test containers](https://testcontainers.com/)
 * [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring 
+
+Considered using [java faker](https://github.com/DiUS/java-faker/tree/master) for testing, due to its capabilities to
+generate random values for database insertion, but including it makes Intelij in my computer not recognize
+any gradle dependencies for reasons unknown.
 
 ### About spring docs
 

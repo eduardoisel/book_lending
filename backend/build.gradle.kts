@@ -43,7 +43,7 @@ sourceSets {
 
 //https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
 dependencies {
-    // automatic documentation
+    // automatic documentation (spring-docs)
     // https://springdoc.org/faq.html#_what_is_the_compatibility_matrix_of_springdoc_openapi_with_spring_boot
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
@@ -65,6 +65,13 @@ dependencies {
     // test replacing all autowired
     // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
     implementation("org.projectlombok:lombok")//:1.18.42
+
+    // extra json parser, attempt to replace it with spring default
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.13.2")
+
+
+    //spring boot dependencies below
 
     implementation("org.springframework.boot:spring-boot-starter-web")
 
@@ -91,7 +98,7 @@ dependencies {
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.1")
+    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
     // Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-junit-jupiter
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
 
@@ -106,15 +113,17 @@ dependencies {
 
     //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")   https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html#appendix.configuration-metadata.annotation-processor
 
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation("com.google.code.gson:gson:2.13.2")
-
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-data-jpa-test
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache-test
     testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
+
+
+    //breaks dependencies for unkown reasons
+    // Source: https://mvnrepository.com/artifact/com.github.javafaker/javafaker
+    //testImplementation("com.github.javafaker:javafaker:1.0.2")
 
 }
 

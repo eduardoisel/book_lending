@@ -89,14 +89,18 @@ public class TokenValidation {
 
 
     /**
-     *
-     * Quick check of token itself to see if it is a token
+     * Quick check if received user token itself to see if it is token format
      *
      * @param token the user given by token
-     * @return
+     * @return true if can be token
      */
     public Boolean canBeToken(String token) {
-        return Base64.getUrlDecoder().decode(token).length == tokenSizeInBytes;
+        try {
+            return Base64.getUrlDecoder().decode(token).length == tokenSizeInBytes;
+        } catch (IllegalArgumentException _){
+            return false;
+        }
+
     }
 
     /**
@@ -110,12 +114,6 @@ public class TokenValidation {
 
         Instant ttlExpireDate = token.getCreatedDate().toInstant().plus(tokenTtl);
         Instant ttlRollExpireDate = token.getLastUsed().toInstant().plus(tokenTtlRolling);
-
-        /*
-        boolean basicCheck = token.getCreatedDate().toInstant().isAfter(now);
-        boolean ttl = ttlExpireDate.isBefore(now);
-        boolean tokenTtlBool = ttlRollExpireDate.isBefore(now);
-        */
 
         return token.getCreatedDate().toInstant().isAfter(now)
                 || ttlExpireDate.isBefore(now)

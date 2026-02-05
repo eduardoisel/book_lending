@@ -2,6 +2,7 @@ package backend.bookSharing.services.book.api;
 
 import backend.bookSharing.repository.entities.Book;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public interface BookApi {
 
@@ -11,5 +12,6 @@ public interface BookApi {
      *
      * @return Book information from the API
      */
+    @Nullable
     Book getBook(@NonNull String isbn);
 }

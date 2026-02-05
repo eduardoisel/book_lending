@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
@@ -24,6 +25,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
                 "spring.jpa.hibernate.ddl-auto=create-drop",
         })
 @Import(MockUsage.class)
+@Transactional //rollback after each unit test
 abstract public class ServiceTestBase {
 
     @Container
@@ -42,25 +44,14 @@ abstract public class ServiceTestBase {
     @Autowired
     private TokenRepository tokenRepository;
 
-//    @Autowired
-//    public ServiceTestBase(RegionRepository regionRepository, BookRepository bookRepository, UserRepository userRepository, TokenRepository tokenRepository, TokenValidation tokenValidation) {
-//        this.regionRepository = regionRepository;
-//        this.bookRepository = bookRepository;
-//        this.userRepository = userRepository;
-//        this.tokenRepository = tokenRepository;
-//        this.tokenValidation = tokenValidation;
-//    }
-
     @BeforeEach
     public void insertData() {
 
-        bookRepository.saveAllAndFlush(Arrays.stream(TestData.databaseBooks).toList());
+        bookRepository.saveAllAndFlush(Arrays.stream(TestData.databaseBooks).map(TestData::duplicate).toList());
 
         regionRepository.saveAll(Arrays.stream(TestData.regions).toList());
 
-        userRepository.saveAllAndFlush(TestData.users);
-
-        tokenRepository.saveAllAndFlush(TestData.tokens);
+        userRepository.saveAllAndFlush(TestData.users.stream().map(TestData::duplicate).toList());
 
     }
 

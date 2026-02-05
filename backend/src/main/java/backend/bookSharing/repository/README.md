@@ -1,4 +1,4 @@
-# Hibernate mapping
+# JPA-Hibernate mapping
 
 ## One-to-many relations
 
@@ -14,6 +14,25 @@ to String, numbers or java dates directly. The exception here is the usage of po
 which requires more specialized annotations. Check [this site](https://www.baeldung.com/java-enums-jpa-postgresql)
 if you want to downgrade the spring version, and consequently the hibernate version. Otherwise, substitute the sql file
 to use a simple text for that field.
+
+## Test containers compatibility
+
+When using test containers, one does not have to use a table creation file as is done in [this project](../../../../resources).
+One still has to indicate directly that the database will generate random values. This works well in serial ids, but
+not on timestamp with default value of current timestamp. The most referenced I found for this was 
+[@Generated](https://docs.hibernate.org/orm/6.1/javadocs/org/hibernate/annotations/GenerationTime.html#INSERT).
+Other annotations seen so far (all from hibernate) were:
+ * CurrentTimestamp
+ * CreationTimestamp
+ * ColumnDefault
+ * DynamicInsert
+
+Attempting the usage of hibernate **@CreationTimestamp(source = SourceType.DB)** on real time code with dockerfile
+database, and updating Token table to not have default value **now()**, ensures timestamps are inserted (using logs, 
+using **insert into token (created_at, last_used_at, user_id, token_validation) values(localtimestamp, localtimestamp, ?, ?) returning created_at, last_used_at**).
+This leads me to believe testcontainers is simply incapable of recognizing the annotation.
+
+If the solution is not found, to change database to not use default timestamp values
 
 # JPA repositories
 

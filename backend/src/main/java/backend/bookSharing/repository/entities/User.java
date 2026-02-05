@@ -13,23 +13,36 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Entity()
 @Table(name = "App_User")
 @EqualsAndHashCode
 @NoArgsConstructor
+@ToString
 public class User {
+
+    /*
+     static final values cannot be used on  annotations, so ensure the values are the same
+     */
+    @Transient
+    public static final Integer saltSize = 2;
+    @Transient
+    public static final Integer maxEmailSize = 70;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true)
+    @Size(max = 70, message = "{validation.name.size.too_long}")
     private String email;
 
     /**
@@ -37,10 +50,12 @@ public class User {
      */
     @JsonIgnore
     @Column(length = 256, nullable = false)
+    @ToString.Exclude
     private String hash;
 
     @JsonIgnore
     @Column(length = 2, nullable = false)
+    @ToString.Exclude
     private String salt;
 
     @ManyToOne
@@ -49,10 +64,12 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) //note: mapped by string value is from owned class user reference name member
+    @ToString.Exclude
     private List<Owned> owned;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", orphanRemoval = true) //note: mapped by string value is from owned class user reference name member
+    @ToString.Exclude
     private List<Token> tokens;
 
     public User(Region region, String email, String hash, String salt) {
@@ -65,11 +82,6 @@ public class User {
     @JsonIgnore
     public PasswordValidationInfo getValidationInfo(){
         return new PasswordValidationInfo(hash, salt);
-    }
-
-    @Override
-    public String toString() {
-        return String.format("User[id='%d', email='%s']", id, email);
     }
 
 }

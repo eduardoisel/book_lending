@@ -5,15 +5,14 @@ import backend.bookSharing.services.ServiceTestBase;
 import backend.bookSharing.TestData;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.ContextConfiguration;
 
-@Transactional
-@Rollback(value = true)
+import static org.junit.jupiter.api.Assertions.*;
+
+@ContextConfiguration
 public class BookServiceTest extends ServiceTestBase {
 
     private final BookService service;
@@ -31,7 +30,6 @@ public class BookServiceTest extends ServiceTestBase {
         } catch (BookAdditionError e) {
             fail("Should succeed");
         }
-
 
     }
 
@@ -57,6 +55,5 @@ public class BookServiceTest extends ServiceTestBase {
         );
 
     }
-
 
 }

@@ -1,5 +1,6 @@
 package backend.bookSharing.services.user;
 
+import backend.bookSharing.RandomValuesGenerator;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,14 +67,10 @@ public class PasswordValidationTest {
     public void failureMissingSpecialChar() {
         String password = "abcDEFGHIJKL";
 
-        try {
-            passwordValidation.isSafePassword(password);
-            fail("Should have thrown exception");
-        } catch (PasswordValidation.NoSpecialCharException _) {
+        assertThrowsExactly(
+                PasswordValidation.NoSpecialCharException.class,
+                ()-> passwordValidation.isSafePassword(password));
 
-        } catch (Exception e) {
-            fail(e);
-        }
 
     }
 
@@ -81,16 +78,18 @@ public class PasswordValidationTest {
     public void fullWorkingPassword() {
         String password = "abcDEFGHIJKL_\"";
 
+        int  a = '_';
+        int b = '"';
         try {
             passwordValidation.isSafePassword(password);
         } catch (Exception e) {
-            fail("Threw exception, should have passed");
+            fail("Threw exception, should have passed", e);
         }
     }
 
     @Test
     public void encodingAndMatchingTest(){
-        String password = "test_password1";
+        String password = RandomValuesGenerator.password();
         String salt = passwordValidation.getSalt();
 
         String encodedPassword = passwordValidation.passwordEncoding(password, salt);

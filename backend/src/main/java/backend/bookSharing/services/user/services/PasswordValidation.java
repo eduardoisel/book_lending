@@ -1,10 +1,11 @@
 package backend.bookSharing.services.user.services;
 
+import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.utils.PasswordValidationInfo;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
+import java.util.regex.Pattern;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class PasswordValidation {
     }
 
     public String getSalt() {
-        byte[] salt = new byte[2]; // TODO database needs to be at least size of array. Search for possible automation
+        byte[] salt = new byte[User.saltSize];
         secureRandom.nextBytes(salt);
         return new String(salt, StandardCharsets.UTF_8);
     }
@@ -42,7 +43,7 @@ public class PasswordValidation {
      * Encodes password as a way to avoid saving raw passwords on server side.
      *
      * @param password raw password
-     * @param salt
+     * @param salt random salt
      * @return Hashed password
      */
     public String passwordEncoding(String password, String salt) {
@@ -94,7 +95,9 @@ public class PasswordValidation {
             throw new NoUpperCaseException();
         }
 
-        if (!password.matches(".*[!$%^&*()_+|~=`´{}:\";'\\\\<>?,./].*")){
+        Pattern specialCharCheck = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+
+        if (!specialCharCheck.matcher(password).find()){
             throw new NoSpecialCharException();
         }
 

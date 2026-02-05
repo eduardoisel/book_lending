@@ -5,10 +5,12 @@ import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.services.book.api.BookApi;
 import java.util.Arrays;
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
 public class MockBookApi implements BookApi {
 
     @Override
+    @Nullable
     public Book getBook(String isbn) {
 
         if (isbn == null) {
@@ -17,8 +19,15 @@ public class MockBookApi implements BookApi {
 
         if (isbn.length() == 13) {
             Optional<Book> b = Arrays.stream(TestData.allBooks)
-                    .filter(book -> book.getIsbnThirteen() != null) // avoid NullPointerException
-                    .filter(book -> book.getIsbnThirteen().equals(isbn)).findFirst();
+                    .filter(book -> {
+                        String isbn13 = book.getIsbnThirteen();
+
+                        if (isbn13 == null){
+                            return false;
+                        }
+
+                        return isbn13.equals(isbn);
+                    }).findFirst();
 
             if (b.isEmpty()){
                 throw new RuntimeException("Mock api has not found the book");
@@ -29,14 +38,15 @@ public class MockBookApi implements BookApi {
         }
 
         Optional<Book> b = Arrays.stream(TestData.allBooks)
-                .filter(book -> book.getIsbnTen() != null) // avoid NullPointerException
-                .filter(book -> book.getIsbnTen().equals(isbn)).findFirst();
+                .filter(book -> {
+                    String isbn10 = book.getIsbnTen();
+                    if (isbn10 == null){
+                        return false;
+                    }
+                    return book.getIsbnTen().equals(isbn);
+                }).findFirst();
 
-        if (b.isEmpty()){
-            throw new RuntimeException("Mock api has not found the book");
-        }
-
-        return b.get();
+        return b.map(TestData::duplicate).orElse(null);
 
     }
 }
