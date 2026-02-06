@@ -1,58 +1,52 @@
 package backend.bookSharing.http;
 
-import static io.restassured.RestAssured.given;
-
 import backend.bookSharing.TestData;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
-import org.springframework.transaction.annotation.Transactional;
-
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 public class BookControllerTest extends ControllerTestBase {
 
     @Test
-    public void addBookByIsbn10(){
+    public void addBookByIsbn10() throws Exception{
 
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/books/{isbn}", TestData.booksExclusiveFromApi[0].getIsbnTen())
-                .then()
-                .statusCode(201);
+        String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/books/{isbn}", isbn10)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
 
     @Test
-    public void addBookByIsbn13(){
+    public void addBookByIsbn13() throws Exception{
 
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/books/{isbn}", TestData.booksExclusiveFromApi[0].getIsbnTen())
-                .then()
-                .statusCode(201);
+        String isbn13 = TestData.booksExclusiveFromApi[0].getIsbnThirteen();
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/books/{isbn}", isbn13)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
 
     }
 
 
     @Test
-    public void addBookTwice(){
+    public void addBookTwice() throws Exception{
 
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/books/{isbn}", TestData.booksExclusiveFromApi[0].getIsbnTen())
-                .then()
-                .statusCode(201);
+        String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
 
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .post("/books/{isbn}", TestData.booksExclusiveFromApi[0].getIsbnTen())
-                .then()
-                .statusCode(400);
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/books/{isbn}", isbn10)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/books/{isbn}", isbn10)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
     }
 

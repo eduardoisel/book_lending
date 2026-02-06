@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestConfiguration(proxyBeanMethods = false)
+//@TestConfiguration(proxyBeanMethods = false)
 public class UserServiceTest extends ServiceTestBase {
 
     private final UserService userService;
@@ -30,7 +30,7 @@ public class UserServiceTest extends ServiceTestBase {
     public void successfulUserCreation() {
 
         try {
-            userService.createUser("", "Passw_1234");
+            userService.createUser(RandomValuesGenerator.email(), RandomValuesGenerator.password());
         } catch (Exception _) {
             fail("User creation should be successful");
         }
@@ -41,7 +41,7 @@ public class UserServiceTest extends ServiceTestBase {
     public void userCreationWithWeakPassword() {
 
         String validUniqueEmail = RandomValuesGenerator.email();
-        String invalidPassword = RandomValuesGenerator.password();
+        String invalidPassword = "weak";
 
         assertThrowsExactly(
                 UserCreationError.WeakPassword.class,

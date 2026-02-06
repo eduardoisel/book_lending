@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
         try {
             passwordValidation.isSafePassword(password);
         } catch (Exception e) {
-            throw new UserCreationError.WeakPassword(); //todo communicate more specific
+            throw new UserCreationError.WeakPassword(password); //todo communicate more specific
         }
 
         Optional<User> emailSearch = userRepo.findByEmail(email);

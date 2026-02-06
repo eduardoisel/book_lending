@@ -7,19 +7,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Timestamp;
-import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
-import org.hibernate.annotations.DialectOverride;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.SourceType;
-import org.hibernate.generator.EventType;
 
 /**
  * not necessary if we limit amount of sessions for an account to one. Then delete table and change values to user
@@ -43,17 +38,13 @@ public class Token {
     @ToString.Exclude
     private User user;
 
-    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)//
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     @CreationTimestamp(source = SourceType.DB)
-    //@ColumnDefault("now()")
-    //@Generated(event = EventType.INSERT)
     private Timestamp createdDate;
 
     @Setter
-    @Column(name = "last_used_at", nullable = false, insertable = false)//
+    @Column(name = "last_used_at", nullable = false, insertable = false)
     @CurrentTimestamp(source = SourceType.DB)
-    //@ColumnDefault("now()")
-    //@Generated(event = EventType.INSERT)
     private Timestamp lastUsed;
 
     /**

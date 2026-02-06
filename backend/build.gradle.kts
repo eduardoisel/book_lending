@@ -75,6 +75,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    // test including the dependency and running code first before continuing
     // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
     //implementation("org.springframework.hateoas:spring-hateoas")
 
@@ -102,13 +103,14 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-junit-jupiter
     testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
 
-
-    testImplementation("io.rest-assured:rest-assured:6.0.0") // NEW, requires version specification?
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") //for @Autoconfigure mockMvc
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-webmvc-test
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
 
     //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")   https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html#appendix.configuration-metadata.annotation-processor
@@ -131,6 +133,18 @@ dependencies {
 springBoot{
     buildInfo()
 }
+
+//from https://javadoc.io/doc/org.mockito/mockito-core/5.20.0/org.mockito/org/mockito/Mockito.html#0.3
+//advised from when running test
+//val mockitoAgent = configurations.create("mockitoAgent")
+//dependencies{
+//    testImplementation("org.mockito:mockito-core")
+//    mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
+//}
+//
+//tasks.test{
+//    jvmArgs!!.add("-javaagent:${mockitoAgent.asPath}")
+//}
 
 tasks.test {
     useJUnitPlatform()
