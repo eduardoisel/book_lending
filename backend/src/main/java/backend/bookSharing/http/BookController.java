@@ -3,6 +3,7 @@ package backend.bookSharing.http;
 import backend.bookSharing.http.data.LendCreation;
 import backend.bookSharing.http.data.RequestCreation;
 import backend.bookSharing.http.returns.ListedData;
+import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.BookService;
@@ -11,6 +12,7 @@ import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,7 +44,7 @@ public class BookController {
 
         } catch (BookOwnersSearchError error) {
 
-            return switch (error){
+            return switch (error) {
                 case BookOwnersSearchError.BookNotFound bookNotFound ->
                         ResponseEntity.status(400).body("Book does not exist");
             };
@@ -50,25 +54,24 @@ public class BookController {
     }
 
 
-    @PostMapping("/addBook/{isbn}")
+    @PostMapping("/{isbn}")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseBody
     public ResponseEntity<?> postBook(@PathVariable String isbn) {
 
         try {
-            service.addBookFromApi(isbn);
+            Book book = service.addBookFromApi(isbn);
 
-            return ResponseEntity.status(200).body("Book added");
-
-        } catch (BookAdditionError error) {
-
-            switch (error) {
-                case BookAdditionError.Isbn10InUse isbn10InUse -> {
-                    return ResponseEntity.status(400).body("Isbn 10 number already in use");
-                }
-
-                case BookAdditionError.Isbn13InUse isbn13InUse -> {
-                    return ResponseEntity.status(400).body("Isbn 13 number already in use");
-                }
-            }
+            return ResponseEntity.status(HttpStatus.CREATED).body(book);
+        } catch (BookAdditionError e) {
+            return switch (e) {
+                case BookAdditionError.Isbn10InUse isbn10InUse ->
+                        ResponseEntity.status(400).body(e.getClass().getSimpleName());
+                case BookAdditionError.Isbn13InUse isbn13InUse ->
+                        ResponseEntity.status(400).body(e.getClass().getSimpleName());
+                case BookAdditionError.BookNotFound bookNotFound ->
+                        ResponseEntity.status(400).body(e.getClass().getSimpleName());
+            };
 
         }
 

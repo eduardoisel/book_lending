@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,6 +43,7 @@ public class UserController {
      * @return on success status 200 and info in body
      */
     @GetMapping("owned/{userId}")
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> booksOwned(@PathVariable Integer userId, @RequestParam(required = false, defaultValue = "0") Integer page) {
 
         try {
@@ -89,6 +92,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Repeat email")
     })
     @PostMapping("createUser")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createUser(@RequestBody UserCreation body) {
         try {
             Integer result = service.createUser(body.email, body.password);
@@ -109,6 +113,7 @@ public class UserController {
     }
 
     @PostMapping("login")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<?> login(@RequestBody UserCreation body) {
         try {
             String result = service.login(body.email, body.password);
@@ -126,11 +131,9 @@ public class UserController {
 
     }
 
-    /*
-    todo change parameter input
-     */
     @DeleteMapping("logout")
-    public ResponseEntity<?> logout(@RequestBody String token) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<?> logout(@RequestHeader(value = "Authorization", required = true) String token) {
         try {
             service.logout(token);
 
@@ -148,6 +151,7 @@ public class UserController {
     }
 
     @PostMapping("bookOwned/{isbn}")
+    @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<?> addBookOwned(@PathVariable String isbn, @RequestHeader(value = "Authorization", required = true) String token) {
 
         try {

@@ -21,6 +21,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * TODO see {@link org.springframework.security.core.userdetails.User} and related classes
+ */
 @Getter
 @Entity()
 @Table(name = "App_User")
@@ -29,20 +32,17 @@ import lombok.ToString;
 @ToString
 public class User {
 
-    /*
-     static final values cannot be used on  annotations, so ensure the values are the same
-     */
     @Transient
-    public static final Integer saltSize = 2;
+    public static final int saltSize = 2;
     @Transient
-    public static final Integer maxEmailSize = 70;
+    public static final int maxEmailSize = 70;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true)
-    @Size(max = 70, message = "{validation.name.size.too_long}")
+    @Size(max = maxEmailSize, message = "{validation.name.size.too_long}")
     private String email;
 
     /**
@@ -54,7 +54,7 @@ public class User {
     private String hash;
 
     @JsonIgnore
-    @Column(length = 2, nullable = false)
+    @Column(length = saltSize, nullable = false)
     @ToString.Exclude
     private String salt;
 

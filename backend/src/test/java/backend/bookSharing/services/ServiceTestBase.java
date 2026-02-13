@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
-@SpringBootTest
+@SpringBootTest //conflicts with @DataJpaTest due to its @BootstrapWith
 @Testcontainers
 @TestPropertySource(
         properties = {
@@ -26,7 +26,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
         })
 @Import(MockUsage.class)
 @Transactional //rollback after each unit test
-abstract public class ServiceTestBase {
+public class ServiceTestBase {
 
     @Container
     @ServiceConnection

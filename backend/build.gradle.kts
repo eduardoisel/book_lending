@@ -148,7 +148,28 @@ springBoot{
 
 tasks.test {
     useJUnitPlatform()
+//    beforeTest(Closure.IDENTITY);
+//
+//    val closure: Closure<Any> = { println("")}
+//
+//
+//    testLogging{
+//        events("failed")
+//        exceptionFormat = TestExceptionFormat.FULL
+//
+//    }
 }
+
+//class UnitTest: Test(){
+//    override fun getDryRun(): Property<Boolean> {
+//        TODO("Not yet implemented")
+//    }
+//
+//}
+//
+//tasks.register("springIndependentTests", fun Test.(){
+//
+//})
 
 
 /*
