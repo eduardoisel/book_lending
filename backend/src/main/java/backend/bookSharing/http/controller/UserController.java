@@ -1,4 +1,4 @@
-package backend.bookSharing.http;
+package backend.bookSharing.http.controller;
 
 import backend.bookSharing.http.data.UserCreation;
 import backend.bookSharing.http.returns.ListedData;

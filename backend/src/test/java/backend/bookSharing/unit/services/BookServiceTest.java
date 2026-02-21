@@ -9,14 +9,11 @@ import backend.bookSharing.repository.RequestRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
-import backend.bookSharing.repository.entities.OwnedId;
 import backend.bookSharing.repository.entities.Request;
-import backend.bookSharing.repository.entities.RequestId;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.BookServiceImpl;
 import backend.bookSharing.services.book.api.BookApi;
 import backend.bookSharing.services.book.failures.BookAdditionError;
-import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.user.UserService;
 import java.util.List;
@@ -29,7 +26,6 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 public class BookServiceTest {
 
     @MockitoBean
-    private final UserService userService = Mockito.mock(UserService.class);
+    private UserService userService;
 
     @Autowired
     private OwnedRepository ownedRepo;
@@ -57,7 +53,7 @@ public class BookServiceTest {
     private UserRepository userRepo;
 
     @Autowired
-    private RequestRepository requestRepo;// = Mockito.mock(RequestRepository.class);
+    private RequestRepository requestRepo;
 
     @Autowired
     private LendRepository lendRepo;// = Mockito.mock(LendRepository.class);
@@ -66,7 +62,7 @@ public class BookServiceTest {
     private BookApi bookApi;// = Mockito.mock(BookApi.class);
 
     @InjectMocks
-    private BookServiceImpl service;// = new BookServiceImpl(userService, ownedRepo, bookRepo, userRepo, requestRepo, lendRepo, bookApi);
+    private BookServiceImpl service;
 
     @Test
     public void addBookFromApiTest() throws BookAdditionError {

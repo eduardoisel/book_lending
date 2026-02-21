@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,7 +19,10 @@ import org.springframework.transaction.annotation.AnnotationTransactionAttribute
 
 @SpringBootApplication
 @EnableJpaRepositories()
+@EnableCaching
 public class Main {
+
+
 
     private static class EmptySecurityFilterChain implements SecurityFilterChain{
 

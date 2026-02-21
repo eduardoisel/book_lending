@@ -27,6 +27,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.querydsl.QSort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -69,7 +70,6 @@ public class UserServiceImpl implements UserService {
         if (!ownedRepo.existsById(new OwnedId(ownerId, bookId))) {
             throw new OwnershipRequestSearchError.OwnershipDoesNotExist();
         }
-
 
         return requestRepo.findByOwnedId(new OwnedId(ownerId, bookId), PageRequest.of(
                 pageNumber,

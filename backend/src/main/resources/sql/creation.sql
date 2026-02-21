@@ -37,8 +37,8 @@ CREATE type LANGUAGE as ENUM(
 --- either isbn 10 or isbn_13 may be required to not be null
 CREATE TABLE Book(
     id serial primary key NOT NULL,
-    isbn_10 varchar(10) CHECK(isbn_10 ~ '^[0-9]*$'),
-    isbn_13 varchar(13) check(isbn_13 ~ '^[0-9]*$') ,
+    isbn_10 varchar(10) CHECK(isbn_10 ~ '^[0-9]*[0-9X]$'),
+    isbn_13 varchar(13) check(isbn_13 ~ '^[0-9]*[0-9X]$') ,
     title varchar(100) NOT NULL,
     lang LANGUAGE NOT NULL
 );

@@ -42,6 +42,11 @@ public class BookServiceImpl implements BookService {
 
     private final BookApi bookApi;
 
+    @Override
+    public Page<Book> getBooks(Integer pageNumber) {
+        return bookRepo.findAll(PageRequest.of(pageNumber, 20));
+    }
+
     public Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError {
 
         Book book = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);

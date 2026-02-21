@@ -4,6 +4,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+#used to specify java 22. Running with 25 fails (think changing gradle to 9.3 solves it)
+gradle.properties
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

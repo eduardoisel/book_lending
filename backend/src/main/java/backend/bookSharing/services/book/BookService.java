@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface BookService {
 
     @Transactional
+    Page<Book> getBooks(Integer pageNumber);
+
+    @Transactional
     Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)

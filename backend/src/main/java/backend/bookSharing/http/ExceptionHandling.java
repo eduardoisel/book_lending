@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class ExceptionConfig {
+public class ExceptionHandling {
 
     public record ExceptionDto(String problem){}
 
