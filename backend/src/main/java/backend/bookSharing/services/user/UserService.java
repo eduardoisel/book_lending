@@ -59,11 +59,11 @@ public interface UserService {
     /**
      *
      * @param isbn isbn 10 or 13 from book
-     * @param token authentication token of {@link User} doing action
+     * @param user authenticated {@link User} doing action
      * @return created {@link Owned} instance. Can be changed to void
      */
     @Transactional
-    Owned addOwner(String isbn, String token) throws OwnerShipAdditionError;
+    Owned addOwner(String isbn, User user) throws OwnerShipAdditionError;
 
 
 }

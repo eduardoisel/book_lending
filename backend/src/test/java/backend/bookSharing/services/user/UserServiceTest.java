@@ -123,7 +123,7 @@ public class UserServiceTest extends ServiceTestBase {
 
         String token = userService.login(owner.email(), owner.clearPassword());
 
-        userService.addOwner(book.getIsbnTen(), token);
+        userService.addOwner(book.getIsbnTen(), TestData.users.getFirst());
 
 
     }

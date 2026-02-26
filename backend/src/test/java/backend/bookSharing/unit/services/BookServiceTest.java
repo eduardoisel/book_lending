@@ -188,7 +188,7 @@ public class BookServiceTest {
         when(userService.checkAuthentication(anyString())).thenReturn(lender);
 
         try {
-            service.lendBook(book.getIsbnTen(), receiver.getEmail(), "token");
+            service.lendBook(book.getIsbnTen(), receiver.getEmail(), lender);
         } catch (Exception e) {
             fail("Should not fail", e);
         }

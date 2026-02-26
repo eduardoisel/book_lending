@@ -1,6 +1,7 @@
 # Organization
 
 ```
+└── 📁authentication
 └── 📁configuration
 └── 📁controller
 └── 📁data
@@ -11,7 +12,8 @@ The folders data and returns contain data classes received and returned through 
 
 The controller folder contains the app's spring controllers.
 
-For now configuration folder contains [cache configuration](./configuration/CacheConfiguration.java)
+The authentication folder contains an authentication filter and an authentication entry point for bearer authentication.
+These are used on SecurityConfiguration, the class that defines which API endpoints need to be authenticated.
 
 # Caching
 

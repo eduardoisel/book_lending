@@ -14,18 +14,17 @@ import java.time.Instant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
 @Entity
 @NoArgsConstructor
+@ToString(doNotUseGetters = true)
 public class Lend {
 
     @EmbeddedId
-    public OwnedId id;
-
-    @Column(nullable = false, name = "requester_user_id")
-    private Integer requesterId;
+    public LendId id;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @MapsId("lent") // from LendId
@@ -46,15 +45,10 @@ public class Lend {
      */
     public Lend(Request request){
         //this.id = new LendId(request.getRequestId().getRequested().getUserId(), request.getRequestId().getRequested().getBookId());
-        this.id = request.getRequestId().getRequested();
+        this.id = new LendId(request.getRequestId().getRequested(), request.getRequestId().getUserId());
         this.lent= request.getOwned();
         this.returnLimit = Timestamp.from(Instant.now().plus(Duration.ofDays(request.getDuration())));
-        this.requesterId = request.getRequestId().getUserId();
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Lend[Owned='%s', date='%s', returnLimit='%s', requesterId='%d']", super.toString(), date, returnLimit.toString(), requesterId);
+        //this.requesterId = request.getRequestId().getUserId();
     }
 
 }

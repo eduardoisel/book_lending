@@ -43,7 +43,7 @@ public class Token {
     private Timestamp createdDate;
 
     @Setter
-    @Column(name = "last_used_at", nullable = false, insertable = false)
+    @Column(name = "last_used_at", nullable = false, insertable = false, updatable = true)
     @CurrentTimestamp(source = SourceType.DB)
     private Timestamp lastUsed;
 

@@ -12,18 +12,22 @@ import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.hibernate.internal.SessionImpl;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,7 +58,7 @@ public class BookController {
     }
 
     @GetMapping("/owners/{isbn}")
-    @Cacheable("bookOwners")
+    //@Cacheable("bookOwners")
     public ResponseEntity<?> getBookOwners(@PathVariable String isbn, @RequestParam(required = false, defaultValue = "0") Integer page) {
 
         try {
@@ -75,9 +79,7 @@ public class BookController {
 
     }
 
-
     @PostMapping("/{isbn}")
-    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<?> postBook(@PathVariable String isbn) {
 
         try {
@@ -99,13 +101,20 @@ public class BookController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<?> requestBook(@RequestBody RequestCreation body, @RequestHeader(value = "Authorization", required = true) String token) {
+    public ResponseEntity<?> requestBook(@RequestBody RequestCreation body, User authenticatedUser) {
 //        if (body.isbn() == null){
 //            System.out.println("Should be impossible");
 //        }
 
+
+        //AnonymousAuthenticationToken a;
+
+        //SecurityContextImpl s;
+
         try {
-            service.requestBook(body.isbn(), body.ownerEmail(), token, body.timeInDays());
+            service.requestBook(body.isbn(), body.ownerEmail(),
+                    authenticatedUser,
+                    body.timeInDays());
 
             return ResponseEntity.status(HttpStatus.OK).body("Request done");
 
@@ -118,8 +127,6 @@ public class BookController {
                         ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Owner cannot request its book");
                 case BookRequestError.OwnershipNotFound ownershipNotFound ->
                         ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Book %s is not owned by user %s", body.isbn(), body.ownerEmail()));
-                case BookRequestError.UserAuthenticationInvalid userAuthenticationInvalid ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authentication invalid");
             };
         }
 
@@ -127,10 +134,10 @@ public class BookController {
 
 
     @PostMapping("/lend")
-    public ResponseEntity<?> lendBook(@RequestBody LendCreation body, @RequestHeader(value = "Authorization", required = true) String token) {
+    public ResponseEntity<?> lendBook(@RequestBody LendCreation body, User user) {
 
         try {
-            service.lendBook(body.isbn(), body.receiverEmail(), token);
+            service.lendBook(body.isbn(), body.receiverEmail(), user);
 
             return ResponseEntity.status(HttpStatus.OK).body("Book successfully lent");
 
@@ -138,11 +145,9 @@ public class BookController {
 
             return switch (error) {
                 case BookLendError.AlreadyLent alreadyLent ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CAnnot lend already lent book");
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot lend already lent book");
                 case BookLendError.RequestNotFound requestNotFound ->
                         ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot lend to someone who did not request book");
-                case BookLendError.UserAuthenticationInvalid userAuthenticationInvalid ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Authentication invalid");
             };
         }
 

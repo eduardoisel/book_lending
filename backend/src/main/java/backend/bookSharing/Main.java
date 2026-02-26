@@ -1,54 +1,41 @@
 package backend.bookSharing;
 
-import backend.bookSharing.repository.BookRepository;
-import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.services.user.services.TokenValidation;
-import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 import java.time.Duration;
-import java.util.List;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 
+/*
+  Does not use any annotation from spring or spring docs, so i am lead to believe it can be replaced
+  with other annotations or application properties to set on the yaml
+ */
+@SecurityScheme(
+        name = "Bearer",
+        type = SecuritySchemeType.HTTP,
+        scheme = "Bearer")
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Book lending",
+                contact = @Contact(
+                        name = "Eduardo Tavares",
+                        email = "eduardodinis3@gmail.com"
+                )
+        ),
+        servers = @Server(url = "http://localhost:8080"), security = @SecurityRequirement(name = "Bearer")
+)
 @SpringBootApplication
 @EnableJpaRepositories()
-@EnableCaching
 public class Main {
-
-
-
-    private static class EmptySecurityFilterChain implements SecurityFilterChain{
-
-        @Override
-        public boolean matches(HttpServletRequest request) {
-            return false;
-        }
-
-        @Override
-        public List<Filter> getFilters() {
-            return List.of();
-        }
-    }
-
-
-    /*
-    https://docs.spring.io/spring-boot/reference/web/spring-security.html
-    Not placing this will require authentication by html form
-    Substitutes the default by one that does not have any security.
-    Todo review the link when working fully on http side
-     */
-    @Bean
-    public SecurityFilterChain securityFilterChainBean(){
-        return new EmptySecurityFilterChain();
-
-    }
 
     @Bean
     public TokenValidation.TokenValidTime tokenValidationBean(){

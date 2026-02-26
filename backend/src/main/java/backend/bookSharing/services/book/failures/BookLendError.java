@@ -1,10 +1,8 @@
 package backend.bookSharing.services.book.failures;
 
-public abstract sealed class BookLendError extends Exception permits BookLendError.UserAuthenticationInvalid, BookLendError.RequestNotFound, BookLendError.AlreadyLent{
+public abstract sealed class BookLendError extends Exception permits BookLendError.RequestNotFound, BookLendError.AlreadyLent{
 
     private BookLendError(){}
-
-    public static final class UserAuthenticationInvalid extends BookLendError{}
 
     public static final class RequestNotFound extends  BookLendError{}
 

@@ -26,16 +26,21 @@ public interface BookService {
     Book addBookFromApi(String isbn) throws BookAdditionError;
 
     /**
-     *
      * @param isbn isbn of requested {@link Book}
      * @param ownerEmail email of owner, a {@link User}
-     * @param token auth token of {@link User} doing request
+     * @param user authenticated {@link User} doing request
      * @param timeInDays amount of days requested
      */
     @Transactional
-    void requestBook(String isbn, String ownerEmail, String token, Integer timeInDays) throws BookRequestError;
+    void requestBook(String isbn, String ownerEmail, User user, Integer timeInDays) throws BookRequestError;
 
+    /**
+     * @param isbn isbn of requested {@link Book}
+     * @param receiverEmail email of receiver
+     * @param user authenticated {@link  User}
+     * @throws BookLendError
+     */
     @Transactional
-    void lendBook(String isbn, String receiverEmail, String token) throws BookLendError;
+    void lendBook(String isbn, String receiverEmail, User user) throws BookLendError;
 
 }

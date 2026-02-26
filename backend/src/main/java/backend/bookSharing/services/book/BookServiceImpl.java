@@ -7,6 +7,7 @@ import backend.bookSharing.repository.RequestRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Lend;
+import backend.bookSharing.repository.entities.LendId;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.OwnedId;
 import backend.bookSharing.repository.entities.Request;
@@ -89,18 +90,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void requestBook(String isbn, String ownerEmail, String token, Integer timeInDays) throws BookRequestError {
-
-        User requester = userService.checkAuthentication(token);
-
-        if (requester == null) {
-            throw new BookRequestError.UserAuthenticationInvalid();
-        }
+    public void requestBook(String isbn, String ownerEmail, User user, Integer timeInDays) throws BookRequestError {
 
         User owner = userRepo.findByEmail(ownerEmail)
                 .orElseThrow((Supplier<BookRequestError>) BookRequestError.OwnershipNotFound::new);
 
-        if (requester.getId().equals(owner.getId())) {
+        if (user.getId().equals(owner.getId())) {
             throw new BookRequestError.CannotRequestFromSelf();
         }
 
@@ -115,20 +110,15 @@ public class BookServiceImpl implements BookService {
         Owned owned = ownedRepo.findById(ownedIdCheck)
                 .orElseThrow((Supplier<BookRequestError>) BookRequestError.OwnershipNotFound::new);
 
-        if (requestRepo.findById(new RequestId(ownedIdCheck, requester.getId())).isPresent()) {
+        if (requestRepo.findById(new RequestId(ownedIdCheck, user.getId())).isPresent()) {
             throw new BookRequestError.AlreadyRequested();
         }
 
-        requestRepo.save(new Request(owned, requester.getId(), timeInDays));
+        requestRepo.save(new Request(owned, user.getId(), timeInDays));
     }
 
     @Override
-    public void lendBook(String isbn, String receiverEmail, String token) throws BookLendError {
-        User lender = userService.checkAuthentication(token);
-
-        if (lender == null) {
-            throw new BookLendError.UserAuthenticationInvalid();
-        }
+    public void lendBook(String isbn, String receiverEmail, User user) throws BookLendError {
 
         User requester = userRepo.findByEmail(receiverEmail)
                 .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
@@ -139,7 +129,7 @@ public class BookServiceImpl implements BookService {
             throw new BookLendError.RequestNotFound();
         }
 
-        OwnedId ownedIdCheck = new OwnedId(lender.getId(), book.getId());
+        OwnedId ownedIdCheck = new OwnedId(user.getId(), book.getId());
 
         //use if error message change to specify where went wrong (i.e. no book, no of ownership of book instead of no request)
         ownedRepo.findById(ownedIdCheck).orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
@@ -147,11 +137,13 @@ public class BookServiceImpl implements BookService {
         Request request = requestRepo.findById(new RequestId(ownedIdCheck, requester.getId()))
                 .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
-        if (lendRepo.existsById(ownedIdCheck)) {
+        if (lendRepo.existsById(new LendId(ownedIdCheck, requester.getId()))) {
             throw new BookLendError.AlreadyLent();
         }
 
-        lendRepo.save(new Lend(request)); //mark book as lent
+        Lend lend = new Lend(request);
+
+        lendRepo.save(lend); //mark book as lent
 
         requestRepo.delete(request); //remove from request list
 

@@ -62,25 +62,13 @@ CREATE TABLE Request(
 
 ---Lend table: to allow for multiple lends of book, would require server to ensure no overlaps on the lend dates. Add requester_user_id as part of primary key
 ---plus ways to warn every user if return on book was delayed
+--- primary key cannot be the same due to hibernate roadblocks. Starting to get convinced Hibernate is bugged in some way
 CREATE TABLE Lend(
     user_id integer NOT NULL,
     book_id integer NOT NULL,
     foreign key (user_id, book_id) references Owned(user_id, book_id),
-    primary key(user_id, book_id),
     requester_user_id integer references App_User(id) NOT NULL,
+    primary key(user_id, book_id, requester_user_id),
     date timestamp NOT NULL DEFAULT now(), --- check others than timestamp
     return_limit timestamp NOT NULL --- check others than timestamp
 );
-
-
----version with same primary key name as owned to use jakarta Inheritance.
----not used since saving lend attempts to save owned at the same time, causing exception due to conflicting PK
----     CREATE TABLE lend(
----     	user_id integer NOT NULL,
----         book_id integer NOT NULL,
----         primary key (user_id, book_id),
----         foreign key (user_id, book_id) references Owned(user_id, book_id),
----         requester_user_id integer references app_user(id) NOT NULL,
----         date timestamp NOT NULL DEFAULT now(),
----         return_limit timestamp NOT NULL
----     );
