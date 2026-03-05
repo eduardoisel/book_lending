@@ -43,11 +43,13 @@ Technologies used:
 * JUnit 5
 * Docker for database (latest PostgresSQL version)
 * [Test containers](https://testcontainers.com/)
-* [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring 
+* [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring. Check [the limitations of its current setting](#Spring-docs-limitations) before using it
 
 Considered using [java faker](https://github.com/DiUS/java-faker/tree/master) for testing, due to its capabilities to
 generate random values for database insertion, but including it makes Intelij in my computer not recognize
 any gradle dependencies for reasons unknown.
+
+
 
 ### About spring docs
 
@@ -55,9 +57,25 @@ Access on browser the base url for the server used in the code plus the value fo
 [spring properties file](./src/main/resources/application.yaml). This will give you a page with every available endpoint
 of your API. If this file is up to date, this project should use http://localhost:8080/swagger-ui.html by default.
 
-https://deepwiki.com/springdoc/springdoc-openapi/8.3-javadoc-integration
+#### Spring docs limitations
+
+At least as it is configured right now, endpoint parameters are based on the parameters the corresponding method uses,
+along with the option to use authentication (set to use Bearer authentication), which will always appear regardless of
+it being necessary. This leads to 2 problems, both related to the parameters each endpoint will need. 
+
+The first issue being spring http is set to use a custom argument resolver for user information. 
+This means on places where the user needs to be authenticated, spring is set to be able to grab the information from the
+authentication, automatically allowing Controller methods to use the user information as its parameter. Spring docs
+will say that setting that information is required, but this is not true, as the server will completely ignore that info
+and retrieve it from the authentication.
+
+The second is related to http caching. As explained [on the http md](./src/main/java/backend/bookSharing/http/README.md),
+http get request can use the header "If-None-Match", receiving a not modified status response if the value is valid.
+Again, spring docs will not tell you this since it is done by a filter, instead of the controller methods.
 
 ### Javadoc
+
+//https://deepwiki.com/springdoc/springdoc-openapi/8.3-javadoc-integration
 
 Gradle was set up so the javadoc documentation of the code is used. This project did it with uses gradle, but 
 documentation shows example for [maven](https://springdoc.org/#javadoc-support). Javadoc may not cover well all

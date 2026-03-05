@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 @RestController
 @RequestMapping("/books")
@@ -37,8 +39,11 @@ public class BookController {
 
     private final BookService service;
 
+    //private WebContentGenerator a;
+
     /**
      * General list book search by segments
+     *
      * @param page optional parameter (defaulted to 0) to indicate the page
      * @return list of books
      */
@@ -46,15 +51,14 @@ public class BookController {
     @Cacheable(
             value = "getBooks",
             unless = "#result.getBody().hasNextPage()==false")//no cache since list may increase or bool change
-    public ResponseEntity<?> getBooks(@RequestParam(required = false, defaultValue = "0") Integer page){
+    public ResponseEntity<?> getBooks(@RequestParam(required = false, defaultValue = "0") Integer page) {
 
         Page<Book> books = service.getBooks(page);
 
         ListedData body = new ListedData(books.toList().toArray(), books.hasNext(), books.hasPrevious());
 
-        val ret = ResponseEntity.status(HttpStatus.OK).body(body);
+        return ResponseEntity.ok().body(body);
 
-        return ret;
     }
 
     @GetMapping("/owners/{isbn}")
@@ -84,6 +88,7 @@ public class BookController {
 
         try {
             Book book = service.addBookFromApi(isbn);
+            ShallowEtagHeaderFilter a ;
 
             return ResponseEntity.status(HttpStatus.CREATED).body(book);
         } catch (BookAdditionError e) {

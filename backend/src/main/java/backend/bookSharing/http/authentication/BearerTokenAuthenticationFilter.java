@@ -53,7 +53,7 @@ public class BearerTokenAuthenticationFilter extends OncePerRequestFilter {
         User user = service.checkAuthentication(token);
 
         if (user == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token is not in use on the database");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token not found on database");
             return;
         }
 

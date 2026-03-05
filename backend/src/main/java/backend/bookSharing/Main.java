@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import java.time.Duration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 /*
   Does not use any annotation from spring or spring docs, so i am lead to believe it can be replaced
@@ -40,6 +42,18 @@ public class Main {
     @Bean
     public TokenValidation.TokenValidTime tokenValidationBean(){
         return new TokenValidation.TokenValidTime(Duration.ofHours(10), Duration.ofMinutes(30));
+    }
+
+    /*
+    From https://www.baeldung.com/etags-for-rest-with-spring
+    TODO find a better place to put the bean
+     */
+    @Bean
+    public FilterRegistrationBean<?> shallowEtagHeaderFilter() {
+
+        FilterRegistrationBean<?> filterRegistrationBean = new FilterRegistrationBean<>(new ShallowEtagHeaderFilter());
+        filterRegistrationBean.addUrlPatterns("/*"); //limited to http get by filter
+        return filterRegistrationBean;
     }
 
     public static void main(String[] args) {

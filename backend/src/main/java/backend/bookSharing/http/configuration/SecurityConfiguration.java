@@ -2,12 +2,7 @@ package backend.bookSharing.http.configuration;
 
 import backend.bookSharing.http.authentication.BearerTokenAuthenticationEntryPoint;
 import backend.bookSharing.http.authentication.BearerTokenAuthenticationFilter;
-import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,15 +11,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 @Configuration
@@ -33,15 +23,9 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
 @AllArgsConstructor
 public class SecurityConfiguration {
 
-    //private BasicAuthenticationFilter;
+    private final BearerTokenAuthenticationFilter authenticationFilter;
 
-    //private DefaultHandlerExceptionResolver a;
-
-    //private MissingRequestHeaderException a;
-
-    private BearerTokenAuthenticationFilter authenticationFilter;
-
-    private BearerTokenAuthenticationEntryPoint authenticationEntryPoint;
+    private final BearerTokenAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,9 +41,7 @@ public class SecurityConfiguration {
 
                 })
                 .exceptionHandling(handling -> handling.authenticationEntryPoint(authenticationEntryPoint))
-                .sessionManagement(management -> {
-                    management.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-                });
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 //                .logout(logout -> logout
 //                        .logoutSuccessUrl("userAuth/logout")
@@ -67,55 +49,15 @@ public class SecurityConfiguration {
 //                            response.setStatus(HttpServletResponse.SC_OK);
 //
 //                        }));
-//
+
 //        http.formLogin(httpSecurityFormLoginConfigurer ->
-//                httpSecurityFormLoginConfigurer.usernameParameter("email").loginPage("/userAuth/login")
+//                httpSecurityFormLoginConfigurer.usernameParameter("email").loginPage("/userAuthentication/login")
 //        );
 
-        http.addFilterBefore(authenticationFilter,
-                UsernamePasswordAuthenticationFilter.class);
+        //Avoid filterOrderException
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
-//    @Bean
-//    public BearerTokenAuthenticationFilter authenticationFilter(){
-//        return new BearerTokenAuthenticationFilter(authenticationManager);
-//    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new BearerTokenAuthenticationEntryPoint();
-    }
-
-    /*
-    private static class EmptySecurityFilterChain implements SecurityFilterChain {
-
-        @Override
-        public boolean matches(HttpServletRequest request) {
-            return false;
-        }
-
-        @Override
-        public List<Filter> getFilters() {
-            return List.of();
-        }
-    }
-
-
-
-//    https://docs.spring.io/spring-boot/reference/web/spring-security.html
-//    Not placing this will require authentication by html form
-//    Substitutes the default by one that does not have any security.
-//    Todo review the link when working fully on http side
-//
-    @Bean
-    public SecurityFilterChain securityFilterChainBean() {
-        return new EmptySecurityFilterChain();
-
-    }
-    */
-
 
 }
