@@ -25,6 +25,11 @@ public class BookServiceTest extends ServiceTestBase {
     }
 
     @Test
+    public void certainFailure(){
+        fail();
+    }
+
+    @Test
     public void addBookFromApiTest() {
 
         try {

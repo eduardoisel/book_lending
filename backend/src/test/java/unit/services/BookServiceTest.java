@@ -1,4 +1,4 @@
-package backend.bookSharing.unit.services;
+package services;
 
 import backend.bookSharing.RandomValuesGenerator;
 import backend.bookSharing.TestData;
@@ -8,6 +8,7 @@ import backend.bookSharing.repository.OwnedRepository;
 import backend.bookSharing.repository.RequestRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.LendId;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
@@ -183,7 +184,7 @@ public class BookServiceTest {
         when(requestRepo.findById(any())) //new RequestId(owned.getId(), receiver.getId()) needs to be any?
                 .thenReturn(Optional.of(new Request(owned, receiver.getId(), 5)));
 
-        when(lendRepo.existsById(owned.getId())).thenReturn(false);
+        when(lendRepo.existsById(new LendId(owned.getId(), receiver.getId()))).thenReturn(false);
 
         when(userService.checkAuthentication(anyString())).thenReturn(lender);
 

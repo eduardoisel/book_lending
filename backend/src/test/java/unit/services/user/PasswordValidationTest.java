@@ -1,4 +1,4 @@
-package backend.bookSharing.services.user;
+package services.user;
 
 import backend.bookSharing.RandomValuesGenerator;
 import backend.bookSharing.services.user.services.PasswordValidation;
@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PasswordValidationTest {
-
-    //import org.junit.Test;
 
     @Autowired
     PasswordValidation passwordValidation = new PasswordValidation();

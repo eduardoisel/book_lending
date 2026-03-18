@@ -11,7 +11,6 @@ import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 
 import static org.junit.jupiter.api.Assertions.*;
 

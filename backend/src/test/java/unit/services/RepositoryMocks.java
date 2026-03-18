@@ -1,4 +1,4 @@
-package backend.bookSharing.unit.services;
+package services;
 
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.LendRepository;

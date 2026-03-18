@@ -6,16 +6,12 @@ plugins {
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
 
-    //id("com.gorylenko.gradle-git-properties") version "2.5.4" // https://docs.spring.io/spring-boot/how-to/build.html#howto.build.generate-git-info
-    checkstyle
-
     //not for this gradle, only groovy?
     //id ("nebula.lint") version "17.8.0" // https://www.javacodegeeks.com/intro-to-gradle-lint-plugin.html
 
     id("io.freefair.lombok") version "9.2.0"
 
 }
-
 
 java {
     toolchain {
@@ -26,19 +22,29 @@ java {
 group = "backend.bookSharing"
 version = "1.0-SNAPSHOT"
 
-val list: LinkedList<String> = LinkedList<String>()
-list.add("src/main/resources") //is default
-
 repositories {
     mavenCentral()
 }
 
 sourceSets {
-    main {
-        resources {
-            setSrcDirs(list)
-        }
+    create("integrationTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+
+        val integrationDirs: LinkedList<String> = LinkedList<String>()
+        integrationDirs.add("src/test/java/integration")
+        integrationDirs.add("src/test/java/commons")
+        java.setSrcDirs(integrationDirs)
     }
+
+    test {
+        val unitDirs: LinkedList<String> = LinkedList<String>()
+        unitDirs.add("src/test/java/unit")
+        unitDirs.add("src/test/java/commons")
+
+        java.setSrcDirs(unitDirs)
+    }
+
 }
 
 //https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
@@ -54,7 +60,7 @@ dependencies {
 
     //below use javadoc (normal java documentation of classes and functions as documentation for swagger ui
     runtimeOnly("com.github.therapi:therapi-runtime-javadoc:0.15.0")
-    java{
+    java {
         annotationProcessor("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
     }
 
@@ -97,13 +103,6 @@ dependencies {
 
     implementation("org.postgresql:postgresql:42.7.2")
 
-
-    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
-    testImplementation("org.springframework.boot:spring-boot-testcontainers")
-    testImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
-    // Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-junit-jupiter
-    testImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
-
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -124,15 +123,95 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
 
 
-    //breaks dependencies for unkown reasons
+    //breaks dependencies (on my Intelij IDE) for unkown reasons
     // Source: https://mvnrepository.com/artifact/com.github.javafaker/javafaker
     //testImplementation("com.github.javafaker:javafaker:1.0.2")
 
 }
 
+//new dependency context methods only for integration test scope
+val integrationTestImplementation by configurations.getting {
+    extendsFrom(configurations.testImplementation.get())
+}
+val integrationTestRuntimeOnly by configurations.getting {
+    extendsFrom(configurations.testRuntimeOnly.get())
+}
+
+dependencies {
+
+    // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
+    integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
+    integrationTestImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
+    // Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-junit-jupiter
+    integrationTestImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
+
+}
+
+val integrationTest = tasks.register<Test>("integrationTest") {
+    description = "Runs integration tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath
+    shouldRunAfter("test")
+
+    useJUnitPlatform()
+
+    testLogging {
+        events("passed")
+    }
+}
+
+tasks.check { dependsOn(integrationTest) }
+
 //https://docs.spring.io/spring-boot/how-to/build.html
-springBoot{
+springBoot {
     buildInfo()
+}
+
+tasks.withType<Jar> {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+/*
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class)
+
+        //val a: TestSuite = this
+
+        this.register<JvmTestSuite>("integrationTest") {
+            dependencies {
+                implementation(project())
+            }
+
+            sources{
+
+
+            }
+
+            targets {
+                all {
+                    testTask.configure {
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn(testing.suites.named("integrationTest"))
+}
+*/
+
+tasks.test { exclude("")
+    useJUnitPlatform()
+
+    testLogging{
+        events("failed")
+    }
 }
 
 //from https://javadoc.io/doc/org.mockito/mockito-core/5.20.0/org.mockito/org/mockito/Mockito.html#0.3
@@ -147,41 +226,10 @@ springBoot{
 //    jvmArgs!!.add("-javaagent:${mockitoAgent.asPath}")
 //}
 
-tasks.test {
-    useJUnitPlatform()
-//    beforeTest(Closure.IDENTITY);
-//
-//    val closure: Closure<Any> = { println("")}
-//
-//
-//    testLogging{
-//        events("failed")
-//        exceptionFormat = TestExceptionFormat.FULL
-//
-//    }
-}
-
-//class UnitTest: Test(){
-//    override fun getDryRun(): Property<Boolean> {
-//        TODO("Not yet implemented")
-//    }
-//
-//}
-//
-//tasks.register("springIndependentTests", fun Test.(){
-//
-//})
-
 
 /*
- * https://github.com/mkyong/spring-boot/tree/master/spring-data-jpa-postgresql
- *
- * Project above uses postgres without sql file for initialization?
- *
- * https://docs.spring.io/spring-boot/how-to/data-initialization.html
- * Should be involved with this property
+ Addition of docker commands
  */
-
 tasks.named<BootRun>("bootRun") {
     //should not be necessary with application.properties
     mainClass.set("backend.bookSharing.Main")
