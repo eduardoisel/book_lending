@@ -1,6 +1,7 @@
 package backend.bookSharing.services;
 
 import backend.bookSharing.MockUsage;
+import backend.bookSharing.PostgresDatabase;
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.RegionRepository;
@@ -10,27 +11,18 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.postgresql.PostgreSQLContainer;
 
-@SpringBootTest //conflicts with @DataJpaTest due to its @BootstrapWith
-@Testcontainers
+@SpringBootTest
 @TestPropertySource(
         properties = {
                 "spring.jpa.hibernate.ddl-auto=create-drop",
         })
 @Import(MockUsage.class)
 @Transactional //rollback after each unit test
-public class ServiceTestBase {
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer container = new PostgreSQLContainer("postgres");
+public class ServiceTestBase extends PostgresDatabase {
 
     @Autowired
     private RegionRepository regionRepository;
@@ -51,7 +43,7 @@ public class ServiceTestBase {
 
         regionRepository.saveAll(Arrays.stream(TestData.regions).toList());
 
-        userRepository.saveAllAndFlush(TestData.users.stream().map(TestData::duplicate).toList());
+        userRepository.saveAllAndFlush(TestData.users);
 
     }
 

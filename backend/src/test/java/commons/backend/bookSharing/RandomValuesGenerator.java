@@ -28,7 +28,7 @@ public class RandomValuesGenerator {
         if (lowerBound > higherBound) {
             int temp = lowerBound;
             lowerBound = higherBound;
-            higherBound = lowerBound;
+            higherBound = temp;
         }
 
         return lowerBound + (int) (random.nextFloat() * (higherBound - lowerBound + 1));
@@ -50,7 +50,7 @@ public class RandomValuesGenerator {
     }
 
     public static String generateUppercase(Integer size) {
-        return random.ints(UPPERCASE_A, LOWERCASE_Z + 1)
+        return random.ints(UPPERCASE_A, UPPERCASE_Z + 1)
                 .limit(size)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
@@ -87,20 +87,15 @@ public class RandomValuesGenerator {
         int requiredNumeric, requiredLowercase, requiredUppercase, requiredSpecial, requiredSize = 8;
         requiredNumeric =  requiredLowercase = requiredUppercase = requiredSpecial = 1;
 
-        //not yet decided type of char
-        int nonFixed  = requiredSize - (requiredLowercase + requiredNumeric + requiredUppercase + requiredSpecial);
-        int numericExtra = randomBetween(requiredNumeric, nonFixed); nonFixed -= numericExtra;
-        int lowercaseExtra = randomBetween(requiredLowercase, nonFixed); nonFixed -= lowercaseExtra;
-        int uppercaseExtra = randomBetween(requiredUppercase, nonFixed); nonFixed -= uppercaseExtra;
+        int numericSize = randomBetween(requiredNumeric, 3);
+        int lowercaseSize = randomBetween(requiredLowercase, 3);
+        int uppercaseSize = randomBetween(requiredUppercase, 3);
+        int specialCharSize = Math.max(requiredSpecial, requiredSize - (numericSize + lowercaseSize + uppercaseSize));
 
-        StringBuilder password = new StringBuilder(8);
-
-        password.append(generateNumeric(numericExtra + 1));
-        password.append(generateLowercase(lowercaseExtra + 1) );
-        password.append(generateUppercase(uppercaseExtra + 1));
-        password.append(generateSpecialChar(nonFixed + 1));
-
-        return password.toString();
+        return generateNumeric(numericSize) +
+                generateLowercase(lowercaseSize) +
+                generateUppercase(uppercaseSize) +
+                generateSpecialChar(specialCharSize);
     }
 
     /**

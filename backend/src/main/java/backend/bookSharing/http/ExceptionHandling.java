@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice
+/*
+The spring way to handle exceptions, not used but here as the most basic example
+
+To use it uncomment teh class annotations, and do not handle the exception directly on the controller
+ */
+//@ControllerAdvice
 public class ExceptionHandling {
 
     public record ExceptionDto(String problem){}

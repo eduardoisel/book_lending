@@ -3,6 +3,7 @@ package backend.bookSharing.services.user;
 import backend.bookSharing.RandomValuesGenerator;
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.entities.Book;
+import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.ServiceTestBase;
 
 
@@ -30,8 +31,8 @@ public class UserServiceTest extends ServiceTestBase {
 
         try {
             userService.createUser(RandomValuesGenerator.email(), RandomValuesGenerator.password());
-        } catch (Exception _) {
-            fail("User creation should be successful");
+        } catch (Exception e) {
+            fail("User creation should be successful", e);
         }
 
     }
@@ -94,7 +95,6 @@ public class UserServiceTest extends ServiceTestBase {
 
     @Test
     public void successfulLogout() {
-        //login user
         String token = "";
         try {
             token = userService.login(TestData.clearPasswordUsers[0].email(), TestData.clearPasswordUsers[0].clearPassword());
@@ -112,17 +112,17 @@ public class UserServiceTest extends ServiceTestBase {
 
     /*
     For now fails due to not placing default values on timestamps
+
+    TODO: Now user needs to have id since it is not searched, instead given by authentication filter search
      */
     @Test
     public void addOwnerOfBook() throws Exception {
 
-        TestData.ClearPasswordUsers owner = TestData.clearPasswordUsers[0]; // does not have id
+        User owner = TestData.users.getFirst(); // does not have id
 
         Book book = TestData.databaseBooks[0];
 
-        String token = userService.login(owner.email(), owner.clearPassword());
-
-        userService.addOwner(book.getIsbnTen(), TestData.users.getFirst());
+        userService.addOwner(book.getIsbnTen(), owner);
 
 
     }

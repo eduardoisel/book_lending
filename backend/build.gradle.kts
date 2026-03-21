@@ -26,6 +26,8 @@ repositories {
     mavenCentral()
 }
 
+//see https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests
+//sourceSets is not the only part that is changed. Adapted a bit due to having a common directory, at least so far
 sourceSets {
     create("integrationTest") {
         compileClasspath += sourceSets.main.get().output
@@ -206,7 +208,7 @@ tasks.named("check") {
 }
 */
 
-tasks.test { exclude("")
+tasks.test {
     useJUnitPlatform()
 
     testLogging{

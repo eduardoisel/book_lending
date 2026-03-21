@@ -3,12 +3,14 @@ package backend.bookSharing.http;
 import backend.bookSharing.TestData;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 public class BookControllerTest extends ControllerTestBase {
 
     @Test
+    @WithMockUser
     public void addBookByIsbn10() throws Exception{
 
         String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
@@ -21,6 +23,7 @@ public class BookControllerTest extends ControllerTestBase {
     }
 
     @Test
+    @WithMockUser
     public void addBookByIsbn13() throws Exception{
 
         String isbn13 = TestData.booksExclusiveFromApi[0].getIsbnThirteen();
@@ -34,6 +37,7 @@ public class BookControllerTest extends ControllerTestBase {
 
 
     @Test
+    @WithMockUser
     public void addBookTwice() throws Exception{
 
         String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();

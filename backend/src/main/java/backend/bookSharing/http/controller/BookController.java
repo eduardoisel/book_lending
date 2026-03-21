@@ -11,8 +11,6 @@ import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.hibernate.internal.SessionImpl;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -107,9 +105,9 @@ public class BookController {
 
     @PostMapping("/request")
     public ResponseEntity<?> requestBook(@RequestBody RequestCreation body, User authenticatedUser) {
-//        if (body.isbn() == null){
-//            System.out.println("Should be impossible");
-//        }
+        if (body.isbn() == null){
+            System.out.println("Should be impossible");
+        }
 
 
         //AnonymousAuthenticationToken a;

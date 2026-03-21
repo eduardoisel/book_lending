@@ -1,8 +1,6 @@
 package backend.bookSharing.http;
 
 import backend.bookSharing.repository.entities.User;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.val;
 import org.jspecify.annotations.Nullable;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;

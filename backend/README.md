@@ -15,7 +15,9 @@ harassment through any communication in the server or adding fake books. The dam
 to their owners after the time limit will also be added, even if in this person to person lending framework may not 
 allow any realistic way for these cases to be actually verified.
 
-Testing framework is still being developed, as there are kinks with test containers to be solved.
+Testing framework is still being developed, such as:
+* kinks with test containers to be solved, seems it cannot generate default values such as timestamps.
+* [this file's](src/test/java/commons/backend/bookSharing/TestData.java) is inserted on the beginning of a lot of tests each time, to avoid common inserts. They will not hold the auto generated id, and sometimes it will act against testing interests.
 
 Http capabilities are underdeveloped. Looking into adding cache and possibly using hateoas.
 
@@ -27,12 +29,17 @@ Smaller things to solve on current code may be marked with todo text.
 
 ## Conversion to maven
 
-If you do not like gradle you will need to
+If you do not like gradle you will need to:
 
 * Change the dependencies, see [here](https://docs.gradle.org/current/userguide/migrating_from_maven.html#migmvn:migrating_deps) to understand the relation
 * Find equivalent plugins for maven, [here are spring equivalents](https://docs.spring.io/spring-boot/maven-plugin/getting-started.html)
 * Activate usage of javadoc for API documentation, see more of this file
 * Substitute gradle automatic docker with maven equivalent or just use commands on file below
+
+There is also the issue of testing, this setup adds besides the default main and testing folders, the integration test
+folder, one used to ensure unit tests run before integration tests. If one is not interested in such a feature, simply
+ignore the lines on the build gradle related to them, and change [the test folder](./src/test/java) by combining all the
+direct child folders.
 
 ## Technologies used:
 Technologies used:

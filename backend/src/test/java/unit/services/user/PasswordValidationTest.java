@@ -13,6 +13,11 @@ public class PasswordValidationTest {
     @Autowired
     PasswordValidation passwordValidation = new PasswordValidation();
 
+//    @Test
+//    public void certainFailure(){
+//        fail();
+//    }
+
     @Test
     public void failureBySize() {
 
