@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authorization.DefaultAuthorizationManagerFactory;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -86,7 +87,6 @@ public class BookController {
 
         try {
             Book book = service.addBookFromApi(isbn);
-            ShallowEtagHeaderFilter a ;
 
             return ResponseEntity.status(HttpStatus.CREATED).body(book);
         } catch (BookAdditionError e) {

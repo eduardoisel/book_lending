@@ -27,6 +27,7 @@ public class BearerTokenAuthenticationEntryPoint implements AuthenticationEntryP
         public void commence(HttpServletRequest request, HttpServletResponse response,
                              AuthenticationException authException) throws IOException {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setHeader("WWW-Authenticate", "Bearer");
             response.getWriter().println("Access Denied !! " + authException.getMessage());
         }
 

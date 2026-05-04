@@ -18,7 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
-public class BearerTokenAuthenticationFilter extends OncePerRequestFilter {
+public class BearerTokenAuthenticationFilter extends OncePerRequestFilter { // extends AbstractAuthenticationProcessingFilter// never implemented
 
 //        private final UserDetailsService userDetailsService;
 //        private final TokenService tokenService;

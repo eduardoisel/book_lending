@@ -70,7 +70,7 @@ dependencies {
 
     // https://www.geeksforgeeks.org/advance-java/using-lombok-to-reduce-boilerplate-code-in-spring-boot/ extra
     // From https://medium.com/@dulanjayasandaruwan1998/spring-doesnt-recommend-autowired-anymore-05fc05309dad
-    // test replacing all autowired
+    // Replaces all autowired by using RequiredArgsConstructor
     // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
     implementation("org.projectlombok:lombok")//:1.18.42
 
@@ -125,7 +125,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
 
 
-    //breaks dependencies (on my Intelij IDE) for unkown reasons
+    //breaks dependencies (on my Intelij IDE) for unknown reasons
     // Source: https://mvnrepository.com/artifact/com.github.javafaker/javafaker
     //testImplementation("com.github.javafaker:javafaker:1.0.2")
 
@@ -174,39 +174,6 @@ springBoot {
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
-
-/*
-testing {
-    suites {
-        val test by getting(JvmTestSuite::class)
-
-        //val a: TestSuite = this
-
-        this.register<JvmTestSuite>("integrationTest") {
-            dependencies {
-                implementation(project())
-            }
-
-            sources{
-
-
-            }
-
-            targets {
-                all {
-                    testTask.configure {
-                        shouldRunAfter(test)
-                    }
-                }
-            }
-        }
-    }
-}
-
-tasks.named("check") {
-    dependsOn(testing.suites.named("integrationTest"))
-}
-*/
 
 tasks.test {
     useJUnitPlatform()
