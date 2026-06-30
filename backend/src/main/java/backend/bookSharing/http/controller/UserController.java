@@ -12,6 +12,7 @@ import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
 import backend.bookSharing.services.user.UserService;
+import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -108,6 +110,22 @@ public class UserController {
 
         }
 
+    }
+
+    @PostMapping("/blacklist/{email}")
+    @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> addBlacklist(@PathVariable String email) {
+        try {
+            service.lockAccount(email);
+
+            return  ResponseEntity.status(201).body(String.format("Added as blacklisted: %s \n", email));
+        } catch (UserLockingError error) {
+            return switch (error) {
+                case UserLockingError.UserDoesNotExist userDoesNotExist ->
+                    ResponseEntity.status(404).body("User to lock does not exist");
+            };
+        }
     }
 
 

@@ -9,16 +9,18 @@ import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
 import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
+import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Actions related to a user (e.g. authentication, creation and updates of user, searches about users or books of user)
  */
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     @Transactional
     Page<Book> getOwnedBooks(Integer userId, Integer pageNumber) throws UserOwnershipSearchError;
@@ -64,6 +66,13 @@ public interface UserService {
      */
     @Transactional
     Owned addOwner(String isbn, User user) throws OwnerShipAdditionError;
+
+    /**
+     * Theoretically to be used only by a type of administrator. Ought to forbid them to interact with other accounts,
+     * but keeps it on the database to blacklist the email. Warning: currently no effect on other operations
+     */
+    @Transactional
+    void lockAccount(String email) throws UserLockingError;
 
 
 }

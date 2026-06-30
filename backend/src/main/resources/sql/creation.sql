@@ -7,6 +7,8 @@ CREATE TABLE App_User(
     id serial primary key NOT NULL,
     region varchar(50) references Region(name) NOT NULL,
     email varchar(70) UNIQUE NOT NULL,
+    locked boolean NOT NULL DEFAULT FALSE,
+    has_admin_powers boolean NOT NULL DEFAULT FALSE,
     hash varchar(256) NOT NULL,
     salt varchar(2) NOT NULL
 );

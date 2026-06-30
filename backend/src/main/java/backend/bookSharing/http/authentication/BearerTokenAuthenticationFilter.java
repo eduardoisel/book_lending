@@ -57,12 +57,15 @@ public class BearerTokenAuthenticationFilter extends OncePerRequestFilter { // e
             return;
         }
 
-        LinkedList<GrantedAuthority> defaultRole = new LinkedList<>();
+        LinkedList<GrantedAuthority> role = new LinkedList<>();
 
-        defaultRole.add((GrantedAuthority) () -> "ROLE_AUTHENTICATED");
+
+        if (user.getIsAdmin()){
+            role.add((GrantedAuthority) () -> "ROLE_ADMIN");
+        }
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                user, token, defaultRole);
+                user, token, role);
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);

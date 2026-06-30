@@ -18,6 +18,7 @@ import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
 import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
+import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import backend.bookSharing.services.user.services.TokenValidation;
@@ -25,9 +26,11 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.querydsl.QSort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User checkAuthentication(String token) {
+    public @Nullable User checkAuthentication(String token) {
 
         if (!tokenValidation.canBeToken(token)) {
             return null;
@@ -191,5 +194,20 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public void lockAccount(String email) throws UserLockingError {
 
+        try{
+            this.loadUserByUsername(email).setLocked(true);
+        } catch (UsernameNotFoundException e) {
+            throw new UserLockingError.UserDoesNotExist(e);
+        }
+
+    }
+
+
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+    }
 }
