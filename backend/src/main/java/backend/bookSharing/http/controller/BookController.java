@@ -10,12 +10,12 @@ import backend.bookSharing.services.book.BookService;
 import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authorization.DefaultAuthorizationManagerFactory;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,8 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.filter.ShallowEtagHeaderFilter;
-import org.springframework.web.servlet.support.WebContentGenerator;
 
 @RestController
 @RequestMapping("/books")
@@ -104,7 +102,7 @@ public class BookController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<?> requestBook(@RequestBody RequestCreation body, User authenticatedUser) {
+    public ResponseEntity<?> requestBook(@RequestBody RequestCreation body, @Parameter(hidden = true) User authenticatedUser) {
         if (body.isbn() == null){
             System.out.println("Should be impossible");
         }
@@ -137,7 +135,7 @@ public class BookController {
 
 
     @PostMapping("/lend")
-    public ResponseEntity<?> lendBook(@RequestBody LendCreation body, User user) {
+    public ResponseEntity<?> lendBook(@RequestBody LendCreation body, @Parameter(hidden = true) User user) {
 
         try {
             service.lendBook(body.isbn(), body.receiverEmail(), user);

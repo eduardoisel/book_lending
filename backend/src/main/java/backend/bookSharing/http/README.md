@@ -15,6 +15,13 @@ The controller folder contains the app's spring controllers.
 The authentication folder contains an authentication filter and an authentication entry point for bearer authentication.
 These are used on SecurityConfiguration, the class that defines which API endpoints need to be authenticated.
 
+# SpringDocs
+
+## Hiding Resolver parameters
+
+Springdocs will automatically show all parameters of the method, including the complete user information retrieved
+by userResolver, to fix this, one can use the @Parameter(hidden = true) to remove it.
+
 # Caching (NOT HTTP cache)
 
 Implementation of caching using [CaffeineCacheManager](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/caffeine/CaffeineCacheManager.html).

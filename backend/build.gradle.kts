@@ -1,3 +1,5 @@
+import io.freefair.gradle.plugins.lombok.LombokExtension
+import io.freefair.gradle.plugins.lombok.tasks.Delombok
 import java.util.LinkedList
 import org.springframework.boot.gradle.tasks.run.BootRun
 
@@ -5,9 +7,6 @@ plugins {
     id("java")
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
-
-    //not for this gradle, only groovy?
-    //id ("nebula.lint") version "17.8.0" // https://www.javacodegeeks.com/intro-to-gradle-lint-plugin.html
 
     id("io.freefair.lombok") version "9.2.0"
 
