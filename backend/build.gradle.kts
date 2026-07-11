@@ -202,10 +202,12 @@ tasks.named<BootRun>("bootRun") {
     //should not be necessary with application.properties
     mainClass.set("backend.bookSharing.Main")
     dependsOn("dbAppWait")
-    finalizedBy("dbAppDown")
+    finalizedBy("dbAppUp")
 }
 
 tasks.register<Exec>("dbAppUp", fun Exec.() {
+    commandLine("docker", "exec", "book-lending-container", "/app/bin/wait-for-postgres.sh", "localhost")
+
     commandLine(
         "docker",
         "compose",
@@ -218,12 +220,6 @@ tasks.register<Exec>("dbAppUp", fun Exec.() {
         "--build",
         "book-lending-app",
     )
-})
-
-tasks.register<Exec>("dbAppWait", fun Exec.() {
-    commandLine("docker", "exec", "book-lending-container", "/app/bin/wait-for-postgres.sh", "localhost")
-
-    dependsOn("dbAppUp")
 })
 
 tasks.register<Exec>("dbAppDown", fun Exec.() {
