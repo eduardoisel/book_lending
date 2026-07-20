@@ -1,12 +1,8 @@
-# About this project
+# About this branch
 
-This project is for personal training of server backend technologies, focusing on using a database with 
-JPA with spring tools as much as possible.
-
-I have done my best to comment my code, so I believe it is a good example to see what spring can automate for other people
-starting out. That being said, I have not explained basic concepts such as dependency injection. If you do not understand
-why created classes are never instantiated explicitly on code, you should not look to this project yet. 
-[I advise reading the official documentation](https://docs.spring.io/spring-framework/reference/core.html).
+The only base change from the main branch is using an embedded H2 database instead of a Postgres
+instance on the docker. As with test containers, it may have issues with default values. Such an issue 
+can be resolved by creating them on code.
 
 ## TODO
 
@@ -34,7 +30,6 @@ If you do not like gradle you will need to:
 * Change the dependencies, see [here](https://docs.gradle.org/current/userguide/migrating_from_maven.html#migmvn:migrating_deps) to understand the relation
 * Find equivalent plugins for maven, [here are spring equivalents](https://docs.spring.io/spring-boot/maven-plugin/getting-started.html)
 * Activate usage of javadoc for API documentation, see more of this file
-* Substitute gradle automatic docker with maven equivalent or just use commands on file below
 
 There is also the issue of testing, this setup adds besides the default main and testing folders, the integration test
 folder, one used to ensure unit tests run before integration tests. If one is not interested in such a feature, simply
@@ -48,7 +43,6 @@ Technologies used:
 * Gradle kotlin
 * Java 21
 * JUnit 5
-* Docker for database (latest PostgresSQL version)
 * [Test containers](https://testcontainers.com/)
 * [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring. Check [the limitations of its current setting](#Spring-docs-limitations) before using it
 
@@ -97,30 +91,10 @@ to use [controllerAdvice](https://docs.spring.io/spring-framework/reference/web/
 to handle apart the exceptions. Spring has a lot of tools, and there may be some spring-docs can translate to 
 documentation better.
 
-## How to run this code
-
-An instance of this server can be started with gradlew bootRun. Due to configuring the [gradle file](./build.gradle.kts)
-to do so, a postgres database will start (created if needed) automatically. Stopping the database however, is only done
-automatically if the code aborts due to an exception. When forcing the server to stop manually, the step to shut down 
-the database is skipped.
-
-When avoiding gradle to start and stop the database, use
-
-```
-docker compose -p book-lend -f ./docker-compose.yml up -d --build book-lending-app
-```
-
-to create the image, along with creating and start the container (uses already created), and
-
-```
-docker compose -p book-lend -f ./docker-compose.yml pause book-lending-app
-```
-
-to shut that container down.
-
 ## Database
 
-Postgres is the chosen database. Its related files can be found [here](./src/main/resources/sql).
+Embedded H2 database, with the tables created automatically. on [this sql file](src/main/resources/data.sql)
+one can insert at runtime the starting values. The data will reset on each app start
 
 ## Foreign API
 
@@ -133,8 +107,6 @@ therefore preferable, but requires authentication given only to some organizatio
 ```
 └── 📁src
     └── 📁main
-        └── 📁docker
-            ├── Dockerfile
         └── 📁java
             └── 📁backend
                 └── 📁bookSharing
@@ -153,9 +125,6 @@ therefore preferable, but requires authentication given only to some organizatio
             ├── application.properties
     └── 📁test
 ```
-
-Above is the structure of the src folder. The main and test folders are standard, while the resources/sql and docker 
-folders serve for automation of the database creation, that can be activated with gradle.
 
 ### BookSharing
 

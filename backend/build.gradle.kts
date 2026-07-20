@@ -1,5 +1,3 @@
-import io.freefair.gradle.plugins.lombok.LombokExtension
-import io.freefair.gradle.plugins.lombok.tasks.Delombok
 import java.util.LinkedList
 import org.springframework.boot.gradle.tasks.run.BootRun
 
@@ -50,6 +48,9 @@ sourceSets {
 
 //https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
 dependencies {
+    // Source: https://mvnrepository.com/artifact/com.h2database/h2
+    implementation("com.h2database:h2:2.4.240")
+
     // automatic documentation (spring-docs)
     // https://springdoc.org/faq.html#_what_is_the_compatibility_matrix_of_springdoc_openapi_with_spring_boot
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
@@ -101,8 +102,6 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("com.github.ben-manes.caffeine:caffeine")
-
-    implementation("org.postgresql:postgresql:42.7.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -201,27 +200,4 @@ tasks.test {
 tasks.named<BootRun>("bootRun") {
     //should not be necessary with application.properties
     mainClass.set("backend.bookSharing.Main")
-    dependsOn("dbAppWait")
-    finalizedBy("dbAppUp")
 }
-
-tasks.register<Exec>("dbAppUp", fun Exec.() {
-    commandLine("docker", "exec", "book-lending-container", "/app/bin/wait-for-postgres.sh", "localhost")
-
-    commandLine(
-        "docker",
-        "compose",
-        "-p",
-        "book-lend",
-        "-f",
-        "./docker-compose.yml",
-        "up",
-        "-d",
-        "--build",
-        "book-lending-app",
-    )
-})
-
-tasks.register<Exec>("dbAppDown", fun Exec.() {
-    commandLine("docker", "compose", "-p", "book-lend", "-f", "./docker-compose.yml", "pause", "book-lending-app")
-})

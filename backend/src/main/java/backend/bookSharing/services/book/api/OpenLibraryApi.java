@@ -101,7 +101,7 @@ public class OpenLibraryApi implements BookApi {
             isbn_13 = isbn13.getFirst();
         }
 
-        return new Book(isbn_10, isbn_13, title, isoIdToLanguage(language[language.length - 1]));
+        return new Book(isbn_10, isbn_13, title, language[language.length - 1]);
 
     }
 

@@ -27,6 +27,10 @@ import org.hibernate.type.SqlTypes;
 @ToString
 public class Book {
 
+    /**
+     * Dangling form main branch with postgres. As tests reference it, it stays as it may be easier to repair the tests
+     * with it
+     */
     public enum Language {
         English,
         Portuguese,
@@ -57,10 +61,10 @@ public class Book {
     private String title;
 
     //https://www.tutorialpedia.org/blog/how-to-map-postgresql-enum-with-jpa-and-hibernate/ to see
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
     @Column(name = "lang")
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private Language language;
+    // @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    private String language;
 
     @JsonIgnore
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY) //note: mapped by string value is from owned class Owned reference name field
@@ -68,7 +72,7 @@ public class Book {
     @ToString.Exclude
     private List<Owned> owners; //private Set<Owned> owners;
 
-    public Book(String isbn_10, String isbn_13, String title, Language language){
+    public Book(String isbn_10, String isbn_13, String title, String language){
         this.isbnTen = isbn_10;
         this.isbnThirteen = isbn_13;
         this.title = title;
