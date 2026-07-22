@@ -1,5 +1,3 @@
-import io.freefair.gradle.plugins.lombok.LombokExtension
-import io.freefair.gradle.plugins.lombok.tasks.Delombok
 import java.util.LinkedList
 import org.springframework.boot.gradle.tasks.run.BootRun
 
@@ -9,6 +7,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
 
     id("io.freefair.lombok") version "9.2.0"
+    // 22/7
+    //https://plugins.gradle.org/plugin/com.coditory.integration-test
+    id("com.coditory.integration-test") version "2.2.5"
 
 }
 
@@ -28,7 +29,8 @@ repositories {
 //see https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests
 //sourceSets is not the only part that is changed. Adapted a bit due to having a common directory, at least so far
 sourceSets {
-    create("integrationTest") {
+
+    integration {
         compileClasspath += sourceSets.main.get().output
         runtimeClasspath += sourceSets.main.get().output
 
@@ -113,10 +115,6 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-webmvc-test
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
-
-    //annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")   https://docs.spring.io/spring-boot/specification/configuration-metadata/annotation-processor.html#appendix.configuration-metadata.annotation-processor
-
-
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-data-jpa-test
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
 
@@ -130,40 +128,13 @@ dependencies {
 
 }
 
-//new dependency context methods only for integration test scope
-val integrationTestImplementation by configurations.getting {
-    extendsFrom(configurations.testImplementation.get())
-}
-val integrationTestRuntimeOnly by configurations.getting {
-    extendsFrom(configurations.testRuntimeOnly.get())
-}
-
 dependencies {
-
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
-    integrationTestImplementation("org.springframework.boot:spring-boot-testcontainers")
-    integrationTestImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
+    integrationImplementation("org.springframework.boot:spring-boot-testcontainers")
+    integrationImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")
     // Source: https://mvnrepository.com/artifact/org.testcontainers/testcontainers-junit-jupiter
-    integrationTestImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
-
+    integrationImplementation("org.testcontainers:testcontainers-junit-jupiter:2.0.3")
 }
-
-val integrationTest = tasks.register<Test>("integrationTest") {
-    description = "Runs integration tests."
-    group = "verification"
-
-    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
-    classpath = sourceSets["integrationTest"].runtimeClasspath
-    shouldRunAfter("test")
-
-    useJUnitPlatform()
-
-    testLogging {
-        events("passed")
-    }
-}
-
-tasks.check { dependsOn(integrationTest) }
 
 //https://docs.spring.io/spring-boot/how-to/build.html
 springBoot {
@@ -177,7 +148,7 @@ tasks.withType<Jar> {
 tasks.test {
     useJUnitPlatform()
 
-    testLogging{
+    testLogging {
         events("failed")
     }
 }
