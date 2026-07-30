@@ -4,7 +4,6 @@ import backend.bookSharing.MockUsage;
 import backend.bookSharing.PostgresDatabase;
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.BookRepository;
-import backend.bookSharing.repository.RegionRepository;
 import backend.bookSharing.repository.TokenRepository;
 import backend.bookSharing.repository.UserRepository;
 import java.util.Arrays;
@@ -25,9 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ServiceTestBase extends PostgresDatabase {
 
     @Autowired
-    private RegionRepository regionRepository;
-
-    @Autowired
     private BookRepository bookRepository;
 
     @Autowired
@@ -40,8 +36,6 @@ public class ServiceTestBase extends PostgresDatabase {
     public void insertData() {
 
         bookRepository.saveAllAndFlush(Arrays.stream(TestData.databaseBooks).map(TestData::duplicate).toList());
-
-        regionRepository.saveAll(Arrays.stream(TestData.regions).toList());
 
         userRepository.saveAllAndFlush(TestData.users);
 

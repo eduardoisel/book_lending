@@ -30,7 +30,11 @@ public class UserServiceTest extends ServiceTestBase {
     public void successfulUserCreation() {
 
         try {
-            userService.createUser(RandomValuesGenerator.email(), RandomValuesGenerator.password());
+            userService.createUser(
+                    RandomValuesGenerator.email(),
+                    RandomValuesGenerator.password(),
+                    RandomValuesGenerator.randomBetween(-180, 180),
+                    RandomValuesGenerator.randomBetween(-90, 90));
         } catch (Exception e) {
             fail("User creation should be successful", e);
         }
@@ -43,9 +47,10 @@ public class UserServiceTest extends ServiceTestBase {
         String validUniqueEmail = RandomValuesGenerator.email();
         String invalidPassword = "weak";
 
-        assertThrowsExactly(
-                UserCreationError.WeakPassword.class,
-                () -> userService.createUser(validUniqueEmail, invalidPassword));
+        int validLongitude = RandomValuesGenerator.randomBetween(-180, 180);
+        int validLatitude = RandomValuesGenerator.randomBetween(-90, 90);
+
+        assertThrowsExactly(UserCreationError.WeakPassword.class, () -> userService.createUser(validUniqueEmail, invalidPassword, validLongitude, validLatitude));
 
     }
 
@@ -55,9 +60,10 @@ public class UserServiceTest extends ServiceTestBase {
         String repeatedEmail = TestData.users.getFirst().getEmail();
         String validPassword = RandomValuesGenerator.password();
 
-        assertThrowsExactly(
-                UserCreationError.EmailInUse.class,
-                () -> userService.createUser(repeatedEmail, validPassword));
+        int validLongitude = RandomValuesGenerator.randomBetween(-180, 180);
+        int validLatitude = RandomValuesGenerator.randomBetween(-90, 90);
+
+        assertThrowsExactly(UserCreationError.EmailInUse.class, () -> userService.createUser(repeatedEmail, validPassword, validLongitude, validLatitude));
 
     }
 
@@ -76,9 +82,7 @@ public class UserServiceTest extends ServiceTestBase {
         String invalidEmail = TestData.users.getFirst().getEmail();
         String validPassword = RandomValuesGenerator.password();
 
-        assertThrowsExactly(
-                UserAuthenticationError.UserOrPasswordAreInvalid.class,
-                () -> userService.login(invalidEmail, validPassword));
+        assertThrowsExactly(UserAuthenticationError.UserOrPasswordAreInvalid.class, () -> userService.login(invalidEmail, validPassword));
 
     }
 
@@ -87,9 +91,7 @@ public class UserServiceTest extends ServiceTestBase {
 
         String bogusToken = "good morning usa";
 
-        assertThrowsExactly(
-                LogoutError.TokenInvalidForAuthentication.class,
-                () -> userService.logout(bogusToken));
+        assertThrowsExactly(LogoutError.TokenInvalidForAuthentication.class, () -> userService.logout(bogusToken));
 
     }
 

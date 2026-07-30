@@ -1,6 +1,7 @@
 package backend.bookSharing.http.controller;
 
 import backend.bookSharing.http.data.UserCreation;
+import backend.bookSharing.http.data.UserLogin;
 import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
@@ -36,7 +37,7 @@ public class UserAuthenticationController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createUser(@RequestBody UserCreation body) {
         try {
-            Integer result = service.createUser(body.email, body.password);
+            Integer result = service.createUser(body.email(), body.password(), body.x(), body.y());
 
             return ResponseEntity.status(201).body(String.format("Id of user: %s \n", result));
 
@@ -47,6 +48,10 @@ public class UserAuthenticationController {
                         ResponseEntity.status(400).body("Password is weak. Todo add ways to inform requirements");
                 case UserCreationError.EmailInUse emailInUse ->
                         ResponseEntity.status(400).body("Email is already in use for this service.");
+                case UserCreationError.InvalidLongitude invalidLongitude ->
+                        ResponseEntity.status(400).body("Longitude needs to be between -180 and 180.");
+                case UserCreationError.InvalidLatitude invalidLatitude ->
+                        ResponseEntity.status(400).body("Latitude needs to be between -90 and 90.");
             };
 
         }
@@ -55,9 +60,9 @@ public class UserAuthenticationController {
 
     @PostMapping("login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<?> login(@RequestBody UserCreation body) {
+    public ResponseEntity<?> login(@RequestBody UserLogin body) {
         try {
-            String result = service.login(body.email, body.password);
+            String result = service.login(body.email(), body.password());
 
             return ResponseEntity.status(201).body(result);
 

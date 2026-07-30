@@ -3,7 +3,6 @@ package services;
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.LendRepository;
 import backend.bookSharing.repository.OwnedRepository;
-import backend.bookSharing.repository.RegionRepository;
 import backend.bookSharing.repository.RequestRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.services.book.api.BookApi;
@@ -20,7 +19,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @MockitoBean(types = {
-        RegionRepository.class, //
         UserRepository.class,
         OwnedRepository.class,
         BookRepository.class,

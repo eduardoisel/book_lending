@@ -57,6 +57,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
 
+    // Source: https://mvnrepository.com/artifact/org.springframework/spring-orm
+    implementation("org.springframework:spring-orm")
+
     // https://springdoc.org/#spring-security-support
     // Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
     implementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.1")
@@ -105,6 +108,12 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
 
     implementation("org.postgresql:postgresql:42.7.2")
+
+    // Source: https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-spatial
+    implementation("org.hibernate.orm:hibernate-spatial:7.2.0.Final")
+
+    // Source: https://mvnrepository.com/artifact/org.locationtech.jts/jts-core
+    implementation("org.locationtech.jts:jts-core:1.20.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -172,8 +181,8 @@ tasks.test {
 tasks.named<BootRun>("bootRun") {
     //should not be necessary with application.properties
     mainClass.set("backend.bookSharing.Main")
-    dependsOn("dbAppWait")
-    finalizedBy("dbAppUp")
+    dependsOn("dbAppUp")
+    finalizedBy("dbAppDown")
 }
 
 tasks.register<Exec>("dbAppUp", fun Exec.() {

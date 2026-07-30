@@ -1,16 +1,12 @@
 package backend.bookSharing.http.controller;
 
-import backend.bookSharing.http.data.UserCreation;
 import backend.bookSharing.http.returns.ListedData;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
-import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
 import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
-import backend.bookSharing.services.user.failures.UserAuthenticationError;
-import backend.bookSharing.services.user.failures.UserCreationError;
 import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
@@ -23,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

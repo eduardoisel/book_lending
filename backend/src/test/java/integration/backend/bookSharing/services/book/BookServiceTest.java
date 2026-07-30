@@ -79,12 +79,12 @@ public class BookServiceTest extends ServiceTestBase {
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnTen(), 0)
+                () -> service.getOwnersOfBook(book.getIsbnTen(), 0, TestData.points.getFirst())
         );
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnThirteen(), 0)
+                () -> service.getOwnersOfBook(book.getIsbnThirteen(), 0, TestData.points.getFirst())
         );
     }
 

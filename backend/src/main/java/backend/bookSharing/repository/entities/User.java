@@ -24,13 +24,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.CredentialsContainer;
+import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/**
- * TODO see {@link org.springframework.security.core.userdetails.User} and related classes
- */
 @Getter
 @Entity()
 @Table(name = "App_User")
@@ -55,8 +52,9 @@ public class User implements UserDetails {
     /**
      * Possibly to be changed so it is on another table
      */
+    @JsonIgnore
     @Setter
-    private Boolean locked;
+    private Boolean locked = false;
 
     @Column(name = "has_admin_powers")
     private Boolean isAdmin;
@@ -74,9 +72,12 @@ public class User implements UserDetails {
     @ToString.Exclude
     private String salt;
 
-    @ManyToOne
-    @JoinColumn(name = "region") //assumes region_name without
-    private Region region;
+    @JsonIgnore
+    @Column(columnDefinition = "geography(Point,4326)")
+    private Point location;
+
+//    @JdbcTypeCode(SqlTypes.GEOGRAPHY)
+//    private Geometry<G2D> location;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) //note: mapped by string value is from owned class user reference name member
@@ -88,16 +89,16 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<Token> tokens;
 
-    public User(Region region, String email, String hash, String salt) {
-        this.region = region;
+    public User(Point point, String email, String hash, String salt) {
+        this.location = point;
         this.email = email;
         this.hash = hash;
         this.salt = salt;
         this.isAdmin = false;
     }
 
-    public User(Region region, String email, String hash, String salt, Boolean isAdmin) {
-        this.region = region;
+    public User(Point point, String email, String hash, String salt, Boolean isAdmin) {
+        this.location = point;
         this.email = email;
         this.hash = hash;
         this.salt = salt;
@@ -109,24 +110,40 @@ public class User implements UserDetails {
         return new PasswordValidationInfo(hash, salt);
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
+    @JsonIgnore
     @Override
     public @Nullable String getPassword() {
         return hash;
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return !locked;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
 }

@@ -60,10 +60,10 @@ public class BookController {
 
     @GetMapping("/owners/{isbn}")
     //@Cacheable("bookOwners")
-    public ResponseEntity<?> getBookOwners(@PathVariable String isbn, @RequestParam(required = false, defaultValue = "0") Integer page) {
+    public ResponseEntity<?> getBookOwners(@PathVariable String isbn, @RequestParam(required = false, defaultValue = "0") Integer page, @Parameter(hidden = true) User user) {
 
         try {
-            Page<User> users = service.getOwnersOfBook(isbn, page);
+            Page<User> users = service.getOwnersOfBook(isbn, page, user.getLocation());
 
             ListedData body = new ListedData(users.toList().toArray(), users.hasNext(), users.hasPrevious());
 

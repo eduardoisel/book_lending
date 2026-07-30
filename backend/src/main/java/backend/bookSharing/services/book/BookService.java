@@ -7,6 +7,7 @@ import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import org.springframework.data.domain.Page;
+import org.locationtech.jts.geom.Point;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public interface BookService {
     Page<Book> getBooks(Integer pageNumber);
 
     @Transactional
-    Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError;
+    Page<User> getOwnersOfBook(String isbn, Integer pageNumber, Point location) throws BookOwnersSearchError;
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     Book addBookFromApi(String isbn) throws BookAdditionError;

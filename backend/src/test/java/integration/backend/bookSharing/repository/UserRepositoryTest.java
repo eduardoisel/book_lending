@@ -15,17 +15,10 @@ public class UserRepositoryTest extends DatabaseTest {
 
     private final UserRepository userRepository;
 
-    private final RegionRepository regionRepository;
 
     @Autowired
-    public UserRepositoryTest(UserRepository userRepository, RegionRepository regionRepository) {
+    public UserRepositoryTest(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.regionRepository = regionRepository;
-    }
-
-    @BeforeEach
-    public void insertRegions(){
-        regionRepository.saveAll(Arrays.stream(TestData.regions).toList());
     }
 
     @Test
@@ -69,7 +62,7 @@ public class UserRepositoryTest extends DatabaseTest {
 
         assertEquals(inserted.getEmail(), found.getEmail());
         assertEquals(inserted.getHash(), found.getHash());
-        assertEquals(inserted.getRegion(), found.getRegion());
+        assertEquals(inserted.getLocation(), found.getLocation());
 
     }
 

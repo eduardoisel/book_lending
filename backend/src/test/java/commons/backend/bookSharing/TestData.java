@@ -1,7 +1,6 @@
 package backend.bookSharing;
 
 import backend.bookSharing.repository.entities.Book;
-import backend.bookSharing.repository.entities.Region;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import java.lang.reflect.Array;
@@ -10,6 +9,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
+import org.locationtech.jts.geom.PrecisionModel;
 
 import static backend.bookSharing.repository.entities.Book.Language.English;
 import static backend.bookSharing.repository.entities.Book.Language.French;
@@ -91,19 +94,13 @@ public class TestData {
 
     }
 
-    public static Region[] regions = {
-            new Region("Portugal"),
-            new Region("England"),
-            new Region("USA"),
-    };
-
     private static final PasswordValidation passwordValidation = new PasswordValidation();
 
-    public record ClearPasswordUsers(Region region, String email, String clearPassword) {
+    public record ClearPasswordUsers(Point location, String email, String clearPassword) {
 
         public User toUser() {
             String salt = passwordValidation.getSalt();
-            return new User(this.region, this.email, passwordValidation.passwordEncoding(this.clearPassword, salt), salt);
+            return new User(this.location, this.email, passwordValidation.passwordEncoding(this.clearPassword, salt), salt);
         }
 
     }
@@ -116,10 +113,20 @@ public class TestData {
 //
 //    }
 
+    private static final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+
+    public static Coordinate[] coordinates = {
+            new Coordinate(2.1d, 2.1d),
+            new Coordinate(2.1d, 2.3d),
+            new Coordinate(-20d, 70d),
+    };
+
+    public static List<Point> points = Arrays.stream(coordinates).map(geometryFactory::createPoint).toList();
+
     public static ClearPasswordUsers[] clearPasswordUsers = {
-            new ClearPasswordUsers(regions[0], "portugal@gmail.com", "password1"),
-            new ClearPasswordUsers(regions[1], "england@gmail.com", "password2"),
-            new ClearPasswordUsers(regions[2], "us@gmail.com", "password3"),
+            new ClearPasswordUsers(points.getFirst(), "portugal@gmail.com", "password1"),
+            new ClearPasswordUsers(points.get(1), "england@gmail.com", "password2"),
+            new ClearPasswordUsers(points.get(2), "us@gmail.com", "password3"),
     };
 
     public static Boolean isEmailUnique(@NonNull String email){
@@ -155,7 +162,7 @@ public class TestData {
      */
     public static User duplicate(User user){
         return new User(
-                user.getRegion(),
+                user.getLocation(),
                 user.getEmail(),
                 user.getHash(),
                 user.getSalt()

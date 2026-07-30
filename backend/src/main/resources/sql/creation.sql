@@ -1,11 +1,6 @@
-CREATE TABLE Region(
-    name varchar(50) primary key
-);
-
-
 CREATE TABLE App_User(
     id serial primary key NOT NULL,
-    region varchar(50) references Region(name) NOT NULL,
+    location GEOGRAPHY(POINT,4326) NOT NULL,  --- GEOGRAPHY GEOMETRY
     email varchar(70) UNIQUE NOT NULL,
     locked boolean NOT NULL DEFAULT FALSE,
     has_admin_powers boolean NOT NULL DEFAULT FALSE,

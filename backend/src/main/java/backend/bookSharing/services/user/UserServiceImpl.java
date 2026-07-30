@@ -9,7 +9,6 @@ import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.OwnedId;
-import backend.bookSharing.repository.entities.Region;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.Token;
 import backend.bookSharing.repository.entities.User;
@@ -27,9 +26,11 @@ import java.time.Instant;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,9 @@ public class UserServiceImpl implements UserService {
     private final PasswordValidation passwordValidation;
 
     private final TokenValidation tokenValidation;
+
+    //todo should probably initialized somewhere else as a bean
+    private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     @Override
     public Page<Book> getOwnedBooks(Integer userId, Integer pageNumber) throws UserOwnershipSearchError {
@@ -108,7 +112,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer createUser(String email, String password) throws UserCreationError {
+    public Integer createUser(String email, String password, double x, double y) throws UserCreationError {
+
+        if (x < -180 || x > 180) {
+            throw new UserCreationError.InvalidLongitude();
+        }
+        if (y < -90 || y > 90) {
+            throw new UserCreationError.InvalidLatitude();
+        }
 
         try {
             passwordValidation.isSafePassword(password);
@@ -125,7 +136,7 @@ public class UserServiceImpl implements UserService {
         String salt = passwordValidation.getSalt();
 
         User created = userRepo.save(new User(
-                new Region("Portugal"), //todo missing
+                geometryFactory.createPoint(new Coordinate(x, y)),
                 email,
                 passwordValidation.passwordEncoding(password, salt),
                 salt

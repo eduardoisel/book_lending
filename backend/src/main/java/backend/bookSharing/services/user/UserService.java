@@ -41,7 +41,7 @@ public interface UserService extends UserDetailsService {
      * @return id of user
      */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    Integer createUser(String email, String password) throws UserCreationError;
+    Integer createUser(String email, String password, double x, double y) throws UserCreationError;
 
     /**
      * Authentication through authentication token

@@ -134,12 +134,12 @@ public class BookServiceTest {
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnTen(), 0)
+                () -> service.getOwnersOfBook(book.getIsbnTen(), 0, null)
         );
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnThirteen(), 0)
+                () -> service.getOwnersOfBook(book.getIsbnThirteen(), 0, null)
         );
 
     }
@@ -161,7 +161,7 @@ public class BookServiceTest {
         when(ownedRepo.findByBookId(book.getId(), PageRequest.of(pageNumber, 20)))
                 .thenReturn(page);
 
-        assertEquals(owners, service.getOwnersOfBook(book.getIsbnTen(), pageNumber).toList());
+        assertEquals(owners, service.getOwnersOfBook(book.getIsbnTen(), pageNumber, null).toList());
 
     }
 

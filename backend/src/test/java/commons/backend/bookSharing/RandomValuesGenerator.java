@@ -24,7 +24,7 @@ public class RandomValuesGenerator {
     static int LOWERCASE_A = 'a'; //97
     static int LOWERCASE_Z = 'z'; //122
 
-    private static int randomBetween(int lowerBound, int higherBound) {
+    public static int randomBetween(int lowerBound, int higherBound) {
         if (lowerBound > higherBound) {
             int temp = lowerBound;
             lowerBound = higherBound;

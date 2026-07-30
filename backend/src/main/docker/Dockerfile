@@ -1,4 +1,4 @@
-FROM postgres
+FROM postgis/postgis
 
 USER postgres
 WORKDIR /app

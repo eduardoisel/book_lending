@@ -21,6 +21,7 @@ import backend.bookSharing.services.book.failures.BookRequestError;
 import backend.bookSharing.services.user.UserService;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -48,16 +49,20 @@ public class BookServiceImpl implements BookService {
         return bookRepo.findAll(PageRequest.of(pageNumber, 20));
     }
 
-    public Page<User> getOwnersOfBook(String isbn, Integer pageNumber) throws BookOwnersSearchError {
+    @Override
+    public Page<User> getOwnersOfBook(String isbn, Integer pageNumber, Point location) throws BookOwnersSearchError {
 
         Book book = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
 
+        //org.hibernate.spatial.dialect.postgis.PostgisDialectContributor TODO
         if (book == null) {
             throw new BookOwnersSearchError.BookNotFound();
         }
 
-        Page<Owned> ownedPage = ownedRepo.findByBookId(
+        Page<Owned> ownedPage = ownedRepo.findNearbyOwners(
                 book.getId(),
+                location,
+                25000d,
                 PageRequest.of(
                         pageNumber,
                         20 //, Sort.by("book_id")

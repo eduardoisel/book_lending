@@ -48,7 +48,7 @@ Technologies used:
 * Gradle kotlin
 * Java 21
 * JUnit 5
-* Docker for database (latest PostgresSQL version)
+* Docker for database (latest PostGis version)
 * [Test containers](https://testcontainers.com/)
 * [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring. Check [the limitations of its current setting](#Spring-docs-limitations) before using it
 
