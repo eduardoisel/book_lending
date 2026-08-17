@@ -112,15 +112,10 @@ public class UserServiceTest extends ServiceTestBase {
 
     }
 
-    /*
-    For now fails due to not placing default values on timestamps
-
-    TODO: Now user needs to have id since it is not searched, instead given by authentication filter search
-     */
     @Test
     public void addOwnerOfBook() throws Exception {
 
-        User owner = TestData.users.getFirst(); // does not have id
+        User owner = insertedUsers.getFirst(); // does not have id
 
         Book book = TestData.databaseBooks[0];
 
