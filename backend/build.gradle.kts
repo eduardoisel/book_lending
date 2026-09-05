@@ -1,4 +1,3 @@
-import java.util.LinkedList
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
@@ -6,6 +5,9 @@ plugins {
     id("org.springframework.boot") version "4.0.1"
     id("io.spring.dependency-management") version "1.1.7"
 
+    // https://www.geeksforgeeks.org/advance-java/using-lombok-to-reduce-boilerplate-code-in-spring-boot/ extra
+    // From https://medium.com/@dulanjayasandaruwan1998/spring-doesnt-recommend-autowired-anymore-05fc05309dad
+    // Replaces all autowired by using RequiredArgsConstructor
     id("io.freefair.lombok") version "9.2.0"
     // 22/7
     //https://plugins.gradle.org/plugin/com.coditory.integration-test
@@ -34,18 +36,6 @@ sourceSets {
         compileClasspath += sourceSets.main.get().output
         runtimeClasspath += sourceSets.main.get().output
 
-        val integrationDirs: LinkedList<String> = LinkedList<String>()
-        integrationDirs.add("src/test/java/integration")
-        integrationDirs.add("src/test/java/commons")
-        java.setSrcDirs(integrationDirs)
-    }
-
-    test {
-        val unitDirs: LinkedList<String> = LinkedList<String>()
-        unitDirs.add("src/test/java/unit")
-        unitDirs.add("src/test/java/commons")
-
-        java.setSrcDirs(unitDirs)
     }
 
 }
@@ -71,12 +61,6 @@ dependencies {
     }
 
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
-
-    // https://www.geeksforgeeks.org/advance-java/using-lombok-to-reduce-boilerplate-code-in-spring-boot/ extra
-    // From https://medium.com/@dulanjayasandaruwan1998/spring-doesnt-recommend-autowired-anymore-05fc05309dad
-    // Replaces all autowired by using RequiredArgsConstructor
-    // Source: https://mvnrepository.com/artifact/org.projectlombok/lombok
-    implementation("org.projectlombok:lombok")//:1.18.42
 
     // extra json parser, attempt to replace it with spring default
     // https://mvnrepository.com/artifact/com.google.code.gson/gson

@@ -158,10 +158,16 @@ public class BookServiceTest {
         when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(book);
 
 
-        when(ownedRepo.findByBookId(book.getId(), PageRequest.of(pageNumber, 20)))
+        when(
+                ownedRepo.findNearbyOwners(
+                        eq(book.getId()),
+                        any(),
+                        anyDouble(),
+                        eq(PageRequest.of(pageNumber, 20)))
+        )
                 .thenReturn(page);
 
-        assertEquals(owners, service.getOwnersOfBook(book.getIsbnTen(), pageNumber, null).toList());
+        assertEquals(owners, service.getOwnersOfBook(book.getIsbnTen(), pageNumber, TestData.points.getFirst()).toList());
 
     }
 
