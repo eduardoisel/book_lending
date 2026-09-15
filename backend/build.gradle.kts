@@ -28,18 +28,6 @@ repositories {
     mavenCentral()
 }
 
-//see https://docs.gradle.org/current/userguide/java_testing.html#sec:configuring_java_integration_tests
-//sourceSets is not the only part that is changed. Adapted a bit due to having a common directory, at least so far
-sourceSets {
-
-    integration {
-        compileClasspath += sourceSets.main.get().output
-        runtimeClasspath += sourceSets.main.get().output
-
-    }
-
-}
-
 //https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
 dependencies {
     // automatic documentation (spring-docs)
@@ -56,9 +44,7 @@ dependencies {
 
     //below use javadoc (normal java documentation of classes and functions as documentation for swagger ui
     runtimeOnly("com.github.therapi:therapi-runtime-javadoc:0.15.0")
-    java {
-        annotationProcessor("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
-    }
+    annotationProcessor("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")
 
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
 
@@ -71,16 +57,12 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web")
 
-    // test including the dependency and running code first before continuing
-    // https://mvnrepository.com/artifact/org.springframework.hateoas/spring-hateoas
-    //implementation("org.springframework.hateoas:spring-hateoas")
-
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-    //@WithMockUser https://docs.spring.io/spring-boot/how-to/testing.html //see
+    //@WithMockUser https://docs.spring.io/spring-boot/how-to/testing.html
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 
 
@@ -115,13 +97,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
 
 
-    //breaks dependencies (on my Intelij IDE) for unknown reasons
-    // Source: https://mvnrepository.com/artifact/com.github.javafaker/javafaker
-    //testImplementation("com.github.javafaker:javafaker:1.0.2")
-
-}
-
-dependencies {
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-testcontainers
     integrationImplementation("org.springframework.boot:spring-boot-testcontainers")
     integrationImplementation("org.testcontainers:testcontainers-postgresql:2.0.3")

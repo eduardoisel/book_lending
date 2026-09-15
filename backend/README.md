@@ -15,15 +15,9 @@ harassment through any communication in the server or adding fake books. The dam
 to their owners after the time limit will also be added, even if in this person to person lending framework may not 
 allow any realistic way for these cases to be actually verified.
 
-Testing framework is still being developed, such as:
-* kinks with test containers to be solved, seems it cannot generate default values such as timestamps.
-* [this file's](src/test/java/commons/backend/bookSharing/TestData.java) is inserted on the beginning of a lot of tests each time, to avoid common inserts. They will not hold the auto generated id, and sometimes it will act against testing interests.
-
-Http capabilities are underdeveloped. Looking into adding cache and possibly using hateoas.
-
 A real implementation of this service would also use better tools to judge the proximity of users, as this is a service
-about physically lending books. Unless it just saves user input coordinates and judge distance by ignoring actual
-terrain such as oceans, a significant external service would be needed.
+about physically lending books. Currently, it only saves geographical coordinates and ignores any other detail. This 
+would include people with close coordinates even if they were to be on another island.
 
 Smaller things to solve on current code may be marked with todo text. 
 
@@ -31,15 +25,14 @@ Smaller things to solve on current code may be marked with todo text.
 
 If you do not like gradle you will need to:
 
-* Change the dependencies, see [here](https://docs.gradle.org/current/userguide/migrating_from_maven.html#migmvn:migrating_deps) to understand the relation
-* Find equivalent plugins for maven, [here are spring equivalents](https://docs.spring.io/spring-boot/maven-plugin/getting-started.html)
+* Change the dependencies, see [here](https://docs.gradle.org/current/userguide/migrating_from_maven.html#migmvn:migrating_deps) to understand the relation,
+* Find equivalent plugins for maven, [here are spring equivalents](https://docs.spring.io/spring-boot/maven-plugin/getting-started.html). Lombok does not need plugin, look up usage of annotation processors  
 * Activate usage of javadoc for API documentation, see more of this file
 * Substitute gradle automatic docker with maven equivalent or just use commands on file below
 
-There is also the issue of testing, this setup adds besides the default main and testing folders, the integration test
-folder, one used to ensure unit tests run before integration tests. If one is not interested in such a feature, simply
-ignore the lines on the build gradle related to them, and change [the test folder](./src/test/java) by combining all the
-direct child folders.
+There is also the issue of testing, this setup has the default main and testing folders, and also the integration test
+folder. If one is not interested in such a feature, simply ignore the lines on the build gradle related to them, 
+and change [the test folder](./src/test/java) by combining all the direct child folders.
 
 ## Technologies used:
 Technologies used:
@@ -82,19 +75,16 @@ Again, spring docs will not tell you this since it is done by a filter, instead 
 
 ### Javadoc
 
-//https://deepwiki.com/springdoc/springdoc-openapi/8.3-javadoc-integration
-
 Gradle was set up so the javadoc documentation of the code is used. This project did it with uses gradle, but 
 documentation shows example for [maven](https://springdoc.org/#javadoc-support). Javadoc may not cover well all
-instances of the API documentation. For example, if your method on a rest controller returns ResponseEntity directly, 
-and handles exceptions directly, I can assure from personal experience the browser documentation does not translate all
+instances of the API documentation. For example, if your mapper method on a rest controller returns ResponseEntity directly, 
+and handles internally, as done in this project, the browser documentation does not translate all
 possible return statuses. For this you may use Open-API's (comes from transitive dependencies) 
 [Operation annotation](https://github.com/OAI/OpenAPI-Specification/blob/3.0.4/versions/2.0.md#operation-object) to add
 documentation besides javadoc.
 
-Whether it is actually necessary at any time to use OpenApi is beyond my knowledge. After all, spring can be structured
-to use [controllerAdvice](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html) 
-to handle apart the exceptions. Spring has a lot of tools, and there may be some spring-docs can translate to 
+Spring can also be structured to use [controllerAdvice](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-advice.html) 
+to handle the exceptions. Spring has a lot of tools, and there may be some spring-docs can translate to 
 documentation better.
 
 ## How to run this code
@@ -152,10 +142,13 @@ therefore preferable, but requires authentication given only to some organizatio
                 ├── creation.sql
             ├── application.properties
     └── 📁test
+    └── 📁integration
 ```
 
 Above is the structure of the src folder. The main and test folders are standard, while the resources/sql and docker 
-folders serve for automation of the database creation, that can be activated with gradle.
+folders serve for automation of the database creation, that can be activated with Gradle.
+
+The integration folder is the new sourceSet created by the Gradle Plugin.
 
 ### BookSharing
 

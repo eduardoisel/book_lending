@@ -10,5 +10,5 @@ spring:
       ddl-auto: create-drop
   datasource:
     hikari: ## default connection pool
-      connectionTimeout: 5000
+      connectionTimeout: 2500
       maximumPoolSize: 20
