@@ -12,19 +12,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-
 /**
  *
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@MockitoBean(types = {
-        UserRepository.class,
-        OwnedRepository.class,
-        BookRepository.class,
-        RequestRepository.class,
-        LendRepository.class,
-        BookApi.class
-})
-public @interface RepositoryMocks {
-}
+@MockitoBean(
+        types = {
+            UserRepository.class,
+            OwnedRepository.class,
+            BookRepository.class,
+            RequestRepository.class,
+            LendRepository.class,
+            BookApi.class
+        })
+public @interface RepositoryMocks {}

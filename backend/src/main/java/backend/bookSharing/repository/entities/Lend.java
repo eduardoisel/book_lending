@@ -23,14 +23,14 @@ import lombok.ToString;
 @ToString(doNotUseGetters = true)
 public class Lend {
 
-    @EmbeddedId
-    public LendId id;
+    @EmbeddedId public LendId id;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @MapsId("lent") // from LendId
     @JoinColumns({
-            @JoinColumn(nullable = false, name = "user_id", referencedColumnName = "user_id"),
-            @JoinColumn(nullable = false, name = "book_id", referencedColumnName = "book_id")}) //without it uses field name for part of joinColumn name
+        @JoinColumn(nullable = false, name = "user_id", referencedColumnName = "user_id"),
+        @JoinColumn(nullable = false, name = "book_id", referencedColumnName = "book_id")
+    }) // without it uses field name for part of joinColumn name
     private Owned lent;
 
     @Column(insertable = false)
@@ -43,12 +43,15 @@ public class Lend {
      * Constructor sets all fields, including {@link OneToOne} relationship
      * @param request information of request needed for lend
      */
-    public Lend(Request request){
-        //this.id = new LendId(request.getRequestId().getRequested().getUserId(), request.getRequestId().getRequested().getBookId());
-        this.id = new LendId(request.getRequestId().getRequested(), request.getRequestId().getUserId());
-        this.lent= request.getOwned();
-        this.returnLimit = Timestamp.from(Instant.now().plus(Duration.ofDays(request.getDuration())));
-        //this.requesterId = request.getRequestId().getUserId();
+    public Lend(Request request) {
+        // this.id = new LendId(request.getRequestId().getRequested().getUserId(),
+        // request.getRequestId().getRequested().getBookId());
+        this.id =
+                new LendId(
+                        request.getRequestId().getRequested(), request.getRequestId().getUserId());
+        this.lent = request.getOwned();
+        this.returnLimit =
+                Timestamp.from(Instant.now().plus(Duration.ofDays(request.getDuration())));
+        // this.requesterId = request.getRequestId().getUserId();
     }
-
 }

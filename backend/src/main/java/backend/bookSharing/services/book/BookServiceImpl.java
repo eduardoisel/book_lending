@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    private final UserService userService; //for auth check. Consider changing place
+    private final UserService userService; // for auth check. Consider changing place
 
     private final OwnedRepository ownedRepo;
 
@@ -50,26 +50,29 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<User> getOwnersOfBook(String isbn, Integer pageNumber, Point location) throws BookOwnersSearchError {
+    public Page<User> getOwnersOfBook(String isbn, Integer pageNumber, Point location)
+            throws BookOwnersSearchError {
 
-        Book book = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
+        Book book =
+                isbn.length() == 10
+                        ? bookRepo.findByIsbnTen(isbn)
+                        : bookRepo.findByIsbnThirteen(isbn);
 
-        //org.hibernate.spatial.dialect.postgis.PostgisDialectContributor TODO
+        // org.hibernate.spatial.dialect.postgis.PostgisDialectContributor TODO
         if (book == null) {
             throw new BookOwnersSearchError.BookNotFound();
         }
 
-        Page<Owned> ownedPage = ownedRepo.findNearbyOwners(
-                book.getId(),
-                location,
-                25000d,
-                PageRequest.of(
-                        pageNumber,
-                        20 //, Sort.by("book_id")
-                ));
+        Page<Owned> ownedPage =
+                ownedRepo.findNearbyOwners(
+                        book.getId(),
+                        location,
+                        25000d,
+                        PageRequest.of(
+                                pageNumber, 20 // , Sort.by("book_id")
+                                ));
 
         return ownedPage.map(Owned::getUser);
-
     }
 
     public Book addBookFromApi(String isbn) throws BookAdditionError {
@@ -91,20 +94,26 @@ public class BookServiceImpl implements BookService {
         }
 
         return bookRepo.save(book);
-
     }
 
     @Override
-    public void requestBook(String isbn, String ownerEmail, User user, Integer timeInDays) throws BookRequestError {
+    public void requestBook(String isbn, String ownerEmail, User user, Integer timeInDays)
+            throws BookRequestError {
 
-        User owner = userRepo.findByEmail(ownerEmail)
-                .orElseThrow((Supplier<BookRequestError>) BookRequestError.OwnershipNotFound::new);
+        User owner =
+                userRepo.findByEmail(ownerEmail)
+                        .orElseThrow(
+                                (Supplier<BookRequestError>)
+                                        BookRequestError.OwnershipNotFound::new);
 
         if (user.getId().equals(owner.getId())) {
             throw new BookRequestError.CannotRequestFromSelf();
         }
 
-        Book searchedBook = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
+        Book searchedBook =
+                isbn.length() == 10
+                        ? bookRepo.findByIsbnTen(isbn)
+                        : bookRepo.findByIsbnThirteen(isbn);
 
         if (searchedBook == null) {
             throw new BookRequestError.OwnershipNotFound();
@@ -112,8 +121,12 @@ public class BookServiceImpl implements BookService {
 
         OwnedId ownedIdCheck = new OwnedId(owner.getId(), searchedBook.getId());
 
-        Owned owned = ownedRepo.findById(ownedIdCheck)
-                .orElseThrow((Supplier<BookRequestError>) BookRequestError.OwnershipNotFound::new);
+        Owned owned =
+                ownedRepo
+                        .findById(ownedIdCheck)
+                        .orElseThrow(
+                                (Supplier<BookRequestError>)
+                                        BookRequestError.OwnershipNotFound::new);
 
         if (requestRepo.findById(new RequestId(ownedIdCheck, user.getId())).isPresent()) {
             throw new BookRequestError.AlreadyRequested();
@@ -125,10 +138,14 @@ public class BookServiceImpl implements BookService {
     @Override
     public void lendBook(String isbn, String receiverEmail, User user) throws BookLendError {
 
-        User requester = userRepo.findByEmail(receiverEmail)
-                .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
+        User requester =
+                userRepo.findByEmail(receiverEmail)
+                        .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
-        Book book = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
+        Book book =
+                isbn.length() == 10
+                        ? bookRepo.findByIsbnTen(isbn)
+                        : bookRepo.findByIsbnThirteen(isbn);
 
         if (book == null) {
             throw new BookLendError.RequestNotFound();
@@ -136,11 +153,16 @@ public class BookServiceImpl implements BookService {
 
         OwnedId ownedIdCheck = new OwnedId(user.getId(), book.getId());
 
-        //use if error message change to specify where went wrong (i.e. no book, no of ownership of book instead of no request)
-        ownedRepo.findById(ownedIdCheck).orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
-
-        Request request = requestRepo.findById(new RequestId(ownedIdCheck, requester.getId()))
+        // use if error message change to specify where went wrong (i.e. no book, no of ownership of
+        // book instead of no request)
+        ownedRepo
+                .findById(ownedIdCheck)
                 .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
+
+        Request request =
+                requestRepo
+                        .findById(new RequestId(ownedIdCheck, requester.getId()))
+                        .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
         if (lendRepo.existsById(new LendId(ownedIdCheck, requester.getId()))) {
             throw new BookLendError.AlreadyLent();
@@ -148,11 +170,8 @@ public class BookServiceImpl implements BookService {
 
         Lend lend = new Lend(request);
 
-        lendRepo.save(lend); //mark book as lent
+        lendRepo.save(lend); // mark book as lent
 
-        requestRepo.delete(request); //remove from request list
-
+        requestRepo.delete(request); // remove from request list
     }
-
-
 }

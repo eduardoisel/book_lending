@@ -4,7 +4,6 @@ import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import java.util.Random;
 
-
 /**
  * Class generates random values to substitute the ones who would be inserted on the database
  * <p>
@@ -16,13 +15,12 @@ public class RandomValuesGenerator {
 
     static Random random = new Random();
 
-
-    static int ZERO_CHAR = '0'; //48
-    static int NINE_CHAR = '9'; //57
-    static int UPPERCASE_A = 'A'; //65
-    static int UPPERCASE_Z = 'Z'; //90
-    static int LOWERCASE_A = 'a'; //97
-    static int LOWERCASE_Z = 'z'; //122
+    static int ZERO_CHAR = '0'; // 48
+    static int NINE_CHAR = '9'; // 57
+    static int UPPERCASE_A = 'A'; // 65
+    static int UPPERCASE_Z = 'Z'; // 90
+    static int LOWERCASE_A = 'a'; // 97
+    static int LOWERCASE_Z = 'z'; // 122
 
     public static int randomBetween(int lowerBound, int higherBound) {
         if (lowerBound > higherBound) {
@@ -32,7 +30,6 @@ public class RandomValuesGenerator {
         }
 
         return lowerBound + (int) (random.nextFloat() * (higherBound - lowerBound + 1));
-
     }
 
     public static String generateNumeric(Integer size) {
@@ -59,15 +56,13 @@ public class RandomValuesGenerator {
     public static String generateSpecialChar(Integer size) {
         return random.ints(0, Short.MAX_VALUE)
                 .limit(size)
-                .filter(i ->
-                        !((i >= ZERO_CHAR && i <= NINE_CHAR)
-                                || (i >= LOWERCASE_A && i <= LOWERCASE_Z)
-                                || ((i >= UPPERCASE_A & i <= UPPERCASE_Z)))
-                )
+                .filter(
+                        i ->
+                                !((i >= ZERO_CHAR && i <= NINE_CHAR)
+                                        || (i >= LOWERCASE_A && i <= LOWERCASE_Z)
+                                        || ((i >= UPPERCASE_A & i <= UPPERCASE_Z))))
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
-
-
     }
 
     /**
@@ -83,19 +78,26 @@ public class RandomValuesGenerator {
      * Requirements followed: size; lowercase and uppercase letters; numeric chars
      * @return Acceptable password for {@link PasswordValidation}
      */
-    public static String password(){
-        int requiredNumeric, requiredLowercase, requiredUppercase, requiredSpecial, requiredSize = 8;
-        requiredNumeric =  requiredLowercase = requiredUppercase = requiredSpecial = 1;
+    public static String password() {
+        int requiredNumeric,
+                requiredLowercase,
+                requiredUppercase,
+                requiredSpecial,
+                requiredSize = 8;
+        requiredNumeric = requiredLowercase = requiredUppercase = requiredSpecial = 1;
 
         int numericSize = randomBetween(requiredNumeric, 3);
         int lowercaseSize = randomBetween(requiredLowercase, 3);
         int uppercaseSize = randomBetween(requiredUppercase, 3);
-        int specialCharSize = Math.max(requiredSpecial, requiredSize - (numericSize + lowercaseSize + uppercaseSize));
+        int specialCharSize =
+                Math.max(
+                        requiredSpecial,
+                        requiredSize - (numericSize + lowercaseSize + uppercaseSize));
 
-        return generateNumeric(numericSize) +
-                generateLowercase(lowercaseSize) +
-                generateUppercase(uppercaseSize) +
-                generateSpecialChar(specialCharSize);
+        return generateNumeric(numericSize)
+                + generateLowercase(lowercaseSize)
+                + generateUppercase(uppercaseSize)
+                + generateSpecialChar(specialCharSize);
     }
 
     /**
@@ -105,11 +107,13 @@ public class RandomValuesGenerator {
     public static String generateAlphaNumeric(Integer size) {
 
         return random.ints(ZERO_CHAR, LOWERCASE_Z + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97)) // not in  gap of numeric-Uppercase or gap Uppercase-Lowercase
+                .filter(
+                        i ->
+                                (i <= 57 || i >= 65)
+                                        && (i <= 90 || i >= 97)) // not in  gap of numeric-Uppercase
+                // or gap Uppercase-Lowercase
                 .limit(size)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
-
-
 }

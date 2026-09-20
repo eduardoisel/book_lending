@@ -12,6 +12,5 @@ public interface BookApi {
      *
      * @return Book information from the API
      */
-    @Nullable
-    Book getBook(@NonNull String isbn);
+    @Nullable Book getBook(@NonNull String isbn);
 }

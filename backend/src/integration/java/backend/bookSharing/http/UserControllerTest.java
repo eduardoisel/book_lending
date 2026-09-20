@@ -1,7 +1,5 @@
 package backend.bookSharing.http;
 
-
-
 public class UserControllerTest extends ControllerTestBase {
 
     /*

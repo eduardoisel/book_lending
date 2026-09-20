@@ -11,12 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 public interface OwnedRepository extends JpaRepository<Owned, OwnedId> {
 
-    @Query(value = """
-            SELECT * FROM OWNED o JOIN APP_USER u ON o.user_id = u.id WHERE
-                        o.book_id = :book_id AND
-                        ST_DWithin(u.location, :point, :distance) = true
-            """, nativeQuery = true
-            )
+    @Query(
+            value =
+                    """
+                    SELECT * FROM OWNED o JOIN APP_USER u ON o.user_id = u.id WHERE
+                                o.book_id = :book_id AND
+                                ST_DWithin(u.location, :point, :distance) = true
+                    """,
+            nativeQuery = true)
     Page<Owned> findNearbyOwners(
             @Param("book_id") Integer bookId,
             @Param("point") Point point,

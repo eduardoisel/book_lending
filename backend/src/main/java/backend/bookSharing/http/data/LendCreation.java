@@ -9,5 +9,4 @@ import com.fasterxml.jackson.annotation.Nulls;
  * */
 public record LendCreation(
         @JsonSetter(nulls = Nulls.FAIL) String isbn,
-        @JsonSetter(nulls = Nulls.FAIL) String receiverEmail) {
-}
+        @JsonSetter(nulls = Nulls.FAIL) String receiverEmail) {}

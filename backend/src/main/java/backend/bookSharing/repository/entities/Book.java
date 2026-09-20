@@ -14,7 +14,6 @@ import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -45,34 +44,36 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //not unique, can be null
+    // not unique, can be null
     @Column(unique = false, nullable = true, name = "isbn_10", length = 10)
     private String isbnTen;
 
-    //not unique, can be null
+    // not unique, can be null
     @Column(unique = false, nullable = true, name = "isbn_13", length = 13)
     private String isbnThirteen;
 
     @Column(length = 100, unique = false, nullable = false)
     private String title;
 
-    //https://www.tutorialpedia.org/blog/how-to-map-postgresql-enum-with-jpa-and-hibernate/ to see
+    // https://www.tutorialpedia.org/blog/how-to-map-postgresql-enum-with-jpa-and-hibernate/ to see
     @Enumerated(EnumType.STRING)
     @Column(name = "lang")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Language language;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY) //note: mapped by string value is from owned class Owned reference name field
+    @OneToMany(
+            mappedBy = "book",
+            fetch = FetchType.LAZY) // note: mapped by string value is from owned class Owned
+    // reference name field
     @BatchSize(size = 20)
     @ToString.Exclude
-    private List<Owned> owners; //private Set<Owned> owners;
+    private List<Owned> owners; // private Set<Owned> owners;
 
-    public Book(String isbn_10, String isbn_13, String title, Language language){
+    public Book(String isbn_10, String isbn_13, String title, Language language) {
         this.isbnTen = isbn_10;
         this.isbnThirteen = isbn_13;
         this.title = title;
         this.language = language;
     }
-
 }

@@ -1,8 +1,10 @@
 package backend.bookSharing.services.user.failures;
 
-public sealed abstract class LogoutError extends Exception permits LogoutError.TokenInvalidForAuthentication{
+public abstract sealed class LogoutError extends Exception
+        permits LogoutError.TokenInvalidForAuthentication {
 
-    private LogoutError(){}
+    private LogoutError() {}
 
-    public static final class TokenInvalidForAuthentication extends LogoutError {};
+    public static final class TokenInvalidForAuthentication extends LogoutError {}
+    ;
 }

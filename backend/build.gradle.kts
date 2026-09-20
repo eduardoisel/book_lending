@@ -10,9 +10,34 @@ plugins {
     // Replaces all autowired by using RequiredArgsConstructor
     id("io.freefair.lombok") version "9.2.0"
     // 22/7
-    //https://plugins.gradle.org/plugin/com.coditory.integration-test
+    // https://plugins.gradle.org/plugin/com.coditory.integration-test
     id("com.coditory.integration-test") version "2.2.5"
 
+    //code formatter
+    // https://plugins.gradle.org/plugin/com.diffplug.spotless
+    id("com.diffplug.spotless") version "8.10.2"
+
+}
+
+// From https://github.com/diffplug/spotless/tree/main/plugin-gradle quickstart
+spotless {
+
+    format( "misc") {
+    // define the files to apply `misc` to
+    target ("*.gradle", ".gitattributes", ".gitignore")
+
+    // define the steps to apply to those files
+    trimTrailingWhitespace()
+    leadingSpacesToTabs() // or leadingTabsToSpaces. Takes an integer argument if you don't like 4
+    endWithNewline()
+    }
+    java {
+
+        // apply a specific flavor of google-java-format
+        googleJavaFormat("1.22.0").aosp().reflowLongStrings().skipJavadocFormatting()
+        // fix formatting of type annotations
+        formatAnnotations()
+    }
 }
 
 java {

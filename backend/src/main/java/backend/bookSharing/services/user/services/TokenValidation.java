@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenValidation {
 
-    public static class TokenValidTime{
+    public static class TokenValidTime {
         private final Duration tokenTtl;
 
         private final Duration tokenTtlRolling;
@@ -24,31 +24,32 @@ public class TokenValidation {
          *
          * @throws  InvalidParameterException if any are negative
          */
-        public TokenValidTime(Duration tokenTtl, Duration tokenTtlRolling){
+        public TokenValidTime(Duration tokenTtl, Duration tokenTtlRolling) {
 
-            if (tokenTtl.isNegative()){
+            if (tokenTtl.isNegative()) {
                 throw new InvalidParameterException("Token time to live cannot be negative");
             }
 
-            if (tokenTtlRolling.isNegative()){
-                throw new InvalidParameterException("Token rolling time to live cannot be negative");
+            if (tokenTtlRolling.isNegative()) {
+                throw new InvalidParameterException(
+                        "Token rolling time to live cannot be negative");
             }
 
             this.tokenTtl = tokenTtl;
             this.tokenTtlRolling = tokenTtlRolling;
         }
     }
+
     private final Duration tokenTtl;
 
     private final Duration tokenTtlRolling;
 
-    private static final Integer tokenSizeInBytes = 256; //token given to user
+    private static final Integer tokenSizeInBytes = 256; // token given to user
 
     public TokenValidation(TokenValidTime tokenValidTime) {
 
         this.tokenTtl = tokenValidTime.tokenTtl;
         this.tokenTtlRolling = tokenValidTime.tokenTtlRolling;
-
     }
 
     private final MessageDigest messageDigest;
@@ -72,9 +73,7 @@ public class TokenValidation {
     }
 
     private String hash(String input) {
-        return Base64.getUrlEncoder().encodeToString(
-                messageDigest.digest(input.getBytes())
-        );
+        return Base64.getUrlEncoder().encodeToString(messageDigest.digest(input.getBytes()));
     }
 
     public String generateTokenValue() {
@@ -84,9 +83,7 @@ public class TokenValidation {
         secureRandom.nextBytes(array);
 
         return Base64.getUrlEncoder().encodeToString(array);
-
     }
-
 
     /**
      * Quick check if received user token itself to see if it is token format
@@ -97,10 +94,9 @@ public class TokenValidation {
     public Boolean canBeToken(String token) {
         try {
             return Base64.getUrlDecoder().decode(token).length == tokenSizeInBytes;
-        } catch (IllegalArgumentException _){
+        } catch (IllegalArgumentException _) {
             return false;
         }
-
     }
 
     /**
@@ -120,9 +116,7 @@ public class TokenValidation {
                 || ttlRollExpireDate.isBefore(now);
     }
 
-
     public String createTokenValidationInformation(String token) {
         return hash(token);
     }
-
 }

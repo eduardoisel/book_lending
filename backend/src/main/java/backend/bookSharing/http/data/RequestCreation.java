@@ -12,5 +12,4 @@ import com.fasterxml.jackson.annotation.Nulls;
 public record RequestCreation(
         @JsonSetter(nulls = Nulls.FAIL) String isbn,
         @JsonSetter(nulls = Nulls.FAIL) String ownerEmail,
-        @JsonSetter(nulls = Nulls.FAIL) Integer timeInDays) {
-}
+        @JsonSetter(nulls = Nulls.FAIL) Integer timeInDays) {}

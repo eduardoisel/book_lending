@@ -1,22 +1,21 @@
 package services.user;
 
-import backend.bookSharing.RandomValuesGenerator;
-import backend.bookSharing.services.user.services.PasswordValidation;
 import static org.junit.jupiter.api.Assertions.*;
 
+import backend.bookSharing.RandomValuesGenerator;
+import backend.bookSharing.services.user.services.PasswordValidation;
 import backend.bookSharing.utils.PasswordValidationInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class PasswordValidationTest {
 
-    @Autowired
-    PasswordValidation passwordValidation = new PasswordValidation();
+    @Autowired PasswordValidation passwordValidation = new PasswordValidation();
 
-//    @Test
-//    public void certainFailure(){
-//        fail();
-//    }
+    //    @Test
+    //    public void certainFailure(){
+    //        fail();
+    //    }
 
     @Test
     public void failureBySize() {
@@ -31,7 +30,6 @@ public class PasswordValidationTest {
         } catch (Exception e) {
             fail(e);
         }
-
     }
 
     @Test
@@ -47,7 +45,6 @@ public class PasswordValidationTest {
         } catch (Exception e) {
             fail(e);
         }
-
     }
 
     @Test
@@ -63,7 +60,6 @@ public class PasswordValidationTest {
         } catch (Exception e) {
             fail(e);
         }
-
     }
 
     @Test
@@ -72,16 +68,14 @@ public class PasswordValidationTest {
 
         assertThrowsExactly(
                 PasswordValidation.NoSpecialCharException.class,
-                ()-> passwordValidation.isSafePassword(password));
-
-
+                () -> passwordValidation.isSafePassword(password));
     }
 
     @Test
     public void fullWorkingPassword() {
         String password = "abcDEFGHIJKL_\"";
 
-        int  a = '_';
+        int a = '_';
         int b = '"';
         try {
             passwordValidation.isSafePassword(password);
@@ -91,15 +85,16 @@ public class PasswordValidationTest {
     }
 
     @Test
-    public void encodingAndMatchingTest(){
+    public void encodingAndMatchingTest() {
         String password = RandomValuesGenerator.password();
         String salt = passwordValidation.getSalt();
 
         String encodedPassword = passwordValidation.passwordEncoding(password, salt);
 
-        //assertEquals(passwordValidation.passwordEncoding(password), encodedPassword);
+        // assertEquals(passwordValidation.passwordEncoding(password), encodedPassword);
 
-        assertTrue(passwordValidation.validatePassword(password, new PasswordValidationInfo(encodedPassword, salt)));
+        assertTrue(
+                passwordValidation.validatePassword(
+                        password, new PasswordValidationInfo(encodedPassword, salt)));
     }
-
 }

@@ -14,6 +14,5 @@ import com.fasterxml.jackson.annotation.Nulls;
 public record UserCreation(
         @JsonSetter(nulls = Nulls.FAIL) String email,
         @JsonSetter(nulls = Nulls.FAIL) String password,
-        double x, double y) {
-
-}
+        double x,
+        double y) {}

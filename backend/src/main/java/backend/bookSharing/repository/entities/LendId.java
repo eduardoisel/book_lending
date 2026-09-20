@@ -23,9 +23,9 @@ was definitely being let as null
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-public class LendId{
+public class LendId {
 
-    //public OwnedId lent;
+    // public OwnedId lent;
 
     @Column(name = "user_id")
     public Integer lentUserId;
@@ -36,12 +36,9 @@ public class LendId{
     @Column(nullable = false, name = "requester_user_id")
     private Integer requesterId;
 
-
     public LendId(OwnedId ownedId, Integer requesterId) {
         this.lentBookId = ownedId.getBookId();
         this.lentUserId = ownedId.getUserId();
         this.requesterId = requesterId;
     }
-
-
 }

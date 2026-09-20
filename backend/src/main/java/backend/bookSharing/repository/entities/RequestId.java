@@ -15,16 +15,14 @@ public class RequestId {
     @Column(name = "requester_user_id")
     private Integer userId;
 
-    public RequestId(OwnedId requested, Integer userId){
+    public RequestId(OwnedId requested, Integer userId) {
         this.requested = requested;
         this.userId = userId;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format(
-                "RequestId[ownedId='%s', requesterUserId='%d']",
-                requested.toString(), userId);
+                "RequestId[ownedId='%s', requesterUserId='%d']", requested.toString(), userId);
     }
-
 }

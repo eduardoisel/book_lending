@@ -20,10 +20,9 @@ import lombok.Setter;
 @Entity
 @EqualsAndHashCode
 @NoArgsConstructor
-public class Owned{
+public class Owned {
 
-    @EmbeddedId
-    private OwnedId id;
+    @EmbeddedId private OwnedId id;
 
     @Setter
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -38,11 +37,13 @@ public class Owned{
     private Book book;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "owned") //note: mapped by string value is from owned class Request field name
+    @OneToMany(
+            mappedBy =
+                    "owned") // note: mapped by string value is from owned class Request field name
     private Set<Request> requests;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "lent") //note: mapped by string value is from owned class Lend field name
+    @OneToOne(mappedBy = "lent") // note: mapped by string value is from owned class Lend field name
     private Lend lend;
 
     /**
@@ -50,15 +51,14 @@ public class Owned{
      * @param user owner of book
      * @param book is the book in question
      */
-    public Owned(User user, Book book){
+    public Owned(User user, Book book) {
         this.user = user;
         this.book = book;
         this.id = new OwnedId(user.getId(), book.getId());
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("Owned[id='%s']", id.toString());
     }
-
 }

@@ -21,5 +21,4 @@ public class OwnedId {
 
     @Column(name = "book_id")
     private Integer bookId;
-
 }

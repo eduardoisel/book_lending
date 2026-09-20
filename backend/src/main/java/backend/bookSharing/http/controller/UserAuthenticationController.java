@@ -29,10 +29,11 @@ public class UserAuthenticationController {
     /**
      * @param body information necessary to create user
      */
-    @Operation(responses = {
-            @ApiResponse(responseCode = "410", description = "Password not up to requirement"),
-            @ApiResponse(responseCode = "400", description = "Repeat email")
-    })
+    @Operation(
+            responses = {
+                @ApiResponse(responseCode = "410", description = "Password not up to requirement"),
+                @ApiResponse(responseCode = "400", description = "Repeat email")
+            })
     @PostMapping("createUser")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createUser(@RequestBody UserCreation body) {
@@ -45,17 +46,18 @@ public class UserAuthenticationController {
 
             return switch (error) {
                 case UserCreationError.WeakPassword weakPassword ->
-                        ResponseEntity.status(400).body("Password is weak. Todo add ways to inform requirements");
+                        ResponseEntity.status(400)
+                                .body("Password is weak. Todo add ways to inform requirements");
                 case UserCreationError.EmailInUse emailInUse ->
-                        ResponseEntity.status(400).body("Email is already in use for this service.");
+                        ResponseEntity.status(400)
+                                .body("Email is already in use for this service.");
                 case UserCreationError.InvalidLongitude invalidLongitude ->
-                        ResponseEntity.status(400).body("Longitude needs to be between -180 and 180.");
+                        ResponseEntity.status(400)
+                                .body("Longitude needs to be between -180 and 180.");
                 case UserCreationError.InvalidLatitude invalidLatitude ->
                         ResponseEntity.status(400).body("Latitude needs to be between -90 and 90.");
             };
-
         }
-
     }
 
     @PostMapping("login")
@@ -72,16 +74,18 @@ public class UserAuthenticationController {
                 case UserAuthenticationError.UserOrPasswordAreInvalid userOrPasswordAreInvalid ->
                         ResponseEntity.status(400).body("User not recognized");
             };
-
         }
-
     }
 
     @DeleteMapping("logout")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<?> logout() {
         try {
-            service.logout((String) SecurityContextHolder.getContext().getAuthentication().getCredentials());
+            service.logout(
+                    (String)
+                            SecurityContextHolder.getContext()
+                                    .getAuthentication()
+                                    .getCredentials());
 
             return ResponseEntity.status(200).body("Deleted token");
 
@@ -91,9 +95,6 @@ public class UserAuthenticationController {
                 case LogoutError.TokenInvalidForAuthentication tokenInvalidForAuthentication ->
                         ResponseEntity.status(400).body("User not recognized");
             };
-
         }
-
     }
-
 }

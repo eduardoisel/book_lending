@@ -1,7 +1,6 @@
 package backend.bookSharing.http.configuration;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +33,6 @@ public class CacheConfiguration {
         cacheNames.add("getBooks");
     }
 
-
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
@@ -43,12 +41,10 @@ public class CacheConfiguration {
         return cacheManager;
     }
 
-    public Caffeine<Object,Object> caffeineConfig() {
+    public Caffeine<Object, Object> caffeineConfig() {
         return Caffeine.newBuilder()
                 .expireAfterWrite(15, TimeUnit.MINUTES) // Cache entries expire after 15 minutes
                 .maximumSize(100) // Maximum of 100 entries in the cache
                 .recordStats(); // For monitoring cache statistics (optional)
     }
-
-
 }

@@ -10,43 +10,46 @@ import org.jspecify.annotations.Nullable;
 public class MockBookApi implements BookApi {
 
     @Override
-    @Nullable
-    public Book getBook(String isbn) {
+    @Nullable public Book getBook(String isbn) {
 
         if (isbn == null) {
             throw new IllegalStateException("Should not be null");
         }
 
         if (isbn.length() == 13) {
-            Optional<Book> b = Arrays.stream(TestData.allBooks)
-                    .filter(book -> {
-                        String isbn13 = book.getIsbnThirteen();
+            Optional<Book> b =
+                    Arrays.stream(TestData.allBooks)
+                            .filter(
+                                    book -> {
+                                        String isbn13 = book.getIsbnThirteen();
 
-                        if (isbn13 == null){
-                            return false;
-                        }
+                                        if (isbn13 == null) {
+                                            return false;
+                                        }
 
-                        return isbn13.equals(isbn);
-                    }).findFirst();
+                                        return isbn13.equals(isbn);
+                                    })
+                            .findFirst();
 
-            if (b.isEmpty()){
+            if (b.isEmpty()) {
                 throw new RuntimeException("Mock api has not found the book");
             }
 
             return b.get();
-
         }
 
-        Optional<Book> b = Arrays.stream(TestData.allBooks)
-                .filter(book -> {
-                    String isbn10 = book.getIsbnTen();
-                    if (isbn10 == null){
-                        return false;
-                    }
-                    return book.getIsbnTen().equals(isbn);
-                }).findFirst();
+        Optional<Book> b =
+                Arrays.stream(TestData.allBooks)
+                        .filter(
+                                book -> {
+                                    String isbn10 = book.getIsbnTen();
+                                    if (isbn10 == null) {
+                                        return false;
+                                    }
+                                    return book.getIsbnTen().equals(isbn);
+                                })
+                        .findFirst();
 
         return b.map(TestData::duplicate).orElse(null);
-
     }
 }

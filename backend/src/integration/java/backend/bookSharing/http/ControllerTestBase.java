@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
-abstract public class ControllerTestBase extends ServiceTestBase {
+public abstract class ControllerTestBase extends ServiceTestBase {
 
-    @Autowired
-    protected MockMvc mockMvc;
-
+    @Autowired protected MockMvc mockMvc;
 }

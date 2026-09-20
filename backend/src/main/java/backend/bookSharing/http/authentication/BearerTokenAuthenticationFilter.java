@@ -18,33 +18,34 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 @RequiredArgsConstructor
-public class BearerTokenAuthenticationFilter extends OncePerRequestFilter { // extends AbstractAuthenticationProcessingFilter// never implemented
+public class BearerTokenAuthenticationFilter
+        extends OncePerRequestFilter { // extends AbstractAuthenticationProcessingFilter// never
+    // implemented
 
-//        private final UserDetailsService userDetailsService;
-//        private final TokenService tokenService;
+    //        private final UserDetailsService userDetailsService;
+    //        private final TokenService tokenService;
 
     private final UserService service;
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
+            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String requestTokenHeader = request.getHeader("Authorization");
 
         /*
-          Necessary. At least on current configurations it will always check, even if the endpoint of the api
-          does not require authentication
-         */
+         Necessary. At least on current configurations it will always check, even if the endpoint of the api
+         does not require authentication
+        */
         if (requestTokenHeader == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
         if (!requestTokenHeader.startsWith("Bearer ")) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token must start with 'Bearer '");
+            response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED, "Token must start with 'Bearer '");
             return;
         }
 
@@ -59,19 +60,16 @@ public class BearerTokenAuthenticationFilter extends OncePerRequestFilter { // e
 
         LinkedList<GrantedAuthority> role = new LinkedList<>();
 
-
-        if (user.getIsAdmin()){
+        if (user.getIsAdmin()) {
             role.add((GrantedAuthority) () -> "ROLE_ADMIN");
         }
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                user, token, role);
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(user, token, role);
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
     }
-
-
 }

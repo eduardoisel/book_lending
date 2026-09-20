@@ -5,8 +5,8 @@ import backend.bookSharing.http.data.RequestCreation;
 import backend.bookSharing.http.returns.ListedData;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.User;
-import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.BookService;
+import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
@@ -16,9 +16,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +31,7 @@ public class BookController {
 
     private final BookService service;
 
-    //private WebContentGenerator a;
+    // private WebContentGenerator a;
 
     /**
      * General list book search by segments
@@ -45,25 +42,32 @@ public class BookController {
     @GetMapping("/")
     @Cacheable(
             value = "getBooks",
-            unless = "#result.getBody().hasNextPage()==false")//no cache since list may increase or bool change
-    public ResponseEntity<?> getBooks(@RequestParam(required = false, defaultValue = "0") Integer page) {
+            unless =
+                    "#result.getBody().hasNextPage()==false") // no cache since list may increase or
+    // bool change
+    public ResponseEntity<?> getBooks(
+            @RequestParam(required = false, defaultValue = "0") Integer page) {
 
         Page<Book> books = service.getBooks(page);
 
-        ListedData body = new ListedData(books.toList().toArray(), books.hasNext(), books.hasPrevious());
+        ListedData body =
+                new ListedData(books.toList().toArray(), books.hasNext(), books.hasPrevious());
 
         return ResponseEntity.ok().body(body);
-
     }
 
     @GetMapping("/owners/{isbn}")
-    //@Cacheable("bookOwners")
-    public ResponseEntity<?> getBookOwners(@PathVariable String isbn, @RequestParam(required = false, defaultValue = "0") Integer page, @Parameter(hidden = true) User user) {
+    // @Cacheable("bookOwners")
+    public ResponseEntity<?> getBookOwners(
+            @PathVariable String isbn,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @Parameter(hidden = true) User user) {
 
         try {
             Page<User> users = service.getOwnersOfBook(isbn, page, user.getLocation());
 
-            ListedData body = new ListedData(users.toList().toArray(), users.hasNext(), users.hasPrevious());
+            ListedData body =
+                    new ListedData(users.toList().toArray(), users.hasNext(), users.hasPrevious());
 
             return ResponseEntity.status(HttpStatus.OK).body(body);
 
@@ -73,9 +77,7 @@ public class BookController {
                 case BookOwnersSearchError.BookNotFound bookNotFound ->
                         ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book does not exist");
             };
-
         }
-
     }
 
     @PostMapping("/{isbn}")
@@ -88,32 +90,32 @@ public class BookController {
         } catch (BookAdditionError e) {
             return switch (e) {
                 case BookAdditionError.Isbn10InUse isbn10InUse ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getClass().getSimpleName());
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(e.getClass().getSimpleName());
                 case BookAdditionError.Isbn13InUse isbn13InUse ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getClass().getSimpleName());
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(e.getClass().getSimpleName());
                 case BookAdditionError.BookNotFound bookNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getClass().getSimpleName());
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(e.getClass().getSimpleName());
             };
-
         }
-
     }
 
     @PostMapping("/request")
-    public ResponseEntity<?> requestBook(@RequestBody RequestCreation body, @Parameter(hidden = true) User authenticatedUser) {
-        if (body.isbn() == null){
+    public ResponseEntity<?> requestBook(
+            @RequestBody RequestCreation body, @Parameter(hidden = true) User authenticatedUser) {
+        if (body.isbn() == null) {
             System.out.println("Should be impossible");
         }
 
+        // AnonymousAuthenticationToken a;
 
-        //AnonymousAuthenticationToken a;
-
-        //SecurityContextImpl s;
+        // SecurityContextImpl s;
 
         try {
-            service.requestBook(body.isbn(), body.ownerEmail(),
-                    authenticatedUser,
-                    body.timeInDays());
+            service.requestBook(
+                    body.isbn(), body.ownerEmail(), authenticatedUser, body.timeInDays());
 
             return ResponseEntity.status(HttpStatus.OK).body("Request done");
 
@@ -121,19 +123,24 @@ public class BookController {
 
             return switch (error) {
                 case BookRequestError.AlreadyRequested alreadyRequested ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Already requested this book");
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Already requested this book");
                 case BookRequestError.CannotRequestFromSelf cannotRequestFromSelf ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Owner cannot request its book");
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Owner cannot request its book");
                 case BookRequestError.OwnershipNotFound ownershipNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Book %s is not owned by user %s", body.isbn(), body.ownerEmail()));
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(
+                                        String.format(
+                                                "Book %s is not owned by user %s",
+                                                body.isbn(), body.ownerEmail()));
             };
         }
-
     }
 
-
     @PostMapping("/lend")
-    public ResponseEntity<?> lendBook(@RequestBody LendCreation body, @Parameter(hidden = true) User user) {
+    public ResponseEntity<?> lendBook(
+            @RequestBody LendCreation body, @Parameter(hidden = true) User user) {
 
         try {
             service.lendBook(body.isbn(), body.receiverEmail(), user);
@@ -144,14 +151,12 @@ public class BookController {
 
             return switch (error) {
                 case BookLendError.AlreadyLent alreadyLent ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot lend already lent book");
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Cannot lend already lent book");
                 case BookLendError.RequestNotFound requestNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot lend to someone who did not request book");
+                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Cannot lend to someone who did not request book");
             };
         }
-
-
     }
-
-
 }

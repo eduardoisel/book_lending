@@ -1,6 +1,5 @@
 package backend.bookSharing.repository.entities;
 
-
 import backend.bookSharing.utils.PasswordValidationInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -9,15 +8,12 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Size;
 import java.util.Collection;
 import java.util.List;
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,25 +32,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 @ToString
 public class User implements UserDetails {
 
-    @Transient
-    public static final int saltSize = 2;
-    @Transient
-    public static final int maxEmailSize = 70;
+    @Transient public static final int saltSize = 2;
+    @Transient public static final int maxEmailSize = 70;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(unique = true)
-    @Size(max = maxEmailSize, message = "{validation.name.size.too_long}")
-    private String email;
+    @Size(max = maxEmailSize, message = "{validation.name.size.too_long}") private String email;
 
     /**
      * Possibly to be changed so it is on another table
      */
-    @JsonIgnore
-    @Setter
-    private Boolean locked = false;
+    @JsonIgnore @Setter private Boolean locked = false;
 
     @Column(name = "has_admin_powers")
     private Boolean isAdmin;
@@ -76,16 +67,23 @@ public class User implements UserDetails {
     @Column(columnDefinition = "geography(Point,4326)")
     private Point location;
 
-//    @JdbcTypeCode(SqlTypes.GEOGRAPHY)
-//    private Geometry<G2D> location;
+    //    @JdbcTypeCode(SqlTypes.GEOGRAPHY)
+    //    private Geometry<G2D> location;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) //note: mapped by string value is from owned class user reference name member
+    @OneToMany(
+            mappedBy = "user",
+            fetch = FetchType.LAZY) // note: mapped by string value is from owned class user
+    // reference name member
     @ToString.Exclude
     private List<Owned> owned;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", orphanRemoval = true) //note: mapped by string value is from owned class user reference name member
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval =
+                    true) // note: mapped by string value is from owned class user reference name
+    // member
     @ToString.Exclude
     private List<Token> tokens;
 
@@ -106,7 +104,7 @@ public class User implements UserDetails {
     }
 
     @JsonIgnore
-    public PasswordValidationInfo getValidationInfo(){
+    public PasswordValidationInfo getValidationInfo() {
         return new PasswordValidationInfo(hash, salt);
     }
 
@@ -145,5 +143,4 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
 }

@@ -1,10 +1,14 @@
 package backend.bookSharing.services.user.failures;
 
-public abstract sealed class UserCreationError extends Exception permits UserCreationError.EmailInUse, UserCreationError.WeakPassword, UserCreationError.InvalidLatitude, UserCreationError.InvalidLongitude{
+public abstract sealed class UserCreationError extends Exception
+        permits UserCreationError.EmailInUse,
+                UserCreationError.WeakPassword,
+                UserCreationError.InvalidLatitude,
+                UserCreationError.InvalidLongitude {
 
-    private UserCreationError(){}
+    private UserCreationError() {}
 
-    private UserCreationError(String message){
+    private UserCreationError(String message) {
         super(message);
     }
 
@@ -12,7 +16,7 @@ public abstract sealed class UserCreationError extends Exception permits UserCre
      * Password is not safe enough. Exact requirements to be defined
      */
     public static final class WeakPassword extends UserCreationError {
-        public WeakPassword(String password){
+        public WeakPassword(String password) {
             super(String.format("Password %s is considered weak", password));
         }
     }
@@ -22,9 +26,7 @@ public abstract sealed class UserCreationError extends Exception permits UserCre
      */
     public static final class EmailInUse extends UserCreationError {}
 
-    public static final class InvalidLatitude extends UserCreationError {
-    }
+    public static final class InvalidLatitude extends UserCreationError {}
 
-    public static final class InvalidLongitude extends UserCreationError {
-    }
+    public static final class InvalidLongitude extends UserCreationError {}
 }

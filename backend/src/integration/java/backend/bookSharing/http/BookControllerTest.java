@@ -11,47 +11,42 @@ public class BookControllerTest extends ControllerTestBase {
 
     @Test
     @WithMockUser
-    public void addBookByIsbn10() throws Exception{
+    public void addBookByIsbn10() throws Exception {
 
         String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/books/{isbn}", isbn10)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/books/{isbn}", isbn10)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
-
     }
 
     @Test
     @WithMockUser
-    public void addBookByIsbn13() throws Exception{
+    public void addBookByIsbn13() throws Exception {
 
         String isbn13 = TestData.booksExclusiveFromApi[0].getIsbnThirteen();
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/books/{isbn}", isbn13)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/books/{isbn}", isbn13)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
-
     }
-
 
     @Test
     @WithMockUser
-    public void addBookTwice() throws Exception{
+    public void addBookTwice() throws Exception {
 
         String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/books/{isbn}", isbn10)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/books/{isbn}", isbn10)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/books/{isbn}", isbn10)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/books/{isbn}", isbn10)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
     }
-
 }

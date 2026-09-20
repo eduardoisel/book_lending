@@ -54,35 +54,33 @@ public class UserServiceImpl implements UserService {
 
     private final TokenValidation tokenValidation;
 
-    //todo should probably initialized somewhere else as a bean
+    // todo should probably initialized somewhere else as a bean
     private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
 
     @Override
-    public Page<Book> getOwnedBooks(Integer userId, Integer pageNumber) throws UserOwnershipSearchError {
+    public Page<Book> getOwnedBooks(Integer userId, Integer pageNumber)
+            throws UserOwnershipSearchError {
 
         if (!userRepo.existsById(userId)) {
             throw new UserOwnershipSearchError.UserDoesNotExist();
         }
 
-        return ownedRepo.findByUserId(userId, PageRequest.of(
-                pageNumber,
-                20
-        )).map(Owned::getBook);
-
+        return ownedRepo.findByUserId(userId, PageRequest.of(pageNumber, 20)).map(Owned::getBook);
     }
 
     @Override
-    public Page<Request> getRequestsOfBook(Integer ownerId, Integer bookId, Integer pageNumber) throws OwnershipRequestSearchError {
+    public Page<Request> getRequestsOfBook(Integer ownerId, Integer bookId, Integer pageNumber)
+            throws OwnershipRequestSearchError {
 
         if (!ownedRepo.existsById(new OwnedId(ownerId, bookId))) {
             throw new OwnershipRequestSearchError.OwnershipDoesNotExist();
         }
 
-        return requestRepo.findByOwnedId(new OwnedId(ownerId, bookId), PageRequest.of(
-                pageNumber,
-                20 //, Sort.by("book_id")
-        ));
-
+        return requestRepo.findByOwnedId(
+                new OwnedId(ownerId, bookId),
+                PageRequest.of(
+                        pageNumber, 20 // , Sort.by("book_id")
+                        ));
     }
 
     @Override
@@ -92,7 +90,8 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
-        Optional<Token> searchedToken = tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
+        Optional<Token> searchedToken =
+                tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
 
         if (searchedToken.isEmpty()) {
             return null;
@@ -108,11 +107,11 @@ public class UserServiceImpl implements UserService {
         retrievedToken.setLastUsed(Timestamp.from(Instant.now())); // to update tokenRollingTtl
 
         return tokenRepo.save(retrievedToken).getUser();
-
     }
 
     @Override
-    public Integer createUser(String email, String password, double x, double y) throws UserCreationError {
+    public Integer createUser(String email, String password, double x, double y)
+            throws UserCreationError {
 
         if (x < -180 || x > 180) {
             throw new UserCreationError.InvalidLongitude();
@@ -124,7 +123,7 @@ public class UserServiceImpl implements UserService {
         try {
             passwordValidation.isSafePassword(password);
         } catch (Exception e) {
-            throw new UserCreationError.WeakPassword(password); //todo communicate more specific
+            throw new UserCreationError.WeakPassword(password); // todo communicate more specific
         }
 
         Optional<User> emailSearch = userRepo.findByEmail(email);
@@ -135,12 +134,13 @@ public class UserServiceImpl implements UserService {
 
         String salt = passwordValidation.getSalt();
 
-        User created = userRepo.save(new User(
-                geometryFactory.createPoint(new Coordinate(x, y)),
-                email,
-                passwordValidation.passwordEncoding(password, salt),
-                salt
-        ));
+        User created =
+                userRepo.save(
+                        new User(
+                                geometryFactory.createPoint(new Coordinate(x, y)),
+                                email,
+                                passwordValidation.passwordEncoding(password, salt),
+                                salt));
 
         return created.getId();
     }
@@ -162,12 +162,14 @@ public class UserServiceImpl implements UserService {
 
         String token = tokenValidation.generateTokenValue();
 
-        Token createdToken = new Token(tokenValidation.createTokenValidationInformation(token), searchedUser.get());
+        Token createdToken =
+                new Token(
+                        tokenValidation.createTokenValidationInformation(token),
+                        searchedUser.get());
 
         tokenRepo.save(createdToken);
 
         return token;
-
     }
 
     @Override
@@ -176,20 +178,23 @@ public class UserServiceImpl implements UserService {
             throw new LogoutError.TokenInvalidForAuthentication();
         }
 
-        Optional<Token> searchedToken = tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
+        Optional<Token> searchedToken =
+                tokenRepo.findById(tokenValidation.createTokenValidationInformation(token));
 
         if (searchedToken.isEmpty()) {
             throw new LogoutError.TokenInvalidForAuthentication();
         }
 
         tokenRepo.delete(searchedToken.get());
-
     }
 
     @Override
     public Owned addOwner(String isbn, User user) throws OwnerShipAdditionError {
 
-        Book searchedBook = isbn.length() == 10 ? bookRepo.findByIsbnTen(isbn) : bookRepo.findByIsbnThirteen(isbn);
+        Book searchedBook =
+                isbn.length() == 10
+                        ? bookRepo.findByIsbnTen(isbn)
+                        : bookRepo.findByIsbnThirteen(isbn);
 
         if (searchedBook == null) {
             throw new OwnerShipAdditionError.BookNotFound();
@@ -202,23 +207,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return ownedRepo.save(toInsert);
-
     }
 
     @Override
     public void lockAccount(String email) throws UserLockingError {
 
-        try{
+        try {
             this.loadUserByUsername(email).setLocked(true);
         } catch (UsernameNotFoundException e) {
             throw new UserLockingError.UserDoesNotExist(e);
         }
-
     }
-
 
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+        return userRepo.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

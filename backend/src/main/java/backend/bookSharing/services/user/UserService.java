@@ -26,7 +26,8 @@ public interface UserService extends UserDetailsService {
     Page<Book> getOwnedBooks(Integer userId, Integer pageNumber) throws UserOwnershipSearchError;
 
     @Transactional
-    Page<Request> getRequestsOfBook(Integer ownerId, Integer bookId, Integer pageNumber) throws OwnershipRequestSearchError;
+    Page<Request> getRequestsOfBook(Integer ownerId, Integer bookId, Integer pageNumber)
+            throws OwnershipRequestSearchError;
 
     /**
      * @return a {@link User} that may be null. Is specifically not either to avoid rollback on failure, as on failure
@@ -73,6 +74,4 @@ public interface UserService extends UserDetailsService {
      */
     @Transactional
     void lockAccount(String email) throws UserLockingError;
-
-
 }

@@ -1,20 +1,17 @@
 package backend.bookSharing.repository;
 
-import backend.bookSharing.TestData;
-import backend.bookSharing.repository.entities.User;
-import java.util.Arrays;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import backend.bookSharing.TestData;
+import backend.bookSharing.repository.entities.User;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserRepositoryTest extends DatabaseTest {
 
     private final UserRepository userRepository;
-
 
     @Autowired
     public UserRepositoryTest(UserRepository userRepository) {
@@ -22,7 +19,7 @@ public class UserRepositoryTest extends DatabaseTest {
     }
 
     @Test
-    public void createAndSearchTest(){
+    public void createAndSearchTest() {
         User savedUser = TestData.duplicate(TestData.users.getFirst());
 
         assertEquals(0, userRepository.count());
@@ -33,11 +30,10 @@ public class UserRepositoryTest extends DatabaseTest {
 
         assertEquals(savedUser.getEmail(), foundUser.getEmail());
         assertEquals(savedUser.getHash(), foundUser.getHash());
-
     }
 
     @Test
-    public void deletionTest(){
+    public void deletionTest() {
         assertEquals(0, userRepository.count());
 
         User temporaryInsert = TestData.duplicate(TestData.users.getFirst());
@@ -49,7 +45,7 @@ public class UserRepositoryTest extends DatabaseTest {
     }
 
     @Test
-    public void findByEmail(){
+    public void findByEmail() {
         User inserted = TestData.duplicate(TestData.clearPasswordUsers[0].toUser());
 
         userRepository.save(inserted);
@@ -63,7 +59,5 @@ public class UserRepositoryTest extends DatabaseTest {
         assertEquals(inserted.getEmail(), found.getEmail());
         assertEquals(inserted.getHash(), found.getHash());
         assertEquals(inserted.getLocation(), found.getLocation());
-
     }
-
 }

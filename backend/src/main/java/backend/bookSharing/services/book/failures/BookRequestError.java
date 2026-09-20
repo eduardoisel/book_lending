@@ -1,16 +1,18 @@
 package backend.bookSharing.services.book.failures;
 
-public abstract sealed class BookRequestError extends Exception permits BookRequestError.OwnershipNotFound, BookRequestError.AlreadyRequested, BookRequestError.CannotRequestFromSelf{
+public abstract sealed class BookRequestError extends Exception
+        permits BookRequestError.OwnershipNotFound,
+                BookRequestError.AlreadyRequested,
+                BookRequestError.CannotRequestFromSelf {
 
-    private BookRequestError(){}
+    private BookRequestError() {}
 
-    public static final class CannotRequestFromSelf extends BookRequestError{}
+    public static final class CannotRequestFromSelf extends BookRequestError {}
 
-    public static final class OwnershipNotFound extends  BookRequestError{}
+    public static final class OwnershipNotFound extends BookRequestError {}
 
     /**
      * Only thrown if requested book from that specific person, policy may be changed
      */
-    public static final class AlreadyRequested extends BookRequestError{}
-
+    public static final class AlreadyRequested extends BookRequestError {}
 }

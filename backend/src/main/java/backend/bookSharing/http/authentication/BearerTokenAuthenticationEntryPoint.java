@@ -10,26 +10,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class BearerTokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-        /**
-         * This method is called when an unauthenticated user tries to access a secured
-         * resource. It sets the HTTP response status to 401 (Unauthorized) and sends an
-         * error message.
-         *
-         * @param request       The HTTP request that resulted in an
-         *                      AuthenticationException
-         * @param response      The HTTP response
-         * @param authException The AuthenticationException that was thrown when trying
-         *                      to authenticate the user
-         *
-         * @throws IOException      If an input or output exception occurs
-         */
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response,
-                             AuthenticationException authException) throws IOException {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setHeader("WWW-Authenticate", "Bearer");
-            response.getWriter().println("Access Denied !! " + authException.getMessage());
-        }
-
-
+    /**
+     * This method is called when an unauthenticated user tries to access a secured
+     * resource. It sets the HTTP response status to 401 (Unauthorized) and sends an
+     * error message.
+     *
+     * @param request       The HTTP request that resulted in an
+     *                      AuthenticationException
+     * @param response      The HTTP response
+     * @param authException The AuthenticationException that was thrown when trying
+     *                      to authenticate the user
+     *
+     * @throws IOException      If an input or output exception occurs
+     */
+    @Override
+    public void commence(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException authException)
+            throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setHeader("WWW-Authenticate", "Bearer");
+        response.getWriter().println("Access Denied !! " + authException.getMessage());
     }
+}

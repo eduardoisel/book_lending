@@ -54,8 +54,7 @@ public class Token {
     public Token(String token, User user) {
         this.token = token;
         this.user = user;
-//        this.lastUsed = Timestamp.from(Instant.now());
-//        this.createdDate = Timestamp.from(Instant.now());
+        //        this.lastUsed = Timestamp.from(Instant.now());
+        //        this.createdDate = Timestamp.from(Instant.now());
     }
-
 }

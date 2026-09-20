@@ -12,12 +12,11 @@ testContext will expect the same database
  */
 public class PostgresDatabase {
 
-    @Container
-    @ServiceConnection
-    static protected PostgreSQLContainer container =
-            new PostgreSQLContainer(DockerImageName.parse("postgis/postgis:12-3.0")
-                    .asCompatibleSubstituteFor("postgres"))
+    @Container @ServiceConnection
+    protected static PostgreSQLContainer container =
+            new PostgreSQLContainer(
+                            DockerImageName.parse("postgis/postgis:12-3.0")
+                                    .asCompatibleSubstituteFor("postgres"))
                     .withReuse(true)
                     .withStartupTimeout(Duration.ofMinutes(2));
-
 }

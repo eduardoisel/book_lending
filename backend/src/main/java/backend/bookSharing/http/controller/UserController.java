@@ -5,9 +5,9 @@ import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
+import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
 import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
-import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,18 +41,23 @@ public class UserController {
      */
     @GetMapping("owned/{userId}")
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<?> booksOwned(@PathVariable Integer userId, @RequestParam(required = false, defaultValue = "0") Integer page) {
+    public ResponseEntity<?> booksOwned(
+            @PathVariable Integer userId,
+            @RequestParam(required = false, defaultValue = "0") Integer page) {
 
         try {
             Page<Book> search = service.getOwnedBooks(userId, page);
 
             return ResponseEntity.status(200)
-                    .body(new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious()));
+                    .body(
+                            new ListedData(
+                                    search.toList().toArray(),
+                                    search.hasNext(),
+                                    search.hasPrevious()));
 
-        }catch (UserOwnershipSearchError _){
+        } catch (UserOwnershipSearchError _) {
             return ResponseEntity.status(400).body("User does not exist");
         }
-
     }
 
     /**
@@ -62,48 +67,55 @@ public class UserController {
      * @param page pagination parameter. First page is 0
      * @return success or failure
      */
-    @Operation(responses = {
-            @ApiResponse(responseCode = "400", description = "User does not own book"),
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved instances of requests of owned book by user")
-    })
+    @Operation(
+            responses = {
+                @ApiResponse(responseCode = "400", description = "User does not own book"),
+                @ApiResponse(
+                        responseCode = "200",
+                        description =
+                                "Successfully retrieved instances of requests of owned book by"
+                                        + " user")
+            })
     @GetMapping("owned/{userId}/requests/{bookId}")
-    public ResponseEntity<?> bookRequests(@PathVariable Integer userId, @PathVariable Integer bookId, @RequestParam(required = false, defaultValue = "0") Integer page) {
+    public ResponseEntity<?> bookRequests(
+            @PathVariable Integer userId,
+            @PathVariable Integer bookId,
+            @RequestParam(required = false, defaultValue = "0") Integer page) {
 
         try {
             Page<Request> search = service.getRequestsOfBook(userId, bookId, page);
 
             return ResponseEntity.status(200)
-                    .body(new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious()));
+                    .body(
+                            new ListedData(
+                                    search.toList().toArray(),
+                                    search.hasNext(),
+                                    search.hasPrevious()));
 
-        }catch (OwnershipRequestSearchError _){
+        } catch (OwnershipRequestSearchError _) {
             return ResponseEntity.status(400).body("User does not own the book");
         }
-
     }
 
     @PostMapping("bookOwned/{isbn}")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<?> addBookOwned(@PathVariable String isbn, @Parameter(hidden = true) User authenticatedUser) {
+    public ResponseEntity<?> addBookOwned(
+            @PathVariable String isbn, @Parameter(hidden = true) User authenticatedUser) {
 
         try {
             Owned result = service.addOwner(isbn, authenticatedUser);
-
 
             return ResponseEntity.status(200).body(String.format("Added as owned: %s \n", result));
 
         } catch (OwnerShipAdditionError error) {
             return switch (error) {
-
                 case OwnerShipAdditionError.BookNotFound bookNotFound ->
                         ResponseEntity.status(404).body("Book from isbn not recognized");
 
                 case OwnerShipAdditionError.AlreadyMarkedAsOwned alreadyMarkedAsOwned ->
                         ResponseEntity.status(400).body("User already marked book as owned");
-
             };
-
         }
-
     }
 
     @PostMapping("/blacklist/{email}")
@@ -113,14 +125,13 @@ public class UserController {
         try {
             service.lockAccount(email);
 
-            return  ResponseEntity.status(201).body(String.format("Added as blacklisted: %s \n", email));
+            return ResponseEntity.status(201)
+                    .body(String.format("Added as blacklisted: %s \n", email));
         } catch (UserLockingError error) {
             return switch (error) {
                 case UserLockingError.UserDoesNotExist userDoesNotExist ->
-                    ResponseEntity.status(404).body("User to lock does not exist");
+                        ResponseEntity.status(404).body("User to lock does not exist");
             };
         }
     }
-
-
 }

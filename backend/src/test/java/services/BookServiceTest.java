@@ -1,5 +1,10 @@
 package services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.*;
+
 import backend.bookSharing.RandomValuesGenerator;
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.BookRepository;
@@ -20,11 +25,6 @@ import backend.bookSharing.services.user.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.*;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,35 +35,25 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
-
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @RepositoryMocks
 public class BookServiceTest {
 
-    @MockitoBean
-    private UserService userService;
+    @MockitoBean private UserService userService;
 
-    @Autowired
-    private OwnedRepository ownedRepo;
+    @Autowired private OwnedRepository ownedRepo;
 
-    @Autowired
-    private BookRepository bookRepo;
+    @Autowired private BookRepository bookRepo;
 
-    @Autowired
-    private UserRepository userRepo;
+    @Autowired private UserRepository userRepo;
 
-    @Autowired
-    private RequestRepository requestRepo;
+    @Autowired private RequestRepository requestRepo;
 
-    @Autowired
-    private LendRepository lendRepo;// = Mockito.mock(LendRepository.class);
+    @Autowired private LendRepository lendRepo; // = Mockito.mock(LendRepository.class);
 
-    @Autowired
-    private BookApi bookApi;// = Mockito.mock(BookApi.class);
+    @Autowired private BookApi bookApi; // = Mockito.mock(BookApi.class);
 
-    @InjectMocks
-    private BookServiceImpl service;
+    @InjectMocks private BookServiceImpl service;
 
     @Test
     public void addBookFromApiTest() throws BookAdditionError {
@@ -71,7 +61,6 @@ public class BookServiceTest {
 
         when(bookRepo.findByIsbnTen(anyString())).thenReturn(null);
         when(bookApi.getBook(book.getIsbnTen())).thenReturn(book);
-
 
         service.addBookFromApi(book.getIsbnTen());
     }
@@ -87,26 +76,24 @@ public class BookServiceTest {
 
         assertThrowsExactly(
                 BookAdditionError.Isbn10InUse.class,
-                () -> service.addBookFromApi(book.getIsbnTen())
-        );
+                () -> service.addBookFromApi(book.getIsbnTen()));
 
         when(bookRepo.findByIsbnThirteen(anyString())).thenReturn(book);
 
         assertThrowsExactly(
                 BookAdditionError.Isbn13InUse.class,
-                () -> service.addBookFromApi(book.getIsbnThirteen())
-        );
-
+                () -> service.addBookFromApi(book.getIsbnThirteen()));
     }
 
     @Test
     public void addBookNotInAPI() {
 
-        Book book = new Book(
-                RandomValuesGenerator.generateNumeric(10),
-                RandomValuesGenerator.generateNumeric(13),
-                RandomValuesGenerator.generateAlphaNumeric(5),
-                Book.Language.English);
+        Book book =
+                new Book(
+                        RandomValuesGenerator.generateNumeric(10),
+                        RandomValuesGenerator.generateNumeric(13),
+                        RandomValuesGenerator.generateAlphaNumeric(5),
+                        Book.Language.English);
 
         when(bookApi.getBook(any())).thenReturn(null);
 
@@ -114,36 +101,30 @@ public class BookServiceTest {
 
         assertThrowsExactly(
                 BookAdditionError.BookNotFound.class,
-                () -> service.addBookFromApi(book.getIsbnTen())
-        );
-
+                () -> service.addBookFromApi(book.getIsbnTen()));
     }
 
     @Test
     public void searchOwnersOfNonExistentBook() {
 
-        Book book = new Book(
-                RandomValuesGenerator.generateNumeric(10),
-                RandomValuesGenerator.generateNumeric(13),
-                RandomValuesGenerator.generateAlphaNumeric(5),
-                Book.Language.English);
+        Book book =
+                new Book(
+                        RandomValuesGenerator.generateNumeric(10),
+                        RandomValuesGenerator.generateNumeric(13),
+                        RandomValuesGenerator.generateAlphaNumeric(5),
+                        Book.Language.English);
 
         when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(null);
         when(bookRepo.findByIsbnThirteen(book.getIsbnThirteen())).thenReturn(null);
 
+        assertThrowsExactly(
+                BookOwnersSearchError.BookNotFound.class,
+                () -> service.getOwnersOfBook(book.getIsbnTen(), 0, null));
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnTen(), 0, null)
-        );
-
-        assertThrowsExactly(
-                BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnThirteen(), 0, null)
-        );
-
+                () -> service.getOwnersOfBook(book.getIsbnThirteen(), 0, null));
     }
-
 
     @Test
     public void searchOwnersOfBook() throws BookOwnersSearchError {
@@ -153,22 +134,19 @@ public class BookServiceTest {
 
         List<User> owners = TestData.users;
 
-        Page<Owned> page = new PageImpl<Owned>(owners.stream().map(user -> new Owned(user, book)).toList());
+        Page<Owned> page =
+                new PageImpl<Owned>(owners.stream().map(user -> new Owned(user, book)).toList());
 
         when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(book);
 
-
-        when(
-                ownedRepo.findNearbyOwners(
-                        eq(book.getId()),
-                        any(),
-                        anyDouble(),
-                        eq(PageRequest.of(pageNumber, 20)))
-        )
+        when(ownedRepo.findNearbyOwners(
+                        eq(book.getId()), any(), anyDouble(), eq(PageRequest.of(pageNumber, 20))))
                 .thenReturn(page);
 
-        assertEquals(owners, service.getOwnersOfBook(book.getIsbnTen(), pageNumber, TestData.points.getFirst()).toList());
-
+        assertEquals(
+                owners,
+                service.getOwnersOfBook(book.getIsbnTen(), pageNumber, TestData.points.getFirst())
+                        .toList());
     }
 
     @Test
@@ -187,7 +165,8 @@ public class BookServiceTest {
 
         when(ownedRepo.findById(owned.getId())).thenReturn(Optional.of(new Owned(lender, book)));
 
-        when(requestRepo.findById(any())) //new RequestId(owned.getId(), receiver.getId()) needs to be any?
+        when(requestRepo.findById(
+                        any())) // new RequestId(owned.getId(), receiver.getId()) needs to be any?
                 .thenReturn(Optional.of(new Request(owned, receiver.getId(), 5)));
 
         when(lendRepo.existsById(new LendId(owned.getId(), receiver.getId()))).thenReturn(false);
@@ -199,8 +178,5 @@ public class BookServiceTest {
         } catch (Exception e) {
             fail("Should not fail", e);
         }
-
-
     }
-
 }

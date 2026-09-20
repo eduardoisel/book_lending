@@ -16,8 +16,7 @@ To use it uncomment teh class annotations, and do not handle the exception direc
 @ControllerAdvice
 public class ExceptionHandling {
 
-    public record ExceptionDto(String problem){}
-
+    public record ExceptionDto(String problem) {}
 
     @ExceptionHandler(BookAdditionError.class)
     @ResponseBody
@@ -36,7 +35,4 @@ public class ExceptionHandling {
     public ExceptionDto handleJsonParseError(HttpMessageNotReadableException ex) {
         return new ExceptionDto(ex.getMessage());
     }
-
-
 }
-

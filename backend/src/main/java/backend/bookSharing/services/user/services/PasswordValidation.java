@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PasswordValidation {
 
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private final PasswordEncoder passwordEncoder =
+            PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     private final SecureRandom secureRandom;
 
@@ -31,11 +32,7 @@ public class PasswordValidation {
         return new String(salt, StandardCharsets.UTF_8);
     }
 
-
-    public Boolean validatePassword(
-            String password,
-            PasswordValidationInfo validationInfo
-    ) {
+    public Boolean validatePassword(String password, PasswordValidationInfo validationInfo) {
         return passwordEncoder.matches(password + validationInfo.salt(), validationInfo.hash());
     }
 
@@ -50,22 +47,13 @@ public class PasswordValidation {
         return passwordEncoder.encode(password + salt);
     }
 
+    public static class InsufficientSizeException extends Exception {}
 
-    public static class InsufficientSizeException extends Exception{
+    public static class NoLowerCaseException extends Exception {}
 
-    }
+    public static class NoUpperCaseException extends Exception {}
 
-    public static class NoLowerCaseException extends Exception{
-
-    }
-
-    public static class NoUpperCaseException extends Exception{
-
-    }
-
-    public static class NoSpecialCharException extends Exception{
-
-    }
+    public static class NoSpecialCharException extends Exception {}
 
     /**
      * Checks if password contains various symbols as a strength check
@@ -81,26 +69,28 @@ public class PasswordValidation {
      * @throws NoSpecialCharException if it has no special character
      *
      */
-    public void isSafePassword(String password) throws InsufficientSizeException, NoLowerCaseException, NoUpperCaseException, NoSpecialCharException {
+    public void isSafePassword(String password)
+            throws InsufficientSizeException,
+                    NoLowerCaseException,
+                    NoUpperCaseException,
+                    NoSpecialCharException {
 
-        if (password.length() < 8){
+        if (password.length() < 8) {
             throw new InsufficientSizeException();
         }
 
-        if (!password.matches(".*[a-z].*")){
+        if (!password.matches(".*[a-z].*")) {
             throw new NoLowerCaseException();
         }
 
-        if (!password.matches(".*[A-Z].*")){
+        if (!password.matches(".*[A-Z].*")) {
             throw new NoUpperCaseException();
         }
 
         Pattern specialCharCheck = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
 
-        if (!specialCharCheck.matcher(password).find()){
+        if (!specialCharCheck.matcher(password).find()) {
             throw new NoSpecialCharException();
         }
-
     }
-
 }

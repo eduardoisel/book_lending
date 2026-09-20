@@ -22,8 +22,9 @@ import tools.jackson.databind.json.JsonMapper;
  */
 @Component
 public class OpenLibraryApi implements BookApi {
-    //allows automatic following of redirects. Needed for the specific url used
-    private final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
+    // allows automatic following of redirects. Needed for the specific url used
+    private final HttpClient client =
+            HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
 
     /*
      * used https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes for languages string
@@ -35,7 +36,7 @@ public class OpenLibraryApi implements BookApi {
      * @param lang three character string from ISO_639
      * @return Enum representing Language
      */
-    private Book.Language isoIdToLanguage(String lang){
+    private Book.Language isoIdToLanguage(String lang) {
         return switch (lang) {
             case "eng" -> Book.Language.English;
             case "por" -> Book.Language.Portuguese;
@@ -49,29 +50,32 @@ public class OpenLibraryApi implements BookApi {
             case "hun" -> Book.Language.Hungarian;
             case "dan" -> Book.Language.Danish;
             default ->
-                    throw new RuntimeException("Language code %s from external API open library not supported".formatted(lang));
+                    throw new RuntimeException(
+                            "Language code %s from external API open library not supported"
+                                    .formatted(lang));
         };
     }
 
     public final Book getBook(@NonNull String isbn) {
-        //https://openlibrary.org/dev/docs/api/books
+        // https://openlibrary.org/dev/docs/api/books
         String url = "https://openlibrary.org/isbn/%s.json".formatted(isbn);
 
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-                .GET()
-                .build();
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).GET().build();
 
         String serialized = null;
         try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response =
+                    client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 404){
+            if (response.statusCode() == 404) {
                 return null;
             }
 
             serialized = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
-            throw new RuntimeException(e); //circumvent throws being added to method signature. todo search for better way
+            throw new RuntimeException(
+                    e); // circumvent throws being added to method signature. todo search for better
+            // way
         }
 
         Gson gson = new Gson();
@@ -80,32 +84,29 @@ public class OpenLibraryApi implements BookApi {
         TypeToken<Map<String, Object>> mapType = new TypeToken<Map<String, Object>>() {};
         Map<String, Object> stringMap = gson.fromJson(serialized, mapType);
 
-        //format is /languages/[3 letter code]
-        String[] language = ((ArrayList<Map<String, String>>) stringMap.get("languages"))
-                .getFirst().get("key")
-                .split("/");
+        // format is /languages/[3 letter code]
+        String[] language =
+                ((ArrayList<Map<String, String>>) stringMap.get("languages"))
+                        .getFirst()
+                        .get("key")
+                        .split("/");
 
         String title = (String) stringMap.get("title");
 
         ArrayList<String> isbn10 = ((ArrayList<String>) stringMap.get("isbn_10"));
         String isbn_10 = null;
 
-        if (isbn10 != null){
+        if (isbn10 != null) {
             isbn_10 = isbn10.getFirst();
         }
 
         ArrayList<String> isbn13 = ((ArrayList<String>) stringMap.get("isbn_13"));
         String isbn_13 = null;
 
-        if (isbn13 != null){
+        if (isbn13 != null) {
             isbn_13 = isbn13.getFirst();
         }
 
         return new Book(isbn_10, isbn_13, title, isoIdToLanguage(language[language.length - 1]));
-
     }
-
-
 }
-
-

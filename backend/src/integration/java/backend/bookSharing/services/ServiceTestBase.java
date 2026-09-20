@@ -13,22 +13,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Import(MockUsage.class)
-@Transactional //rollback after each unit test
+@Transactional // rollback after each unit test
 public class ServiceTestBase extends PostgresDatabase {
 
-    @Autowired
-    private BookRepository bookRepository;
+    @Autowired private BookRepository bookRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
 
-    @Autowired
-    private TokenRepository tokenRepository;
+    @Autowired private TokenRepository tokenRepository;
 
     /**
      * Will be changed by hibernate to have the generated ID, and therefore can be used to inserts that depend on user
@@ -38,10 +34,9 @@ public class ServiceTestBase extends PostgresDatabase {
     @BeforeEach
     public void insertData() {
 
-        bookRepository.saveAllAndFlush(Arrays.stream(TestData.databaseBooks).map(TestData::duplicate).toList());
+        bookRepository.saveAllAndFlush(
+                Arrays.stream(TestData.databaseBooks).map(TestData::duplicate).toList());
 
         userRepository.saveAllAndFlush(insertedUsers);
-
     }
-
 }

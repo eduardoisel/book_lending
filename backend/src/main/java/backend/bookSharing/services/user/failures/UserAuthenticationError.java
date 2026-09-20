@@ -1,9 +1,9 @@
 package backend.bookSharing.services.user.failures;
 
-public sealed abstract class UserAuthenticationError extends Exception permits UserAuthenticationError.UserOrPasswordAreInvalid {
+public abstract sealed class UserAuthenticationError extends Exception
+        permits UserAuthenticationError.UserOrPasswordAreInvalid {
 
-    private UserAuthenticationError(){}
+    private UserAuthenticationError() {}
 
     public static final class UserOrPasswordAreInvalid extends UserAuthenticationError {}
-
 }
