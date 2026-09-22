@@ -62,7 +62,11 @@ public class BookServiceTest {
         when(bookRepo.findByIsbnTen(anyString())).thenReturn(null);
         when(bookApi.getBook(book.getIsbnTen())).thenReturn(book);
 
-        service.addBookFromApi(book.getIsbnTen());
+        Book returnedBook = service.addBookFromApi(book.getIsbnTen());
+
+        assertEquals(book.getIsbnTen(), returnedBook.getIsbnTen());
+        assertEquals(book.getIsbnThirteen(), returnedBook.getIsbnThirteen());
+        assertEquals(book.getTitle(), returnedBook.getTitle());
     }
 
     @Test

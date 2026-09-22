@@ -31,8 +31,6 @@ public class BookController {
 
     private final BookService service;
 
-    // private WebContentGenerator a;
-
     /**
      * General list book search by segments
      *
@@ -42,9 +40,7 @@ public class BookController {
     @GetMapping("/")
     @Cacheable(
             value = "getBooks",
-            unless =
-                    "#result.getBody().hasNextPage()==false") // no cache since list may increase or
-    // bool change
+            unless = "#result.getBody().hasNextPage()==false") // no cache since list may increase
     public ResponseEntity<?> getBooks(
             @RequestParam(required = false, defaultValue = "0") Integer page) {
 
@@ -105,13 +101,6 @@ public class BookController {
     @PostMapping("/request")
     public ResponseEntity<?> requestBook(
             @RequestBody RequestCreation body, @Parameter(hidden = true) User authenticatedUser) {
-        if (body.isbn() == null) {
-            System.out.println("Should be impossible");
-        }
-
-        // AnonymousAuthenticationToken a;
-
-        // SecurityContextImpl s;
 
         try {
             service.requestBook(

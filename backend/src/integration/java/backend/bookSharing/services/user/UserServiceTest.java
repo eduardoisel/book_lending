@@ -123,7 +123,7 @@ public class UserServiceTest extends ServiceTestBase {
     @Test
     public void addOwnerOfBook() throws Exception {
 
-        User owner = insertedUsers.getFirst(); // does not have id
+        User owner = insertedUsers.getFirst();
 
         Book book = TestData.databaseBooks[0];
 

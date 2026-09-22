@@ -97,7 +97,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("bookOwned/{isbn}")
+    @PostMapping("owned/{isbn}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<?> addBookOwned(
             @PathVariable String isbn, @Parameter(hidden = true) User authenticatedUser) {
@@ -118,7 +118,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/blacklist/{email}")
+    @PostMapping("blacklist/{email}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> addBlacklist(@PathVariable String email) {

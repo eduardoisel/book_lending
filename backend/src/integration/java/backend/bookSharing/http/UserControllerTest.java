@@ -1,94 +1,49 @@
 package backend.bookSharing.http;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import backend.bookSharing.TestData;
+import backend.bookSharing.http.returns.ListedData;
+import backend.bookSharing.repository.entities.User;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import tools.jackson.databind.ObjectMapper;
+
 public class UserControllerTest extends ControllerTestBase {
 
-    /*
+    @Autowired private ObjectMapper objectMapper;
 
-    private String createUserAndGetId(String userName) {
-        var newUser = new CreateUserDto(userName);
-
-        return given()
-                .contentType(ContentType.JSON)
-                .body(newUser)
-                .when()
-                .post("/users/")
-                .then()
-                .statusCode(201)
-                .extract()
-                .path("id");
-    }
-
+    @WithMockUser
     @Test
-    void shouldCreateUser() {
-        var newUser = new UserCreation("test@gmail.com", "passWORD_123");
+    void addBookAsOwnedTest() throws Exception {
+        String isbn = TestData.databaseBooks[0].getIsbnThirteen();
 
-        given()
-                .body(newUser)
-                .when()
-                .post("/users/")
-                .then()
-                .statusCode(201)
-                .body("name", equalTo("Test user"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/owned/{isbn}", isbn))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @WithMockUser
     @Test
-    void shouldDeleteUserById() {
-        String userId = createUserAndGetId("Test user");
+    void searchOwnedBooksOfUser() throws Exception {
 
-        given()
-                .when()
-                .delete("/users/{id}", userId)
-                .then()
-                .statusCode(204)
-                .body(emptyOrNullString());
+        User owner = insertedUsers.getFirst();
+
+        String returned =
+                mockMvc.perform(MockMvcRequestBuilders.get("/users/owned/{userId}", owner.getId()))
+                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andReturn()
+                        .getResponse()
+                        .getContentAsString();
+
+        ListedData listedData = objectMapper.readValue(returned, ListedData.class);
+
+        assertEquals(
+                insertedOwned.stream()
+                        .filter(o -> o.getUser().getId().equals(owner.getId()))
+                        .count(),
+                listedData.data().length);
     }
-
-    @Test
-    void shouldGetAllUsers() {
-        createUserAndGetId("Test user");
-
-        given()
-                .when()
-                .get("/users/")
-                .then()
-                .statusCode(200)
-                .body("size()", greaterThan(0));
-    }
-
-    @Test
-    void shouldGetUserById() {
-        String userId = createUserAndGetId("Test user");
-
-        given()
-                .when()
-                .get("/users/{id}", userId)
-                .then()
-                .statusCode(200)
-                .body("id", equalTo(userId))
-                .body("name", equalTo("Test user"));
-
-    }
-
-    @Test
-    void shouldReturn500WhenSearchForNonExistentUser() {
-        String nonExistentUserId = "9999";
-
-        given()
-                .when()
-                .get("/users/{id}", nonExistentUserId)
-                .then()
-                .statusCode(500);
-    }
-
-    @Test
-    void shouldReturn500WhenDeletingNonExistentUser() {
-        String nonExistentUserId = "9999";
-
-        given()
-                .when()
-                .delete("/users/{id}", nonExistentUserId)
-                .then()
-                .statusCode(500);
-    }
-     */
 }
