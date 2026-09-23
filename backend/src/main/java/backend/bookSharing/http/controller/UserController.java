@@ -11,13 +11,13 @@ import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -100,7 +100,7 @@ public class UserController {
     @PostMapping("owned/{isbn}")
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<?> addBookOwned(
-            @PathVariable String isbn, @Parameter(hidden = true) User authenticatedUser) {
+            @PathVariable String isbn, @AuthenticationPrincipal User authenticatedUser) {
 
         try {
             Owned result = service.addOwner(isbn, authenticatedUser);

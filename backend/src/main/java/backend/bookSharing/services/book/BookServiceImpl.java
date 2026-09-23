@@ -18,7 +18,6 @@ import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
-import backend.bookSharing.services.user.UserService;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -29,8 +28,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
-
-    private final UserService userService; // for auth check. Consider changing place
 
     private final OwnedRepository ownedRepo;
 
@@ -58,7 +55,6 @@ public class BookServiceImpl implements BookService {
                         ? bookRepo.findByIsbnTen(isbn)
                         : bookRepo.findByIsbnThirteen(isbn);
 
-        // org.hibernate.spatial.dialect.postgis.PostgisDialectContributor TODO
         if (book == null) {
             throw new BookOwnersSearchError.BookNotFound();
         }

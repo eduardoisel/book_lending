@@ -17,11 +17,6 @@ These are used on SecurityConfiguration, the class that defines which API endpoi
 
 # SpringDocs
 
-## Hiding Resolver parameters
-
-Springdocs will automatically show all parameters of the method, including the complete user information retrieved
-by userResolver, to fix this, one can use the @Parameter(hidden = true) to remove it.
-
 # Caching (NOT HTTP cache)
 
 Implementation of caching using [CaffeineCacheManager](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/cache/caffeine/CaffeineCacheManager.html).

@@ -63,10 +63,6 @@ dependencies {
     // Source: https://mvnrepository.com/artifact/org.springframework/spring-orm
     implementation("org.springframework:spring-orm")
 
-    // https://springdoc.org/#spring-security-support
-    // Source: https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webflux-api
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-api:3.0.1")
-
     //below use javadoc (normal java documentation of classes and functions as documentation for swagger ui
     runtimeOnly("com.github.therapi:therapi-runtime-javadoc:0.15.0")
     annotationProcessor("com.github.therapi:therapi-runtime-javadoc-scribe:0.15.0")

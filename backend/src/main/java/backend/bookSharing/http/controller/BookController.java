@@ -10,12 +10,12 @@ import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +57,7 @@ public class BookController {
     public ResponseEntity<?> getBookOwners(
             @PathVariable String isbn,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @Parameter(hidden = true) User user) {
+            @AuthenticationPrincipal User user) {
 
         try {
             Page<User> users = service.getOwnersOfBook(isbn, page, user.getLocation());
@@ -100,7 +100,7 @@ public class BookController {
 
     @PostMapping("/request")
     public ResponseEntity<?> requestBook(
-            @RequestBody RequestCreation body, @Parameter(hidden = true) User authenticatedUser) {
+            @RequestBody RequestCreation body, @AuthenticationPrincipal User authenticatedUser) {
 
         try {
             service.requestBook(
@@ -129,7 +129,7 @@ public class BookController {
 
     @PostMapping("/lend")
     public ResponseEntity<?> lendBook(
-            @RequestBody LendCreation body, @Parameter(hidden = true) User user) {
+            @RequestBody LendCreation body, @AuthenticationPrincipal User user) {
 
         try {
             service.lendBook(body.isbn(), body.receiverEmail(), user);

@@ -16,9 +16,6 @@ import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.PrecisionModel;
 
-/*
-Uses PasswordValidation directly (without Autowired)
-*/
 /**
  * Contains base information for testing, as a way to avoid creating information for each unit test, since rollback
  * happens after each ends
@@ -78,16 +75,16 @@ public class TestData {
             new GeometryFactory(new PrecisionModel(), 4326);
 
     public static Coordinate[] coordinates = {
-        new Coordinate(2.1d, 2.1d), new Coordinate(2.1d, 2.3d), new Coordinate(-20d, 70d),
+            new Coordinate(2.1d, 2.1d), new Coordinate(2.1d, 2.3d), new Coordinate(-20d, 70d),
     };
 
     public static List<Point> points =
             Arrays.stream(coordinates).map(geometryFactory::createPoint).toList();
 
     public static ClearPasswordUser[] clearPasswordUsers = {
-        new ClearPasswordUser(points.getFirst(), "portugal@gmail.com", "password1"),
-        new ClearPasswordUser(points.get(1), "england@gmail.com", "password2"),
-        new ClearPasswordUser(points.get(2), "us@gmail.com", "password3"),
+            new ClearPasswordUser(points.getFirst(), "portugal@gmail.com", "password1"),
+            new ClearPasswordUser(points.get(1), "england@gmail.com", "password2"),
+            new ClearPasswordUser(points.get(2), "us@gmail.com", "password3"),
     };
 
     public static Boolean isEmailUnique(@NonNull String email) {

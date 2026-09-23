@@ -32,7 +32,6 @@ public class DatabaseBooks {
         new Book("0820703931", "9780820703930", "Paradise Lost", English),
         new Book("1582872554", "9781582872551", "The lost princess of Oz", English),
         new Book(null, "9798604654095", "Paradise Lost", English),
-        new Book("0820703931", "9780820703930", "Anne of Green Gables", English),
         new Book(
                 "1566194326",
                 "9781566194327",

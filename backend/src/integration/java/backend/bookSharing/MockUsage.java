@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 @TestConfiguration
 /**
  * Replaces default beans from app
- *
+ * <p>
  * For beans to be recognized, class needs {@link Import}
  */
 /*
@@ -32,3 +32,4 @@ public class MockUsage {
         return new MockBookApi();
     }
 }
+

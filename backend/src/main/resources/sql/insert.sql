@@ -19,6 +19,5 @@ insert into BOOK (isbn_10, isbn_13, title, lang) VALUES
     ('0820703931', '9780820703930', 'Paradise Lost', 'English'),
     ('1582872554', '9781582872551', 'The lost princess of Oz', 'English'),
     (null, '9798604654095', 'Paradise Lost', 'English'),
-    ('0820703931', '9780820703930', 'Anne of Green Gables', 'English'),
     ('1566194326', '9781566194327', 'Crime and Punishment (Barnes and Noble Classics)', 'English'),
     ('1145233589', '9781145233584', 'Le Comte de Monte-Cristo', 'French'); ---2 languages?
