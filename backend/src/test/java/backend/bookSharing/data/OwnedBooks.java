@@ -25,10 +25,10 @@ public class OwnedBooks {
      * None contain id of owned, user or book
      */
     public static final Owned[] ownedBooks = {
-            new Owned(TestData.users.getFirst(), DatabaseBooks.books[0]),
-            new Owned(TestData.users.getFirst(), DatabaseBooks.books[1]),
-            new Owned(TestData.users.getFirst(), DatabaseBooks.books[2]),
-            new Owned(TestData.users.get(1), DatabaseBooks.books[0]),
+        new Owned(TestData.users.getFirst(), DatabaseBooks.books[0]),
+        new Owned(TestData.users.getFirst(), DatabaseBooks.books[1]),
+        new Owned(TestData.users.getFirst(), DatabaseBooks.books[2]),
+        new Owned(TestData.users.get(1), DatabaseBooks.books[0]),
     };
 
     /**

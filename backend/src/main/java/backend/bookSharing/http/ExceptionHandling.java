@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-/*
-The spring way to handle exceptions, not used but here as the most basic example
-
-To use it uncomment teh class annotations, and do not handle the exception directly on the controller
+/**
+ * The spring way to handle exceptions
+ * To use it uncomment teh class annotations, and do not handle the exception directly on the controller
  */
 @ControllerAdvice
 public class ExceptionHandling {
@@ -31,7 +30,7 @@ public class ExceptionHandling {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "ResponseStatus reason")
     public ExceptionDto handleJsonParseError(HttpMessageNotReadableException ex) {
         return new ExceptionDto(ex.getMessage());
     }
