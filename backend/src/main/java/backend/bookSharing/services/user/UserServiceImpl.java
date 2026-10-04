@@ -122,8 +122,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             passwordValidation.isSafePassword(password);
-        } catch (Exception e) {
-            throw new UserCreationError.WeakPassword(password); // todo communicate more specific
+        } catch (Exception _) {
+            throw new UserCreationError.WeakPassword(); // todo communicate more specific
         }
 
         Optional<User> emailSearch = userRepo.findByEmail(email);
@@ -214,8 +214,8 @@ public class UserServiceImpl implements UserService {
 
         try {
             this.loadUserByUsername(email).setLocked(true);
-        } catch (UsernameNotFoundException e) {
-            throw new UserLockingError.UserDoesNotExist(e);
+        } catch (UsernameNotFoundException _) {
+            throw new UserLockingError.UserDoesNotExist();
         }
     }
 

@@ -73,9 +73,8 @@ public class OpenLibraryApi implements BookApi {
 
             serialized = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
         } catch (Exception e) {
-            throw new RuntimeException(
-                    e); // circumvent throws being added to method signature. todo search for better
-            // way
+            // circumvent throws being added to method signature. todo search for better way
+            throw new RuntimeException(e);
         }
 
         Gson gson = new Gson();

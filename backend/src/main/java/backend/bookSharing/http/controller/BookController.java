@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -76,26 +78,38 @@ public class BookController {
         }
     }
 
+    /**
+     * Add a book to the system so it can be recognized, by giving an id and letting the server check if it exists
+     *
+     * @param isbn
+     * @return
+     * @throws BookAdditionError If given ISBN is in use or not able to be confirmed as an existing book
+     */
     @PostMapping("/{isbn}")
-    public ResponseEntity<?> postBook(@PathVariable String isbn) {
-
-        try {
-            Book book = service.addBookFromApi(isbn);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(book);
-        } catch (BookAdditionError e) {
-            return switch (e) {
-                case BookAdditionError.Isbn10InUse isbn10InUse ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body(e.getClass().getSimpleName());
-                case BookAdditionError.Isbn13InUse isbn13InUse ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body(e.getClass().getSimpleName());
-                case BookAdditionError.BookNotFound bookNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body(e.getClass().getSimpleName());
-            };
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    //    public ResponseEntity<?> postBook(@PathVariable String isbn) throws BookAdditionError {
+    //
+    //        try {
+    //            Book book = service.addBookFromApi(isbn);
+    //
+    //            return ResponseEntity.status(HttpStatus.CREATED).body(book);
+    //        } catch (BookAdditionError e) {
+    //            return switch (e) {
+    //                case BookAdditionError.Isbn10InUse isbn10InUse ->
+    //                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //                                .body(e.getClass().getSimpleName());
+    //                case BookAdditionError.Isbn13InUse isbn13InUse ->
+    //                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //                                .body(e.getClass().getSimpleName());
+    //                case BookAdditionError.BookNotFound bookNotFound ->
+    //                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //                                .body(e.getClass().getSimpleName());
+    //            };
+    //        }
+    //    }
+    public Book postBook(@PathVariable String isbn) throws BookAdditionError {
+        return service.addBookFromApi(isbn);
     }
 
     @PostMapping("/request")

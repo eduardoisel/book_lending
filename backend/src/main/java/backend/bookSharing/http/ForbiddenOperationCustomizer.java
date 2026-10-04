@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 
 /**
- * Reads SpringExprl from {@link PreAuthorize}.
+ * Reads SpringExpr from {@link PreAuthorize}.
  * Implementation expects the use of {@link SecurityExpressionRoot#hasRole(String)}
  */
 @Component
@@ -41,7 +41,8 @@ public class ForbiddenOperationCustomizer implements OperationCustomizer {
             Schema<?> schema = new Schema<>().$ref("#/components/schemas/ProblemDetail");
 
             MediaType mediaType = new MediaType().schema(schema);
-            Content content = new Content().addMediaType("application/problem+json", mediaType);
+            Content content =
+                    new Content().addMediaType("application/problem+json", mediaType); // wrong type
 
             // role read expects the method hasRole
             String role = securityAnnotation.value().split("'")[1];
@@ -51,7 +52,6 @@ public class ForbiddenOperationCustomizer implements OperationCustomizer {
                             .description("Account needs to have the role: " + role)
                             .content(content);
 
-            // Add or overwrite the 400 response code
             operation.getResponses().addApiResponse("403", forbiddenResponse);
         }
 
