@@ -125,8 +125,8 @@ public class UserServiceTest extends ServiceTestBase {
 
         User owner = insertedUsers.getFirst();
 
-        Book book = TestData.databaseBooks[0];
+        Book book = TestData.databaseBooks[4];
 
-        userService.addOwner(book.getIsbnTen(), owner);
+        userService.addOwner(book.getIsbnThirteen(), owner);
     }
 }

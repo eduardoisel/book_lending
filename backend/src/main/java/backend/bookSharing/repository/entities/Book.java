@@ -19,6 +19,13 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+/**
+ * Since this service is about physical books, it assumes the existence of the ISBN. It may be either ISBN 10 or
+ * ISBN 13 or even both, but never neither.
+ * <p>
+ * Due to this restriction, this class can only one of {@link Book#isbnTen}
+ * or {@link Book#isbnThirteen} fields as null
+ */
 @Getter
 @Entity
 @EqualsAndHashCode

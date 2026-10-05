@@ -1,6 +1,5 @@
 package backend.bookSharing.repository.entities;
 
-import backend.bookSharing.utils.PasswordValidationInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +31,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @ToString
 public class User implements UserDetails {
 
-    @Transient public static final int saltSize = 2;
     @Transient public static final int maxEmailSize = 70;
 
     @Id
@@ -50,18 +48,7 @@ public class User implements UserDetails {
     @Column(name = "has_admin_powers")
     private Boolean isAdmin;
 
-    /**
-     * hash(?) of clear password and salt
-     */
-    @JsonIgnore
-    @Column(length = 256, nullable = false)
-    @ToString.Exclude
-    private String hash;
-
-    @JsonIgnore
-    @Column(length = saltSize, nullable = false)
-    @ToString.Exclude
-    private String salt;
+    @JsonIgnore @ToString.Exclude private PasswordValidationInfo validationInfo;
 
     @JsonIgnore
     @Column(columnDefinition = "geography(Point,4326)")
@@ -87,25 +74,18 @@ public class User implements UserDetails {
     @ToString.Exclude
     private List<Token> tokens;
 
-    public User(Point point, String email, String hash, String salt) {
+    public User(Point point, String email, PasswordValidationInfo validationInfo) {
         this.location = point;
         this.email = email;
-        this.hash = hash;
-        this.salt = salt;
+        this.validationInfo = validationInfo;
         this.isAdmin = false;
     }
 
-    public User(Point point, String email, String hash, String salt, Boolean isAdmin) {
+    public User(Point point, String email, PasswordValidationInfo validationInfo, Boolean isAdmin) {
         this.location = point;
         this.email = email;
-        this.hash = hash;
-        this.salt = salt;
+        this.validationInfo = validationInfo;
         this.isAdmin = isAdmin;
-    }
-
-    @JsonIgnore
-    public PasswordValidationInfo getValidationInfo() {
-        return new PasswordValidationInfo(hash, salt);
     }
 
     @JsonIgnore
@@ -117,7 +97,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @Override
     public @Nullable String getPassword() {
-        return hash;
+        return validationInfo.hash();
     }
 
     @JsonIgnore

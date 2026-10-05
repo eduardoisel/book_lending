@@ -9,6 +9,7 @@ import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.OwnedId;
+import backend.bookSharing.repository.entities.PasswordValidationInfo;
 import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.Token;
 import backend.bookSharing.repository.entities.User;
@@ -139,8 +140,9 @@ public class UserServiceImpl implements UserService {
                         new User(
                                 geometryFactory.createPoint(new Coordinate(x, y)),
                                 email,
-                                passwordValidation.passwordEncoding(password, salt),
-                                salt));
+                                new PasswordValidationInfo(
+                                        passwordValidation.passwordEncoding(password, salt),
+                                        salt)));
 
         return created.getId();
     }

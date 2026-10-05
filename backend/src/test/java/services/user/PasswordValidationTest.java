@@ -3,8 +3,8 @@ package services.user;
 import static org.junit.jupiter.api.Assertions.*;
 
 import backend.bookSharing.RandomValuesGenerator;
+import backend.bookSharing.repository.entities.PasswordValidationInfo;
 import backend.bookSharing.services.user.services.PasswordValidation;
-import backend.bookSharing.utils.PasswordValidationInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

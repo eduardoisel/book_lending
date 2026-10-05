@@ -59,8 +59,9 @@ public class BookServiceTest {
     public void addBookFromApiTest() throws BookAdditionError {
         Book book = TestData.booksExclusiveFromApi[0];
 
-        when(bookRepo.findByIsbnTen(anyString())).thenReturn(null);
+        when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(null);
         when(bookApi.getBook(book.getIsbnTen())).thenReturn(book);
+        when(bookRepo.save(book)).thenReturn(book);
 
         Book returnedBook = service.addBookFromApi(book.getIsbnTen());
 

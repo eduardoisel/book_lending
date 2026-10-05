@@ -1,7 +1,6 @@
 package backend.bookSharing.services.user.services;
 
-import backend.bookSharing.repository.entities.User;
-import backend.bookSharing.utils.PasswordValidationInfo;
+import backend.bookSharing.repository.entities.PasswordValidationInfo;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -27,7 +26,7 @@ public class PasswordValidation {
     }
 
     public String getSalt() {
-        byte[] salt = new byte[User.saltSize];
+        byte[] salt = new byte[PasswordValidationInfo.saltSize];
         secureRandom.nextBytes(salt);
         return new String(salt, StandardCharsets.UTF_8);
     }
