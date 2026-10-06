@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import java.time.Duration;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -38,6 +40,11 @@ public class Main {
     @Bean
     public TokenValidation.TokenValidTime tokenValidationBean() {
         return new TokenValidation.TokenValidTime(Duration.ofHours(10), Duration.ofMinutes(30));
+    }
+
+    @Bean
+    public GeometryFactory geometryFactory() {
+        return new GeometryFactory(new PrecisionModel(), 4326);
     }
 
     /*

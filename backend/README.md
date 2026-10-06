@@ -57,21 +57,18 @@ Access on browser the base url for the server used in the code plus the value fo
 [spring properties file](./src/main/resources/application.yaml). This will give you a page with every available endpoint
 of your API. If this file is up to date, this project should use http://localhost:8080/swagger-ui.html by default.
 
+The project required configuring springdoc to be more complete, as described in the
+[http md](./src/main/java/backend/bookSharing/http/README.md).
+
 #### Spring docs limitations
 
-At least as it is configured right now, endpoint parameters are based on the parameters the corresponding method uses,
+The endpoint parameters are based on the parameters the corresponding method uses,
 along with the option to use authentication (set to use Bearer authentication), which will always appear regardless of
-it being necessary. This leads to 2 problems, both related to the parameters each endpoint will need. 
+it being necessary.
 
-The first issue being spring http is set to use a custom argument resolver for user information. 
-This means on places where the user needs to be authenticated, spring is set to be able to grab the information from the
-authentication, automatically allowing Controller methods to use the user information as its parameter. Spring docs
-will say that setting that information is required, but this is not true, as the server will completely ignore that info
-and retrieve it from the authentication.
-
-The second is related to http caching. As explained [on the http md](./src/main/java/backend/bookSharing/http/README.md),
+As explained on the [http md](./src/main/java/backend/bookSharing/http/README.md),
 http get request can use the header "If-None-Match", receiving a not modified status response if the value is valid.
-Again, spring docs will not tell you this since it is done by a filter, instead of the controller methods.
+Spring docs will not tell you this since it is done by a filter, instead of the controller methods.
 
 ### Javadoc
 

@@ -4,6 +4,7 @@ import backend.bookSharing.services.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,21 +18,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandling {
 
-    public record ExceptionDto(String problem) {}
-
     /**
-     * BookAdditionError handler method (ignored on swagger)
      *
-     * @param ex BookAdditionError Parameter (ignored on swagger)
-     * @return An ExceptionDto placed on body
+     * @param ex Authorization denied Exception assumed to be thrown by spring security such as in
+     *           {@link PreAuthorize}
+     * @return ProblemDetail with a detail message from the exception
      */
-    //    @ExceptionHandler(BookAdditionError.class)
-    //    @ResponseBody
-    //    @ResponseStatus(value = HttpStatus.GONE, reason = "Book addition reason HAHAHAHA")
-    //    public ExceptionDto handleBookAdditionError(BookAdditionError ex) {
-    //        return new ExceptionDto(ex.getClass().getSimpleName());
-    //    }
-
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ProblemDetail handleException(Exception ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());

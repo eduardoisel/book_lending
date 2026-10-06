@@ -88,26 +88,6 @@ public class BookController {
     @PostMapping("/{isbn}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    //    public ResponseEntity<?> postBook(@PathVariable String isbn) throws BookAdditionError {
-    //
-    //        try {
-    //            Book book = service.addBookFromApi(isbn);
-    //
-    //            return ResponseEntity.status(HttpStatus.CREATED).body(book);
-    //        } catch (BookAdditionError e) {
-    //            return switch (e) {
-    //                case BookAdditionError.Isbn10InUse isbn10InUse ->
-    //                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    //                                .body(e.getClass().getSimpleName());
-    //                case BookAdditionError.Isbn13InUse isbn13InUse ->
-    //                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    //                                .body(e.getClass().getSimpleName());
-    //                case BookAdditionError.BookNotFound bookNotFound ->
-    //                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-    //                                .body(e.getClass().getSimpleName());
-    //            };
-    //        }
-    //    }
     public Book postBook(@PathVariable String isbn) throws BookAdditionError {
         return service.addBookFromApi(isbn);
     }

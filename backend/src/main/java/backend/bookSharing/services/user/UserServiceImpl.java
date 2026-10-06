@@ -55,8 +55,7 @@ public class UserServiceImpl implements UserService {
 
     private final TokenValidation tokenValidation;
 
-    // todo should probably initialized somewhere else as a bean
-    private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+    private final GeometryFactory geometryFactory;
 
     @Override
     public Page<Book> getOwnedBooks(Integer userId, Integer pageNumber)

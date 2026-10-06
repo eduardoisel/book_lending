@@ -15,7 +15,40 @@ The controller folder contains the app's spring controllers.
 The authentication folder contains an authentication filter and an authentication entry point for bearer authentication.
 These are used on SecurityConfiguration, the class that defines which API endpoints need to be authenticated.
 
+## Service exceptions handling
+
+An exception handler specifically for the service exception is used to read reflection data for the response.
+
 # SpringDocs
+
+## Customizers used
+
+### Security exception
+
+Security annotations such as PreAuthorize will launch an exception but not be automatically caught without help.
+A personal class was used to detect the PreAuthorize annotation specifically.
+
+### Service Exception handler customizer
+
+The [service exceptions handler](#service-exceptions-handling) also needs the
+[Service exception handler](ExceptionOperationCustomizer.java).
+
+
+
+## Using not automatically detected responses 
+
+Some responses such as the default exception handler response will not be automatically detected if do not also
+use them automatically. If this is the case, use the code below on a configuration class to register it.
+
+```
+@Bean
+    public OpenApiCustomizer schemaCustomizer() {
+        ResolvedSchema resolvedSchema =
+                ModelConverters.getInstance()
+                        .resolveAsResolvedSchema(new AnnotatedType(YourClass.class));
+        return openApi -> openApi.schema(resolvedSchema.schema.getName(), resolvedSchema.schema);
+    }
+```
 
 # Caching (NOT HTTP cache)
 
