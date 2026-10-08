@@ -31,8 +31,15 @@ A personal class was used to detect the PreAuthorize annotation specifically.
 ### Service Exception handler customizer
 
 The [service exceptions handler](#service-exceptions-handling) also needs the
-[Service exception handler](ExceptionOperationCustomizer.java).
+[Service exception handler](ExceptionOperationCustomizer.java), this is due to the service exceptions having varied
+http status and only exceptionHandlers with @ResponseStatus are automatically documented
 
+### Required authorization
+
+Spring security authorization control is not automatic, nor it seems possible to access the information for an endpoint
+related to its necessary authentication. To circumvent this issue, data classes were created and stored in
+[the project's code](AuthorizationEndpoints.java) so it can be used easily by spring security and sprindoc at the same 
+time
 
 
 ## Using not automatically detected responses 

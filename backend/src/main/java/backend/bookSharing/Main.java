@@ -1,13 +1,6 @@
 package backend.bookSharing;
 
 import backend.bookSharing.services.user.services.TokenValidation;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import io.swagger.v3.oas.annotations.servers.Server;
 import java.time.Duration;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
@@ -18,21 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
-/*
- Does not use any annotation from spring or spring docs, so i am lead to believe it can be replaced
- with other annotations or application properties to set on the yaml
-*/
-@SecurityScheme(name = "Bearer", type = SecuritySchemeType.HTTP, scheme = "Bearer")
-@OpenAPIDefinition(
-        info =
-                @Info(
-                        title = "Book lending",
-                        contact =
-                                @Contact(
-                                        name = "Eduardo Tavares",
-                                        email = "eduardodinis3@gmail.com")),
-        servers = @Server(url = "http://localhost:8080"),
-        security = @SecurityRequirement(name = "Bearer"))
 @SpringBootApplication
 @EnableJpaRepositories()
 public class Main {

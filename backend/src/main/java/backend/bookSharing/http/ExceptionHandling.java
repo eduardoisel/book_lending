@@ -41,11 +41,14 @@ public class ExceptionHandling {
     /**
      * Catches json parse error on missing values (interpreted as null)
      * This exception may be activated on other scenarios
+     *
+     * @param ex Exception
+     * @return Problem Detail with message specific to the parameter violation detected from the request
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseBody
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_CONTENT)
     public ProblemDetail handleJsonParseError(HttpMessageNotReadableException ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
     }
 }

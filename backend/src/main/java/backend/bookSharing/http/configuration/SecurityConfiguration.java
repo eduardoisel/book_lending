@@ -1,11 +1,11 @@
 package backend.bookSharing.http.configuration;
 
+import backend.bookSharing.http.AuthorizationEndpoints;
 import backend.bookSharing.http.authentication.BearerTokenAuthenticationEntryPoint;
 import backend.bookSharing.http.authentication.BearerTokenAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,28 +27,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(
-                        AbstractHttpConfigurer
-                                ::disable) // removing csrf line will break the configuration, test
-                // it by using a post http method if you do not believe
-                // it, especially logins
-                .authorizeHttpRequests(
-                        requests -> { // set so all gets and user login creation are permitted,
-                            // others need auth
-                            requests.requestMatchers(HttpMethod.GET)
-                                    .permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/userAuth/**")
-                                    .permitAll()
-                                    .requestMatchers(HttpMethod.POST, "/users/**")
-                                    .authenticated()
-                                    .requestMatchers(HttpMethod.POST, "/books/**")
-                                    .authenticated()
-                                    .requestMatchers(HttpMethod.DELETE)
-                                    .authenticated();
-                        })
-                // .oauth2ResourceServer()
-                // .oauth2ResourceServer(configurer -> {configurer.jwt()})
-                .formLogin((login) -> login.permitAll())
+        http
+                // removing csrf line will break the configuration somehow
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(AuthorizationEndpoints::configure)
+                //                .formLogin(
+                //                        (login) ->
+                //                                login.permitAll()
+                //                                        .loginPage("/userAuth/login")
+                //                                        .loginProcessingUrl("/userAuth/login")
+                //                                        .usernameParameter("email"))
                 .exceptionHandling(
                         handling -> handling.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(
@@ -61,11 +49,6 @@ public class SecurityConfiguration {
         //                            response.setStatus(HttpServletResponse.SC_OK);
         //
         //                        }));
-
-        //        http.formLogin(httpSecurityFormLoginConfigurer ->
-        //
-        // httpSecurityFormLoginConfigurer.usernameParameter("email").loginPage("/userAuthentication/login")
-        //        );
 
         // Avoid filterOrderException
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);

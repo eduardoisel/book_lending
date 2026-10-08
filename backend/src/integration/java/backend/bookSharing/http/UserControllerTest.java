@@ -21,7 +21,9 @@ public class UserControllerTest extends ControllerTestBase {
     void addBookAsOwnedTest() throws Exception {
         String isbn = TestData.databaseBooks[0].getIsbnThirteen();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/owned/{isbn}", isbn).with(user(insertedUsers.get(2))))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/users/owned/{isbn}", isbn)
+                                .with(user(insertedUsers.get(2))))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
