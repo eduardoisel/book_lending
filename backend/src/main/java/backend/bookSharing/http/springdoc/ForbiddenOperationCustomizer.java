@@ -1,4 +1,4 @@
-package backend.bookSharing.http;
+package backend.bookSharing.http.springdoc;
 
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;

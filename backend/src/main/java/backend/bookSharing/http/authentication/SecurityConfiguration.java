@@ -1,8 +1,6 @@
-package backend.bookSharing.http.configuration;
+package backend.bookSharing.http.authentication;
 
 import backend.bookSharing.http.AuthorizationEndpoints;
-import backend.bookSharing.http.authentication.BearerTokenAuthenticationEntryPoint;
-import backend.bookSharing.http.authentication.BearerTokenAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

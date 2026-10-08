@@ -1,4 +1,4 @@
-package backend.bookSharing.http.configuration;
+package backend.bookSharing.http.cache;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.LinkedList;

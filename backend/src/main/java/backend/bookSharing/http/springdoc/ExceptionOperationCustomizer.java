@@ -1,4 +1,4 @@
-package backend.bookSharing.http;
+package backend.bookSharing.http.springdoc;
 
 import backend.bookSharing.services.ServiceException;
 import io.swagger.v3.oas.models.Operation;

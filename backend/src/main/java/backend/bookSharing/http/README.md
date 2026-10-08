@@ -18,6 +18,7 @@ These are used on SecurityConfiguration, the class that defines which API endpoi
 ## Service exceptions handling
 
 An exception handler specifically for the service exception is used to read reflection data for the response.
+Possibly to be used on all expected service exceptions.
 
 # SpringDocs
 
@@ -31,14 +32,14 @@ A personal class was used to detect the PreAuthorize annotation specifically.
 ### Service Exception handler customizer
 
 The [service exceptions handler](#service-exceptions-handling) also needs the
-[Service exception handler](ExceptionOperationCustomizer.java), this is due to the service exceptions having varied
+[Service exception handler](./springdoc/ExceptionOperationCustomizer.java), this is due to the service exceptions having varied
 http status and only exceptionHandlers with @ResponseStatus are automatically documented
 
 ### Required authorization
 
 Spring security authorization control is not automatic, nor it seems possible to access the information for an endpoint
 related to its necessary authentication. To circumvent this issue, data classes were created and stored in
-[the project's code](AuthorizationEndpoints.java) so it can be used easily by spring security and sprindoc at the same 
+[the project's code](./AuthorizationEndpoints.java) so it can be used easily by spring security and sprindoc at the same 
 time
 
 
@@ -67,7 +68,7 @@ Annotation [Cacheable](https://docs.spring.io/spring-framework/docs/current/java
 and others related on the cached methods are used.
 
 ## Caching Implementation
-When defining the [cache configuration](./configuration/CacheConfiguration.java), every single string set in the value
+When defining the [cache configuration](./cache/CacheConfiguration.java), every single string set in the value
 field of the related annotations must be added explicitly to the Caffeine cache manager. Not doing so will lead to an
 exception being thrown when calling to that api endpoint.
 
