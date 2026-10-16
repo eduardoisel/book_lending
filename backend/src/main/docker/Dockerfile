@@ -3,9 +3,10 @@ FROM postgis/postgis
 USER postgres
 WORKDIR /app
 
-COPY src/main/resources/sql/creation.sql /docker-entrypoint-initdb.d/1_create.sql
+#base directory is the same as gradle (defined by docker compose yml)
+COPY sql/creation.sql /docker-entrypoint-initdb.d/1_create.sql
 
-COPY src/main/resources/sql/insert.sql /docker-entrypoint-initdb.d/2_insert-test-data.sql
+COPY sql/insert.sql /docker-entrypoint-initdb.d/2_insert-test-data.sql
 
 COPY --chown=postgres:postgres ./wait-for-postgres.sh ./bin/wait-for-postgres.sh
 RUN chmod +x ./bin/wait-for-postgres.sh

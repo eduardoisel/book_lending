@@ -1,0 +1,10 @@
+### Terraform https://github.com/github/gitignore/blob/main/Terraform.gitignore
+.terraform/
+*.tfvars
+*.tfvars.json
+*.tfstate
+*.tfstate.*
+
+###Personal
+
+ssh-key-pair.pem

@@ -58,7 +58,7 @@ dependencies {
     // automatic documentation (spring-docs)
     // https://springdoc.org/faq.html#_what_is_the_compatibility_matrix_of_springdoc_openapi_with_spring_boot
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 
     // Source: https://mvnrepository.com/artifact/org.springframework/spring-orm
     implementation("org.springframework:spring-orm")

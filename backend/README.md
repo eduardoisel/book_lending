@@ -8,17 +8,59 @@ starting out. That being said, I have not explained basic concepts such as depen
 why created classes are never instantiated explicitly on code, you should not look to this project yet. 
 [I advise reading the official documentation](https://docs.spring.io/spring-framework/reference/core.html).
 
+# Folder structure
+
+```
+└── 📁src
+    └── 📁main
+        └── 📁docker
+            ├── Dockerfile
+        └── 📁java
+            └── 📁backend
+                └── 📁bookSharing
+                    └── 📁http
+                    └── 📁repository
+                        └── 📁entities
+                    └── 📁services
+                        └── 📁book
+                            └── 📁api
+                        └── 📁user
+                            └── 📁services
+                    ├── Main.java
+        └── 📁resources
+            ├── application.properties
+    └── 📁test
+    └── 📁integration
+└── 📁sql
+    ├── creation.sql
+└── 📁terraform
+```
+
+Above is the structure of the src folder. The main and test folders are standard, while the docker and sql
+folders serves for automation of the local database creation, that can be activated with Gradle.
+
+The integration folder is the new sourceSet created by a Gradle Plugin, as a way to organize tests.
+
+# Terraform
+Terraform is a tool to manage cloud resources, and [this folder](./terraform) contains the instructions to create
+a database and a server on the amazon cloud. For more details check its README.
+
+# Java/Gradle
+
 ## TODO
 
+### Admin tools 
 Admin user capabilities may also be added, allowing special operations like suspending/banning users, such as 
-harassment through any communication in the server or adding fake books. The damaging books or failing to return them
-to their owners after the time limit will also be added, even if in this person to person lending framework may not 
-allow any realistic way for these cases to be actually verified.
+harassment through any communication in the server or adding fake books. 
+Damaging books or failing to return them to their owners after the time limit will also be added. Realistically,
+this person to person lending framework may not allow a way for these cases to be actually verified.
 
+### Improve user proximity capabilities
 A real implementation of this service would also use better tools to judge the proximity of users, as this is a service
 about physically lending books. Currently, it only saves geographical coordinates and ignores any other detail. This 
 would include people with close coordinates even if they were to be on another island.
 
+### Various
 Smaller things to solve on current code may be marked with todo text. 
 
 ## Conversion to maven
@@ -46,7 +88,7 @@ Technologies used:
 * [Spring docs](https://springdoc.org) 3.* version, automatic API documentation for spring. Check [the limitations of its current setting](#Spring-docs-limitations) before using it
 
 Considered using [java faker](https://github.com/DiUS/java-faker/tree/master) for testing, due to its capabilities to
-generate random values for database insertion, but including it makes Intelij in my computer not recognize
+generate random values for database insertion, but including it makes IntelliJ in my computer not recognize
 any gradle dependencies for reasons unknown.
 
 
@@ -115,54 +157,20 @@ To avoid users placing possibly bad information about books themselves, a foreig
 https://openlibrary.org/dev/docs/api/search was used due to being free. https://developer.api.oclc.org is bigger and 
 therefore preferable, but requires authentication given only to some organizations.
 
-## Project structure
-
-```
-└── 📁src
-    └── 📁main
-        └── 📁docker
-            ├── Dockerfile
-        └── 📁java
-            └── 📁backend
-                └── 📁bookSharing
-                    └── 📁http
-                    └── 📁repository
-                        └── 📁entities
-                    └── 📁services
-                        └── 📁book
-                            └── 📁api
-                        └── 📁user
-                            └── 📁services
-                    ├── Main.java
-        └── 📁resources
-            └── 📁sql
-                ├── creation.sql
-            ├── application.properties
-    └── 📁test
-    └── 📁integration
-```
-
-Above is the structure of the src folder. The main and test folders are standard, while the resources/sql and docker 
-folders serve for automation of the database creation, that can be activated with Gradle.
-
-The integration folder is the new sourceSet created by the Gradle Plugin.
-
 ### BookSharing
 
 There are three main folders in this structure, the repository, the services and http. 
 
 The base is the repository structure, which contains the database entities as classes, the translation being done with 
-jakarta, and the base repository CRUD actions, something the spring does automatically by implementing specific 
+Jakarta, and the base repository CRUD actions, something the spring does automatically by implementing specific 
 interfaces with our generics.
 
 Next step is the services folder, with the power of defining the restrictions on how to interact with the repository
-data, such as defining transaction levels and making use of foreign APIs (used here to get information of books through
-their isbn).
+data. This involves defining transaction levels, making use of foreign APIs (used here to get information of books through
+their ISBN) and apply any rules a database cannot by itself.
 
 The last step is http, which will read and parse the data of receiving http requests and making use of the services 
 layer to answer valid requests.
 
-Outside of these folders is the main file. This has the boilerplate code to start a spring server app, but it's called to
-attention that any component spring cannot create by itself will be supplemented with bean annotated methods. At this 
-stage, the example of defining the validity time of the tokens is done here, and any such information that may be changed
-should be placed here for ease of change.
+Outside of these folders is the main file. This has the boilerplate code to start a spring server app, along with some
+simple beans that would not be grouped well with other beans in the existing spring configuration classes.

@@ -1,3 +1,6 @@
+---due to docker image being postgis already, but terraform going of base postgres
+CREATE EXTENSION IF NOT EXISTS postgis;
+
 CREATE TABLE App_User(
     id serial primary key NOT NULL,
     location GEOGRAPHY(POINT,4326) NOT NULL,  --- GEOGRAPHY GEOMETRY

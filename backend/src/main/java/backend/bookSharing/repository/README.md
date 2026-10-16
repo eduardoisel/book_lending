@@ -9,7 +9,7 @@ may not delete by doing logout. This relation is the most appropriate to use One
 
 ## Postgres enum
 
-The base of this [database structure](../../../../resources/sql/creation.sql) is mostly basic, with the values translating
+The base of this [database structure](../../../../../../sql/creation.sql) is mostly basic, with the values translating
 to String, numbers or java dates directly. The exception here is the usage of postgres enum for the [book's language](./entities/Book.java),
 which requires more specialized annotations. Check [this site](https://www.baeldung.com/java-enums-jpa-postgresql)
 if you want to downgrade the spring version, and consequently the hibernate version. Otherwise, substitute the sql file
