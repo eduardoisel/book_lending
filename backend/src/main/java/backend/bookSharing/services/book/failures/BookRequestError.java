@@ -1,18 +1,31 @@
 package backend.bookSharing.services.book.failures;
 
-public abstract sealed class BookRequestError extends Exception
+import backend.bookSharing.services.ServiceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+public abstract sealed class BookRequestError extends ServiceException
         permits BookRequestError.OwnershipNotFound,
                 BookRequestError.AlreadyRequested,
                 BookRequestError.CannotRequestFromSelf {
 
     private BookRequestError() {}
 
+    /**
+     * Requesting book from self is not allowed
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public static final class CannotRequestFromSelf extends BookRequestError {}
 
+    /**
+     * Target user does not own book
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public static final class OwnershipNotFound extends BookRequestError {}
 
     /**
-     * Only thrown if requested book from that specific person, policy may be changed
+     * Current book from user was already requested
      */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public static final class AlreadyRequested extends BookRequestError {}
 }

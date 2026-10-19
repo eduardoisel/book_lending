@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer createUser(String email, String password, double x, double y)
+    public String createUser(String email, String password, double x, double y)
             throws UserCreationError {
 
         if (x < -180 || x > 180) {
@@ -133,16 +133,18 @@ public class UserServiceImpl implements UserService {
 
         String salt = passwordValidation.getSalt();
 
-        User created =
-                userRepo.save(
-                        new User(
-                                geometryFactory.createPoint(new Coordinate(x, y)),
-                                email,
-                                new PasswordValidationInfo(
-                                        passwordValidation.passwordEncoding(password, salt),
-                                        salt)));
+        userRepo.save(
+                new User(
+                        geometryFactory.createPoint(new Coordinate(x, y)),
+                        email,
+                        new PasswordValidationInfo(
+                                passwordValidation.passwordEncoding(password, salt), salt)));
 
-        return created.getId();
+        try {
+            return login(email, password);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

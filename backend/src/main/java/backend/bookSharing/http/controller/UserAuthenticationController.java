@@ -6,11 +6,9 @@ import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,73 +26,44 @@ public class UserAuthenticationController {
 
     /**
      * @param body information necessary to create user
+     * @return login token
      */
-    @Operation(
-            responses = {
-                @ApiResponse(responseCode = "410", description = "Password not up to requirement"),
-                @ApiResponse(responseCode = "400", description = "Repeat email")
-            })
     @PostMapping("createUser")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<?> createUser(@RequestBody UserCreation body) {
-        try {
-            Integer result = service.createUser(body.email(), body.password(), body.x(), body.y());
+    public String createUser(@RequestBody UserCreation body) throws UserCreationError {
 
-            return ResponseEntity.status(201).body(String.format("Id of user: %s \n", result));
-
-        } catch (UserCreationError error) {
-
-            return switch (error) {
-                case UserCreationError.WeakPassword weakPassword ->
-                        ResponseEntity.status(400)
-                                .body("Password is weak. Todo add ways to inform requirements");
-                case UserCreationError.EmailInUse emailInUse ->
-                        ResponseEntity.status(400)
-                                .body("Email is already in use for this service.");
-                case UserCreationError.InvalidLongitude invalidLongitude ->
-                        ResponseEntity.status(400)
-                                .body("Longitude needs to be between -180 and 180.");
-                case UserCreationError.InvalidLatitude invalidLatitude ->
-                        ResponseEntity.status(400).body("Latitude needs to be between -90 and 90.");
-            };
-        }
+        return service.createUser(body.email(), body.password(), body.x(), body.y());
     }
 
+    /**
+     *
+     * @param body information necessary to login
+     * @return login token
+     * @throws UserAuthenticationError
+     */
     @PostMapping("login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<?> login(@RequestBody UserLogin body) {
-        try {
-            String result = service.login(body.email(), body.password());
-
-            return ResponseEntity.status(201).body(result);
-
-        } catch (UserAuthenticationError error) {
-
-            return switch (error) {
-                case UserAuthenticationError.UserOrPasswordAreInvalid userOrPasswordAreInvalid ->
-                        ResponseEntity.status(400).body("User not recognized");
-            };
-        }
+    public String login(@RequestBody UserLogin body) throws UserAuthenticationError {
+        return service.login(body.email(), body.password());
     }
 
     @DeleteMapping("logout")
     @ResponseStatus(value = HttpStatus.OK)
-    public ResponseEntity<?> logout() {
+    public void logout() {
         try {
-            service.logout(
-                    (String)
-                            SecurityContextHolder.getContext()
-                                    .getAuthentication()
-                                    .getCredentials());
 
-            return ResponseEntity.status(200).body("Deleted token");
+            String token =
+                    (String)
+                            Objects.requireNonNull(
+                                            SecurityContextHolder.getContext().getAuthentication())
+                                    .getCredentials();
+
+            assert token != null;
+            service.logout(token);
 
         } catch (LogoutError error) {
-
-            return switch (error) {
-                case LogoutError.TokenInvalidForAuthentication tokenInvalidForAuthentication ->
-                        ResponseEntity.status(400).body("User not recognized");
-            };
+            // should not happen as token was retrieved on authentication
+            throw new RuntimeException(error);
         }
     }
 }

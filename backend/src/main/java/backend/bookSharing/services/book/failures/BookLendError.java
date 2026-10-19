@@ -1,10 +1,18 @@
 package backend.bookSharing.services.book.failures;
 
-public abstract sealed class BookLendError extends Exception
+import backend.bookSharing.services.ServiceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+public abstract sealed class BookLendError extends ServiceException
         permits BookLendError.RequestNotFound, BookLendError.AlreadyLent {
 
     private BookLendError() {}
 
+    /**
+     * Identified request does not exist
+     */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public static final class RequestNotFound extends BookLendError {}
 
     /**
@@ -12,5 +20,6 @@ public abstract sealed class BookLendError extends Exception
      *
      * Note: this is more restrictive than database model, which allows for multiple lends of the same book.
      */
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public static final class AlreadyLent extends BookLendError {}
 }

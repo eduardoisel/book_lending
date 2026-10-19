@@ -50,7 +50,7 @@ public class ExceptionOperationCustomizer implements OperationCustomizer {
                                     ApiResponse a = operation.getResponses().get(status);
                                     a.description(
                                             a.getDescription()
-                                                    + ";\t"
+                                                    + ";\n    "
                                                     + javadocProvider.getClassJavadoc(ex));
 
                                 } else {

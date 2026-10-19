@@ -15,6 +15,7 @@ import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,10 +40,10 @@ public interface UserService extends UserDetailsService {
     /**
      * @param email identifying email of {@link User}
      * @param password password of {@link User}
-     * @return id of user
+     * @return login token
      */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    Integer createUser(String email, String password, double x, double y) throws UserCreationError;
+    String createUser(String email, String password, double x, double y) throws UserCreationError;
 
     /**
      * Authentication through authentication token
@@ -50,7 +51,8 @@ public interface UserService extends UserDetailsService {
      * @param password password of {@link User}
      * @return login token
      */
-    @Transactional
+    @Transactional(
+            propagation = Propagation.REQUIRES_NEW) // with knowledge it is called by createUser
     String login(String email, String password) throws UserAuthenticationError;
 
     /**

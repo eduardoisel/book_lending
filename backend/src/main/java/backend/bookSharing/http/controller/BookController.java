@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,49 +42,47 @@ public class BookController {
     @Cacheable(
             value = "getBooks",
             unless = "#result.getBody().hasNextPage()==false") // no cache since list may increase
-    public ResponseEntity<?> getBooks(
-            @RequestParam(required = false, defaultValue = "0") Integer page) {
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ListedData getBooks(@RequestParam(required = false, defaultValue = "0") Integer page) {
 
         Page<Book> books = service.getBooks(page);
 
-        ListedData body =
-                new ListedData(books.toList().toArray(), books.hasNext(), books.hasPrevious());
-
-        return ResponseEntity.ok().body(body);
+        return new ListedData(books.toList().toArray(), books.hasNext(), books.hasPrevious());
     }
 
-    @GetMapping("/owners/{isbn}")
+    /**
+     * Get owners of a specific book
+     *
+     * @param isbn ISBN of book in question
+     * @param page page number, starts at 0
+     * @param user
+     * @return list of books
+     * @throws BookOwnersSearchError
+     */
+    @GetMapping("/owners/{ISBN}")
     // @Cacheable("bookOwners")
-    public ResponseEntity<?> getBookOwners(
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ListedData getBookOwners(
             @PathVariable String isbn,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal User user)
+            throws BookOwnersSearchError {
 
-        try {
-            Page<User> users = service.getOwnersOfBook(isbn, page, user.getLocation());
+        Page<User> users = service.getOwnersOfBook(isbn, page, user.getLocation());
 
-            ListedData body =
-                    new ListedData(users.toList().toArray(), users.hasNext(), users.hasPrevious());
-
-            return ResponseEntity.status(HttpStatus.OK).body(body);
-
-        } catch (BookOwnersSearchError error) {
-
-            return switch (error) {
-                case BookOwnersSearchError.BookNotFound bookNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Book does not exist");
-            };
-        }
+        return new ListedData(users.toList().toArray(), users.hasNext(), users.hasPrevious());
     }
 
     /**
      * Add a book to the system so it can be recognized, by giving an id and letting the server check if it exists
      *
-     * @param isbn
-     * @return
+     * @param isbn ISBN to identify book
+     * @return Added book
      * @throws BookAdditionError If given ISBN is in use or not able to be confirmed as an existing book
      */
-    @PostMapping("/{isbn}")
+    @PostMapping("/{ISBN}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Book postBook(@PathVariable String isbn) throws BookAdditionError {
@@ -93,53 +90,19 @@ public class BookController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<?> requestBook(
-            @RequestBody RequestCreation body, @AuthenticationPrincipal User authenticatedUser) {
+    @ResponseStatus(HttpStatus.OK)
+    public void requestBook(
+            @RequestBody RequestCreation body, @AuthenticationPrincipal User authenticatedUser)
+            throws BookRequestError {
 
-        try {
-            service.requestBook(
-                    body.isbn(), body.ownerEmail(), authenticatedUser, body.timeInDays());
-
-            return ResponseEntity.status(HttpStatus.OK).body("Request done");
-
-        } catch (BookRequestError error) {
-
-            return switch (error) {
-                case BookRequestError.AlreadyRequested alreadyRequested ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Already requested this book");
-                case BookRequestError.CannotRequestFromSelf cannotRequestFromSelf ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Owner cannot request its book");
-                case BookRequestError.OwnershipNotFound ownershipNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body(
-                                        String.format(
-                                                "Book %s is not owned by user %s",
-                                                body.isbn(), body.ownerEmail()));
-            };
-        }
+        service.requestBook(body.isbn(), body.ownerEmail(), authenticatedUser, body.timeInDays());
     }
 
     @PostMapping("/lend")
-    public ResponseEntity<?> lendBook(
-            @RequestBody LendCreation body, @AuthenticationPrincipal User user) {
+    @ResponseStatus(HttpStatus.OK)
+    public void lendBook(@RequestBody LendCreation body, @AuthenticationPrincipal User user)
+            throws BookLendError {
 
-        try {
-            service.lendBook(body.isbn(), body.receiverEmail(), user);
-
-            return ResponseEntity.status(HttpStatus.OK).body("Book successfully lent");
-
-        } catch (BookLendError error) {
-
-            return switch (error) {
-                case BookLendError.AlreadyLent alreadyLent ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Cannot lend already lent book");
-                case BookLendError.RequestNotFound requestNotFound ->
-                        ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Cannot lend to someone who did not request book");
-            };
-        }
+        service.lendBook(body.isbn(), body.receiverEmail(), user);
     }
 }

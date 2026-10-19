@@ -1,12 +1,17 @@
 package backend.bookSharing.services.book.failures;
 
-public abstract sealed class BookOwnersSearchError extends Exception
+import backend.bookSharing.services.ServiceException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+public abstract sealed class BookOwnersSearchError extends ServiceException
         permits BookOwnersSearchError.BookNotFound {
 
     private BookOwnersSearchError() {}
 
     /**
-     * Thrown when book does not exist on database
+     * Book does not exist on database
      */
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public static final class BookNotFound extends BookOwnersSearchError {}
 }
