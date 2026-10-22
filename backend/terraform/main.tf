@@ -2,35 +2,6 @@ provider "aws" {
   region = var.region
 }
 
-# Attempt at using dbeaver. Anyone who prefers dbeaver I recommend checking the link and see how to fix it
-# https://github.com/dbeaver/dbeaver/wiki/Command-Line indicates dbeaver.exe (for  windows), tried command below, opens gui but does not connect
-# dbeaverc.exe -con "driver=postgres|name=[con_name]|port=5433|user=var.u|password=var.p|url=[db_instance.address]"
-resource "aws_db_instance" "postgres_database" {
-  allocated_storage   = 8
-  db_name             = var.database_name
-  engine              = "postgres"
-  instance_class      = "db.t3.micro"
-  username            = var.database_username
-  password            = var.database_password
-  port                = var.database_port
-  publicly_accessible = true # should be necessary to access from personal machine. Necessary to create schema
-
-  # deletion does not require snapshot beforehand. Set to true as its in development phase, and should not hold any special values
-  skip_final_snapshot = true
-
-
-  provisioner "local-exec" {
-    interpreter = ["cmd", "/C"] # uses windows command line, change for other operating systems
-    # https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem link for aws recommended file
-    command = "psql --host=${self.address} --port=${self.port} --dbname=${self.db_name} --username=${self.username} -f ${path.root}/../sql/creation.sql"
-
-    environment = {
-      PGPASSWORD = var.database_password # Alternative to passing via command, otherwise command requests input from user
-    }
-  }
-
-}
-
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -43,6 +14,17 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+data "local_file" "server_jar" {
+  filename = "${path.root}/../build/libs/backend-1.0-SNAPSHOT.jar"
+
+  lifecycle {
+    postcondition {
+      condition     =  fileexists(self.filename)
+      error_message = "The required file does not exist at: ${self.filename}"
+    }
+  }
+
+}
 
 
 #next resources below can be removed if using key created in other means, see variables
@@ -127,36 +109,6 @@ resource "aws_security_group" "server_port" {
   }
 }
 
-
-/*
-resource "aws_vpc" "permissive" {
-  cidr_block = "85.246.0.0/16"
-
-  tags = {
-    name = "Book_vpc"
-  }
-}
-
-resource "aws_subnet" "encompassing" {
-  vpc_id     = aws_vpc.permissive.id
-  cidr_block = "85.246.0.0/16"
-
-  tags = {
-    Name = "Book_subnet"
-  }
-
-}
-
-resource "aws_network_interface" "example" {
-  subnet_id = aws_subnet.encompassing.id
-  #private_ips = ["172.16.10.100"]
-
-  tags = {
-    Name = "Book_network_interface"
-  }
-}
-*/
-
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
@@ -172,7 +124,11 @@ resource "aws_instance" "app_server" {
   key_name               = aws_key_pair.ssh-keypair.key_name # var.key_pair_name
   vpc_security_group_ids = [aws_security_group.ssh.id, aws_security_group.server_port.id]
 
-
+  user_data = <<EOF
+          #!/bin/bash
+          sudo apt update -y
+          sudo apt-get -y install openjdk-25-jdk
+          EOF
 
   # Connect using the instance's public IP
   # aws ec2 describe-instances                COMMAND
@@ -184,17 +140,9 @@ resource "aws_instance" "app_server" {
     timeout     = "5m"                                  # should be enough
   }
 
-  # Create the destination directory first
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "sudo apt-get -y install openjdk-25-jdk", # which java: /usr/bin/java
-    ]
-  }
-
 
   provisioner "file" {
-    source      = "${path.root}/../build/libs/backend-1.0-SNAPSHOT.jar"
+    source      = data.local_file.server_jar.filename
     destination = "/home/ubuntu/bookServer.jar"
   }
 

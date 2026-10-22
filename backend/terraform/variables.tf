@@ -30,6 +30,21 @@ variable "database_name" {
   default     = "books"
 }
 
+/*
+variable "jar_file_path" {
+  type        = string
+  default     = "${path.root}/../build/libs/backend-1.0-SNAPSHOT.jar"
+  description = "Location of jar"
+
+  validation {
+    # Refere-se ao objeto local 'var.config_file_path'
+    condition     = fileexists("${path.module}/${var.jar_file_path}")
+    error_message = "O arquivo de configuração especificado não foi encontrado."
+  }
+}
+*/
+
+
 #private values
 
 variable "database_username" {

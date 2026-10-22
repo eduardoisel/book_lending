@@ -7,8 +7,7 @@ on the machine running terraform. If one does not want to install it, check for 
 
 ## Before terraform
 
-Do not forget to create the java jar to be placed on the virtual machine. It is expected to exist (todo update terraform
-to check for the jar file's existence before creation of resources).
+Do not forget to create the java jar to be placed on the virtual machine. It is expected to exist.
 
 # Instructions
 
@@ -29,7 +28,6 @@ and use the commented key variables
 
 # TODO
 
-* Use terraform to check for the existence of files necessary before command using them, such as jars and sql files.
 * Develop heavily the [virtual private cloud](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html) to not use the default.
 * Separate into modules
 * See how to create multiple server instances as to support increase on usage by running multiple instances

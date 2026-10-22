@@ -1,9 +1,4 @@
 
-output "java_formatted_string" {
-  description = "Result of the java jar's formatted string, to check the parameters"
-  value       = "java -jar /home/ubuntu/bookServer.jar --spring.datasource.password=${var.database_password} --spring.datasource.username=${var.database_username} --spring.datasource.url=jdbc:postgresql://${aws_db_instance.postgres_database.address}:${var.database_port}/${var.database_name}"
-}
-
 output "database_address" {
   description = "The address (or host) of the database"
   value       = aws_db_instance.postgres_database.address
