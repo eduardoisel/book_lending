@@ -4,7 +4,7 @@ data "local_file" "creation_schema" {
   lifecycle {
     # needs to be post to have self
     postcondition {
-      condition     =  fileexists(self.filename)
+      condition     = fileexists(self.filename)
       error_message = "The required file does not exist at: ${self.filename}"
     }
   }

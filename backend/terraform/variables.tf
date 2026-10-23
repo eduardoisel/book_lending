@@ -30,20 +30,6 @@ variable "database_name" {
   default     = "books"
 }
 
-/*
-variable "jar_file_path" {
-  type        = string
-  default     = "${path.root}/../build/libs/backend-1.0-SNAPSHOT.jar"
-  description = "Location of jar"
-
-  validation {
-    # Refere-se ao objeto local 'var.config_file_path'
-    condition     = fileexists("${path.module}/${var.jar_file_path}")
-    error_message = "O arquivo de configuração especificado não foi encontrado."
-  }
-}
-*/
-
 
 #private values
 
@@ -58,22 +44,6 @@ variable "database_password" {
   type        = string
   sensitive   = true
 }
-
-# can use variables below if to reuse the same key, could be useful if one wants to manually connect with ssh manually.
-# https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html if none was yet created
-# or else aws ec2 import-key-pair --key-name [yout key name] --public-key-material fileb://[key file path] to register yours on aws
-# Use aws cli to get private key with your --key-name
-/*
-variable "key_pair_name" {
-  description = "Name of an existing EC2 key pair"
-  type        = string
-}
-
-variable "private_key_path" {
-  description = "Path to the corresponding local private key"
-  type        = string
-}
-*/
 
 variable "my_ip_cidr" {
   description = "Your public IP in CIDR notation, e.g. 203.0.113.10/32"

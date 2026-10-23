@@ -19,31 +19,11 @@ data "local_file" "server_jar" {
 
   lifecycle {
     postcondition {
-      condition     =  fileexists(self.filename)
+      condition     = fileexists(self.filename)
       error_message = "The required file does not exist at: ${self.filename}"
     }
   }
 
-}
-
-
-#next resources below can be removed if using key created in other means, see variables
-#creates key
-resource "tls_private_key" "ssh-keypair" {
-  algorithm = "RSA"
-  rsa_bits  = 2048
-}
-
-#stores private on file
-resource "local_file" "private-key" {
-  content  = tls_private_key.ssh-keypair.private_key_pem
-  filename = "${path.root}/ssh-key-pair.pem"
-}
-
-#gives the public key to be stored linked to the name given
-resource "aws_key_pair" "ssh-keypair" {
-  key_name   = "ssh-key-pair" #should be unique on the scope of the account (or maybe region and account?)
-  public_key = tls_private_key.ssh-keypair.public_key_openssh
 }
 
 resource "aws_security_group" "ssh" {
@@ -74,7 +54,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_to_self" {
   description = "SSH from my IP"
   from_port   = 22
   to_port     = 22
-  ip_protocol = "tcp" #ssh uses tcp. Should also be possible to limit for ssh protocol, todo see
+  ip_protocol = "tcp"          #ssh uses tcp. Should also be possible to limit for ssh protocol, todo see
   cidr_ipv4   = var.my_ip_cidr # limits SSH only from your IP address
 
 }
@@ -85,7 +65,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_ssh_to_self" {
   description = "SSH to my IP"
   from_port   = 22
   to_port     = 22
-  ip_protocol = "tcp" #ssh uses tcp. Should also be possible to limit for ssh protocol, todo see
+  ip_protocol = "tcp"          #ssh uses tcp. Should also be possible to limit for ssh protocol, todo see
   cidr_ipv4   = var.my_ip_cidr # limits SSH only to your IP address
 }
 
