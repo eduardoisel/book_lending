@@ -75,10 +75,10 @@ public class UserController {
     @PostMapping("owned/{ISBN}")
     @ResponseStatus(value = HttpStatus.OK)
     public void addBookOwned(
-            @PathVariable String isbn, @AuthenticationPrincipal User authenticatedUser)
+            @PathVariable String ISBN, @AuthenticationPrincipal User authenticatedUser)
             throws OwnerShipAdditionError {
 
-        service.addOwner(isbn, authenticatedUser);
+        service.addOwner(ISBN, authenticatedUser);
     }
 
     @PostMapping("blacklist/{email}")

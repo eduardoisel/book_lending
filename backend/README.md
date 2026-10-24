@@ -97,7 +97,10 @@ any gradle dependencies for reasons unknown.
 
 Access on browser the base url for the server used in the code plus the value found in springdoc.swagger-ui.path of the
 [spring properties file](./src/main/resources/application.yaml). This will give you a page with every available endpoint
-of your API. If this file is up to date, this project should use http://localhost:8080/swagger-ui.html by default.
+of your API. 
+
+* http://localhost:8080/swagger-ui.html for request interactive gui
+* http://localhost:8080/v3/api-docs.yaml to download yaml
 
 The project required configuring springdoc to be more complete, as described in the
 [http md](./src/main/java/backend/bookSharing/http/README.md).

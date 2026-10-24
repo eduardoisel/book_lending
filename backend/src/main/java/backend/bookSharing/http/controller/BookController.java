@@ -78,15 +78,15 @@ public class BookController {
     /**
      * Add a book to the system so it can be recognized, by giving an id and letting the server check if it exists
      *
-     * @param isbn ISBN to identify book
+     * @param ISBN ISBN to identify book
      * @return Added book
      * @throws BookAdditionError If given ISBN is in use or not able to be confirmed as an existing book
      */
     @PostMapping("/{ISBN}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Book postBook(@PathVariable String isbn) throws BookAdditionError {
-        return service.addBookFromApi(isbn);
+    public Book postBook(@PathVariable String ISBN) throws BookAdditionError {
+        return service.addBookFromApi(ISBN);
     }
 
     @PostMapping("/request")
