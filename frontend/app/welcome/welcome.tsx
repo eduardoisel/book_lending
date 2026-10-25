@@ -1,7 +1,52 @@
+import { Link } from "react-router";
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
+import { useAuthenticationContext } from "~/context/userAuthentication";
+import { logoutUser } from "~/api/requests";
+import { useState } from "react";
+
+
+function Logout(){
+
+  const auth = useAuthenticationContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(ev: React.SubmitEvent<HTMLFormElement>) {
+    ev.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const result = await logoutUser();
+      if (result.type === 'success') {
+      auth.unsetAuth();
+      }
+      else {
+        console.error("Error logging out:", result.info.detail);
+      }
+    }
+    catch (error) {
+      console.error("Error logging out:", error);
+    }
+    finally {
+      setIsSubmitting(false);
+    }
+
+  }
+
+  return (
+            <form onSubmit={handleSubmit}>
+            <fieldset disabled={isSubmitting}>
+                <div>
+                    <button type="submit">Logout</button>
+                </div>
+            </fieldset>
+        </form>
+  )
+}
 
 export function Welcome() {
+
+  const auth = useAuthenticationContext() ;
   return (
     <main className="flex items-center justify-center pt-16 pb-4">
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
@@ -40,6 +85,21 @@ export function Welcome() {
               ))}
             </ul>
           </nav>
+
+          {auth.username ? (
+            <div className="text-center text-gray-700 dark:text-gray-200">
+              You are logged in as {auth.username}.
+              <Logout />
+            </div>
+          ) : (
+            <div>
+              <Link to="/login">Go to Login</Link>
+              <p></p>
+              <Link to="/createUser">Go to Create User</Link>
+            </div>
+            
+          )}
+
         </div>
       </div>
     </main>

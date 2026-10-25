@@ -237,6 +237,9 @@ export interface components {
             email: string;
             password: string;
         };
+        LoginToken: {
+            token: string;
+        };
         UserCreation: {
             email: string;
             password: string;
@@ -264,8 +267,49 @@ export interface components {
             isbn: string;
             receiverEmail: string;
         };
-        ListedData: {
-            data: Record<string, never>[];
+        ListedDataBook: {
+            data: components["schemas"]["Book"][];
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+        };
+        ListedDataRequest: {
+            data: components["schemas"]["Request"][];
+            hasNextPage: boolean;
+            hasPreviousPage: boolean;
+        };
+        Owned: {
+            id: components["schemas"]["OwnedId"];
+            user: components["schemas"]["User"];
+            book: components["schemas"]["Book"];
+        };
+        OwnedId: {
+            /** Format: int32 */
+            userId: number;
+            /** Format: int32 */
+            bookId: number;
+        };
+        Request: {
+            requestId: components["schemas"]["RequestId"];
+            owned: components["schemas"]["Owned"];
+            /** Format: date-time */
+            date: string;
+            /** Format: int32 */
+            duration: number;
+        };
+        RequestId: {
+            requested: components["schemas"]["OwnedId"];
+            /** Format: int32 */
+            userId: number;
+        };
+        User: {
+            /** Format: int32 */
+            id: number;
+            email: string;
+            isAdmin: boolean;
+            enabled: boolean;
+        };
+        ListedDataUser: {
+            data: components["schemas"]["User"][];
             hasNextPage: boolean;
             hasPreviousPage: boolean;
         };
@@ -392,7 +436,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": string;
+                    "*/*": components["schemas"]["LoginToken"];
                 };
             };
             /** @description User or password invalid */
@@ -435,7 +479,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": string;
+                    "*/*": components["schemas"]["LoginToken"];
                 };
             };
             /**
@@ -626,7 +670,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ListedData"];
+                    "*/*": components["schemas"]["ListedDataBook"];
                 };
             };
             /** @description User in question does not exist */
@@ -672,7 +716,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ListedData"];
+                    "*/*": components["schemas"]["ListedDataRequest"];
                 };
             };
             /** @description Book in question is not owned by user in question */
@@ -713,7 +757,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ListedData"];
+                    "*/*": components["schemas"]["ListedDataUser"];
                 };
             };
             /** @description Book does not exist on database */
@@ -754,7 +798,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ListedData"];
+                    "*/*": components["schemas"]["ListedDataBook"];
                 };
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */

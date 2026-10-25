@@ -40,14 +40,14 @@ public class UserController {
     @GetMapping("owned/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData booksOwned(
+    public ListedData<Book> booksOwned(
             @PathVariable Integer userId,
             @RequestParam(required = false, defaultValue = "0") Integer page)
             throws UserOwnershipSearchError {
 
         Page<Book> search = service.getOwnedBooks(userId, page);
 
-        return new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious());
+        return new ListedData<Book>(search.toList(), search.hasNext(), search.hasPrevious());
     }
 
     /**
@@ -61,7 +61,7 @@ public class UserController {
     @GetMapping("owned/{userId}/requests/{bookId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData bookRequests(
+    public ListedData<Request> bookRequests(
             @PathVariable Integer userId,
             @PathVariable Integer bookId,
             @RequestParam(required = false, defaultValue = "0") Integer page)
@@ -69,7 +69,7 @@ public class UserController {
 
         Page<Request> search = service.getRequestsOfBook(userId, bookId, page);
 
-        return new ListedData(search.toList().toArray(), search.hasNext(), search.hasPrevious());
+        return new ListedData<Request>(search.toList(), search.hasNext(), search.hasPrevious());
     }
 
     @PostMapping("owned/{ISBN}")

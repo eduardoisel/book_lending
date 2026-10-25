@@ -10,6 +10,7 @@ import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -39,16 +40,18 @@ public class BookController {
      * @return list of books
      */
     @GetMapping("/")
-    @Cacheable(
-            value = "getBooks",
-            unless = "#result.getBody().hasNextPage()==false") // no cache since list may increase
+//    @Cacheable(
+//            value = "getBooks",
+//            unless = "#result.hasNext()==false") // no cache since list may increase
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData getBooks(@RequestParam(required = false, defaultValue = "0") Integer page) {
+    public ListedData<Book> getBooks(@RequestParam(required = false, defaultValue = "0") Integer page) {
 
         Page<Book> books = service.getBooks(page);
 
-        return new ListedData(books.toList().toArray(), books.hasNext(), books.hasPrevious());
+        List<Book> list= books.toList();
+
+        return new ListedData<Book>(list, books.hasNext(), books.hasPrevious());
     }
 
     /**
@@ -64,7 +67,7 @@ public class BookController {
     // @Cacheable("bookOwners")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData getBookOwners(
+    public ListedData<User> getBookOwners(
             @PathVariable String isbn,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @AuthenticationPrincipal User user)
@@ -72,7 +75,7 @@ public class BookController {
 
         Page<User> users = service.getOwnersOfBook(isbn, page, user.getLocation());
 
-        return new ListedData(users.toList().toArray(), users.hasNext(), users.hasPrevious());
+        return new ListedData<User>(users.toList(), users.hasNext(), users.hasPrevious());
     }
 
     /**

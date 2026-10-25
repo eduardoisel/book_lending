@@ -1,5 +1,6 @@
 package backend.bookSharing.http.controller;
 
+import backend.bookSharing.http.data.LoginToken;
 import backend.bookSharing.http.data.UserCreation;
 import backend.bookSharing.http.data.UserLogin;
 import backend.bookSharing.services.user.UserService;
@@ -30,9 +31,9 @@ public class UserAuthenticationController {
      */
     @PostMapping("createUser")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public String createUser(@RequestBody UserCreation body) throws UserCreationError {
+    public LoginToken createUser(@RequestBody UserCreation body) throws UserCreationError {
 
-        return service.createUser(body.email(), body.password(), body.x(), body.y());
+        return new LoginToken(service.createUser(body.email(), body.password(), body.x(), body.y()));
     }
 
     /**
@@ -43,8 +44,8 @@ public class UserAuthenticationController {
      */
     @PostMapping("login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public String login(@RequestBody UserLogin body) throws UserAuthenticationError {
-        return service.login(body.email(), body.password());
+    public LoginToken login(@RequestBody UserLogin body) throws UserAuthenticationError {
+        return new LoginToken(service.login(body.email(), body.password()));
     }
 
     @DeleteMapping("logout")

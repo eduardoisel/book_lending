@@ -1,7 +1,8 @@
-import createClient from "openapi-fetch"
+import createClient, { type Client } from "openapi-fetch"
 import type { components, paths} from "./api-types"
 
-const client = createClient<paths>({baseUrl: "http://localhost:8080"});
+// second argument is content type
+const client: Client<paths> = createClient<paths>({baseUrl: "http://localhost:8080"});
 
 /**
  * Base return type for all fetches. Union of success and failure types, with success containing the expected data and the failure type contains ProblemDetail.
@@ -41,7 +42,7 @@ const { data, error } = await client.GET("/users/owned/{userId}", {
   return {type: 'success', info: data};
 }
 
-async function addBookOwned(ISBN : string): Promise<FetchReturn<undefined>> {
+export async function addBookOwned(ISBN : string): Promise<FetchReturn<undefined>> {
 const { data, error } = await client.POST("/users/owned/{ISBN}", {
     params: { 
       path: { ISBN }
@@ -55,3 +56,40 @@ const { data, error } = await client.POST("/users/owned/{ISBN}", {
 
   return {type: 'success', info: data};
 }
+
+export async function loginUser(email: string, password: string): Promise<FetchReturn<paths["/userAuth/login"]["post"]["responses"]["201"]["content"]["*/*"]>> {
+  const { data, error } = await client.POST("/userAuth/login", {
+    body: { email, password }
+  });
+
+  if (error) {
+    console.error("Error logging in:", error);
+    return {type: 'failure', info: error};
+  }
+
+  return {type: 'success', info: data};
+}
+
+export async function createUser(email: string, password: string, x: number, y: number): Promise<FetchReturn<paths["/userAuth/createUser"]["post"]["responses"]["201"]["content"]["*/*"]>> {
+  const { data, error } = await client.POST("/userAuth/createUser", {
+    body: { email, password, x, y }
+  });
+
+  if (error) {
+    console.error("Error creating user:", error);
+    return {type: 'failure', info: error};
+  }
+
+  return {type: 'success', info: data};
+}
+
+export async function logoutUser(): Promise<FetchReturn<undefined>> {
+  const { data, error } = await client.DELETE("/userAuth/logout", {});
+    
+  if (error) {
+    console.error("Error logging out:", error);
+    return {type: 'failure', info: error};
+  }
+
+  return {type: 'success', info: data};
+  }

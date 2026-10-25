@@ -46,6 +46,6 @@ public class UserControllerTest extends ControllerTestBase {
                 insertedOwned.stream()
                         .filter(o -> o.getUser().getId().equals(owner.getId()))
                         .count(),
-                listedData.data().length);
+                listedData.data().size());
     }
 }
