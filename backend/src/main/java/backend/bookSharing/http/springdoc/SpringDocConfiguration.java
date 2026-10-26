@@ -5,8 +5,10 @@ import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,16 @@ public class SpringDocConfiguration {
         return new OpenAPI()
                 .components(
                         new Components()
+                                .addHeaders(
+                                        "Authentication",
+                                        // does not reflect on automatic typescript tool (security
+                                        // schema is ignored)
+                                        // for it to be indicated you need more configuration
+                                        // elsewhere
+                                        new Header()
+                                                .required(true)
+                                                .description("Bearer token required")
+                                                .schema(new StringSchema()))
                                 .addSecuritySchemes(
                                         "bearer",
                                         new SecurityScheme()
@@ -60,5 +72,4 @@ public class SpringDocConfiguration {
             }
         };
     }
-
 }

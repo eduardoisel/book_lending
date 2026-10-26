@@ -34,18 +34,8 @@ public class BearerTokenAuthenticationFilter
 
         String requestTokenHeader = request.getHeader("Authorization");
 
-        /*
-         Necessary. At least on current configurations it will always check, even if the endpoint of the api
-         does not require authentication
-        */
-        if (requestTokenHeader == null) {
+        if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (!requestTokenHeader.startsWith("Bearer ")) {
-            response.sendError(
-                    HttpServletResponse.SC_UNAUTHORIZED, "Token must start with 'Bearer '");
             return;
         }
 
@@ -54,7 +44,7 @@ public class BearerTokenAuthenticationFilter
         User user = service.checkAuthentication(token);
 
         if (user == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token not found on database");
+            filterChain.doFilter(request, response);
             return;
         }
 

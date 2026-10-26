@@ -12,10 +12,11 @@ import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,16 +41,19 @@ public class BookController {
      * @return list of books
      */
     @GetMapping("/")
-//    @Cacheable(
-//            value = "getBooks",
-//            unless = "#result.hasNext()==false") // no cache since list may increase
+    //    @Cacheable(
+    //            value = "getBooks",
+    //            unless = "#result.hasNext()==false") // no cache since list may increase
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData<Book> getBooks(@RequestParam(required = false, defaultValue = "0") Integer page) {
+    public ListedData<Book> getBooks(
+            @RequestParam(required = false, defaultValue = "0") Integer page) {
+
+        SecurityContext context = SecurityContextHolder.getContext();
 
         Page<Book> books = service.getBooks(page);
 
-        List<Book> list= books.toList();
+        List<Book> list = books.toList();
 
         return new ListedData<Book>(list, books.hasNext(), books.hasPrevious());
     }

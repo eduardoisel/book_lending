@@ -3,7 +3,15 @@ package backend.bookSharing.http.springdoc;
 import backend.bookSharing.http.AuthorizationEndpoints;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
+import java.util.LinkedList;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.http.HttpMethod;
@@ -48,8 +56,44 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
             if (permission.httpMethod().equals(httpMethod)
                     && antPathMatcher.match(permission.pattern(), path)) {
                 switch (permission.access()) {
-                    case AuthorizationEndpoints.ImposePermission.Authenticated _ ->
-                            operation.addSecurityItem(new SecurityRequirement().addList("bearer"));
+                    case AuthorizationEndpoints.ImposePermission.Authenticated _ -> {
+                        operation.addSecurityItem(new SecurityRequirement().addList("bearer"));
+
+                        // add unauthorized response
+                        if (operation.getResponses() == null) {
+                            operation.setResponses(new ApiResponses());
+                        }
+
+                        Schema<?> schema =
+                                new Schema<>().$ref("#/components/schemas/ProblemDetail");
+
+                        MediaType mediaType = new MediaType().schema(schema);
+                        Content content =
+                                new Content().addMediaType("application/problem+json", mediaType);
+
+                        ApiResponse forbiddenResponse =
+                                new ApiResponse()
+                                        .description("Account needs bearer authentication")
+                                        .content(content);
+
+                        operation.getResponses().addApiResponse("401", forbiddenResponse);
+
+                        // add authorization header as path parameter
+
+                        LinkedList<Parameter> parameters =
+                                (operation.getParameters() != null)
+                                        ? new LinkedList<>(operation.getParameters())
+                                        : new LinkedList<>();
+                        Parameter authorizationHeaderParameter =
+                                new Parameter()
+                                        .name("Authorization")
+                                        .description("Authorization header")
+                                        .in("header")
+                                        .schema(new StringSchema())
+                                        .required(true);
+                        parameters.add(authorizationHeaderParameter);
+                        operation.setParameters(parameters);
+                    }
                     case AuthorizationEndpoints.ImposePermission.PermitAll _ -> {}
                 }
                 return;

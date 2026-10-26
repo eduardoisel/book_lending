@@ -3,6 +3,8 @@ package backend.bookSharing.http.authentication;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,9 @@ public class BearerTokenAuthenticationEntryPoint implements AuthenticationEntryP
             throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setHeader("WWW-Authenticate", "Bearer");
-        response.getWriter().println("Access Denied !! " + authException.getMessage());
+        response.getWriter()
+                .println(
+                        ProblemDetail.forStatusAndDetail(
+                                HttpStatus.UNAUTHORIZED, authException.getMessage()));
     }
 }

@@ -29,8 +29,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
 
-        http
-                .cors(cors-> cors.configurationSource(corsConfigurationSource()))
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // removing csrf line will break the configuration somehow
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(AuthorizationEndpoints::configure)
@@ -64,7 +63,8 @@ public class SecurityConfiguration {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of("*")); // all frontend origins
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "X-XSRF-TOKEN"));
+        configuration.setAllowedHeaders(
+                List.of("Authorization", "Cache-Control", "Content-Type", "X-XSRF-TOKEN"));
         configuration.setAllowCredentials(true); // Crucial for passing cookies across origins
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

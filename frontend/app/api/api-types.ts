@@ -317,7 +317,10 @@ export interface components {
     responses: never;
     parameters: never;
     requestBodies: never;
-    headers: never;
+    headers: {
+        /** @description Bearer token required */
+        Authentication: string;
+    };
     pathItems: never;
 }
 export type $defs = Record<string, never>;
@@ -325,7 +328,10 @@ export interface operations {
     addBookOwned: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path: {
                 ISBN: string;
             };
@@ -342,6 +348,15 @@ export interface operations {
             };
             /** @description User in question already owns book in question */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Account needs bearer authentication */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -372,7 +387,10 @@ export interface operations {
     addBlacklist: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path: {
                 email: string;
             };
@@ -386,6 +404,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Account needs bearer authentication */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
             };
             /** @description Account needs to have the role: ROLE_ADMIN */
             403: {
@@ -510,7 +537,10 @@ export interface operations {
     postBook: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path: {
                 /** @description ISBN to identify book */
                 ISBN: string;
@@ -533,6 +563,15 @@ export interface operations {
              *         Was given an ISBN 13 identifier already in database
              */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Account needs bearer authentication */
+            401: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -563,7 +602,10 @@ export interface operations {
     requestBook: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -593,6 +635,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Account needs bearer authentication */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
                 headers: {
@@ -607,7 +658,10 @@ export interface operations {
     lendBook: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -623,6 +677,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Account needs bearer authentication */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
             };
             /**
              * @description Identified request does not exist;
@@ -815,7 +878,10 @@ export interface operations {
     logout: {
         parameters: {
             query?: never;
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -827,6 +893,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Account needs bearer authentication */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {

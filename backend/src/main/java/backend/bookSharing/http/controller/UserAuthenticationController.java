@@ -33,7 +33,8 @@ public class UserAuthenticationController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public LoginToken createUser(@RequestBody UserCreation body) throws UserCreationError {
 
-        return new LoginToken(service.createUser(body.email(), body.password(), body.x(), body.y()));
+        return new LoginToken(
+                service.createUser(body.email(), body.password(), body.x(), body.y()));
     }
 
     /**

@@ -9,7 +9,7 @@ const client: Client<paths> = createClient<paths>({baseUrl: "http://localhost:80
  */
 export type FetchReturn<T> = {type: 'success'; info: T} | {type: 'failure'; info: components["schemas"]["ProblemDetail"]}
 
-async function bookRequests(userId: number, bookId: number, page?: number): Promise<FetchReturn<components["schemas"]["ListedData"]>> {
+async function bookRequests(userId: number, bookId: number, page?: number): Promise<FetchReturn<components["schemas"]["ListedDataRequest"]>> {
     const { data, error } = await client.GET("/users/owned/{userId}/requests/{bookId}", {
     params: {
       path: { userId, bookId },
@@ -26,7 +26,7 @@ async function bookRequests(userId: number, bookId: number, page?: number): Prom
 }
 
 
-async function booksOwned(userId: number, page?: number): Promise<FetchReturn<components["schemas"]["ListedData"]>> {
+async function booksOwned(userId: number, page?: number): Promise<FetchReturn<components["schemas"]["ListedDataBook"]>> {
 const { data, error } = await client.GET("/users/owned/{userId}", {
     params: {
       path: { userId },
@@ -42,10 +42,11 @@ const { data, error } = await client.GET("/users/owned/{userId}", {
   return {type: 'success', info: data};
 }
 
-export async function addBookOwned(ISBN : string): Promise<FetchReturn<undefined>> {
+export async function addBookOwned(ISBN : string, token: string): Promise<FetchReturn<undefined>> {
 const { data, error } = await client.POST("/users/owned/{ISBN}", {
     params: { 
-      path: { ISBN }
+      path: { ISBN },
+      header: { Authorization: `Bearer ${token}` }
     }
   });
 
@@ -83,8 +84,8 @@ export async function createUser(email: string, password: string, x: number, y: 
   return {type: 'success', info: data};
 }
 
-export async function logoutUser(): Promise<FetchReturn<undefined>> {
-  const { data, error } = await client.DELETE("/userAuth/logout", {});
+export async function logoutUser(token: string): Promise<FetchReturn<undefined>> {
+  const { data, error } = await client.DELETE("/userAuth/logout", { params: { header: { Authorization: `Bearer ${token }` } } });
     
   if (error) {
     console.error("Error logging out:", error);
