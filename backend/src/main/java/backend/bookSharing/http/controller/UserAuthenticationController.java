@@ -1,16 +1,18 @@
 package backend.bookSharing.http.controller;
 
-import backend.bookSharing.http.data.LoginToken;
 import backend.bookSharing.http.data.UserCreation;
 import backend.bookSharing.http.data.UserLogin;
+import backend.bookSharing.http.returns.LoginToken;
 import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.LogoutError;
 import backend.bookSharing.services.user.failures.UserAuthenticationError;
 import backend.bookSharing.services.user.failures.UserCreationError;
+import jakarta.validation.Valid;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +33,8 @@ public class UserAuthenticationController {
      */
     @PostMapping("createUser")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public LoginToken createUser(@RequestBody UserCreation body) throws UserCreationError {
+    public LoginToken createUser(@RequestBody @Validated @Valid UserCreation body)
+            throws UserCreationError {
 
         return new LoginToken(
                 service.createUser(body.email(), body.password(), body.x(), body.y()));
@@ -45,7 +48,8 @@ public class UserAuthenticationController {
      */
     @PostMapping("login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public LoginToken login(@RequestBody UserLogin body) throws UserAuthenticationError {
+    public LoginToken login(@Validated @Valid @RequestBody UserLogin body)
+            throws UserAuthenticationError {
         return new LoginToken(service.login(body.email(), body.password()));
     }
 

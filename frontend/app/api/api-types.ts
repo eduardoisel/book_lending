@@ -222,92 +222,120 @@ export interface components {
     schemas: {
         ProblemDetail: {
             /** Format: uri */
-            type: string;
-            title: string;
+            type?: string;
+            title?: string;
             /** Format: int32 */
-            status: number;
-            detail: string;
+            status?: number;
+            detail?: string;
             /** Format: uri */
-            instance: string;
-            properties: {
-                [key: string]: Record<string, never>;
+            instance?: string;
+            properties?: {
+                [key: string]: unknown;
             };
         };
         UserLogin: {
             email: string;
             password: string;
         };
+        /** @description Information necessary to authenticate */
         LoginToken: {
+            /** @description the bearer token */
             token: string;
         };
+        /** @description data class with information necessary to create user */
         UserCreation: {
+            /** @description email to be associated to user, cannot be in use for another account at the same time */
             email: string;
+            /** @description clear password to use on login */
             password: string;
-            /** Format: double */
-            x: number;
-            /** Format: double */
-            y: number;
+            /**
+             * Format: double
+             * @description x coordinate of user location
+             */
+            x?: number;
+            /**
+             * Format: double
+             * @description y coordinate of user location
+             */
+            y?: number;
         };
+        /**
+         * @description Since this service is about physical books, it assumes the existence of the ISBN. It may be either ISBN 10 or
+         *      ISBN 13 or even both, but never neither.
+         *      <p>
+         *      Due to this restriction, this class can only one of {@link Book#isbnTen Book#isbnTen}
+         *      or {@link Book#isbnThirteen Book#isbnThirteen} fields as null
+         */
         Book: {
             /** Format: int32 */
-            id: number;
-            isbnTen: string;
-            isbnThirteen: string;
+            id?: number;
+            isbnTen?: string;
+            isbnThirteen?: string;
             title: string;
             /** @enum {string} */
-            language: "English" | "Portuguese" | "Spanish" | "French" | "German" | "Russian" | "Japanese" | "Italian" | "Hebrew" | "Hungarian" | "Danish";
+            language?: "English" | "Portuguese" | "Spanish" | "French" | "German" | "Russian" | "Japanese" | "Italian" | "Hebrew" | "Hungarian" | "Danish";
         };
         RequestCreation: {
+            /** @description book identifier, either 10 or 13 numbers */
             isbn: string;
+            /** @description unique identifier of book's owner */
             ownerEmail: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Duration of request
+             */
             timeInDays: number;
         };
         LendCreation: {
+            /** @description book identifier, either 10 or 13 numbers */
             isbn: string;
+            /** @description unique identifier of book's requester */
             receiverEmail: string;
         };
+        /** @description Generic data class for a list of possibly incomplete data. */
         ListedDataBook: {
             data: components["schemas"]["Book"][];
             hasNextPage: boolean;
             hasPreviousPage: boolean;
         };
+        /** @description Generic data class for a list of possibly incomplete data. */
         ListedDataRequest: {
             data: components["schemas"]["Request"][];
             hasNextPage: boolean;
             hasPreviousPage: boolean;
         };
         Owned: {
-            id: components["schemas"]["OwnedId"];
-            user: components["schemas"]["User"];
-            book: components["schemas"]["Book"];
+            id?: components["schemas"]["OwnedId"];
+            user?: components["schemas"]["User"];
+            book?: components["schemas"]["Book"];
         };
         OwnedId: {
             /** Format: int32 */
-            userId: number;
+            userId?: number;
             /** Format: int32 */
-            bookId: number;
+            bookId?: number;
         };
         Request: {
-            requestId: components["schemas"]["RequestId"];
-            owned: components["schemas"]["Owned"];
+            requestId?: components["schemas"]["RequestId"];
+            owned?: components["schemas"]["Owned"];
             /** Format: date-time */
-            date: string;
+            date?: string;
             /** Format: int32 */
-            duration: number;
+            duration?: number;
         };
         RequestId: {
-            requested: components["schemas"]["OwnedId"];
+            requested?: components["schemas"]["OwnedId"];
             /** Format: int32 */
-            userId: number;
+            userId?: number;
         };
         User: {
             /** Format: int32 */
-            id: number;
-            email: string;
-            isAdmin: boolean;
-            enabled: boolean;
+            id?: number;
+            email?: string;
+            isAdmin?: boolean;
+            enabled?: boolean;
         };
+        /** @description Generic data class for a list of possibly incomplete data. */
         ListedDataUser: {
             data: components["schemas"]["User"][];
             hasNextPage: boolean;
@@ -382,6 +410,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
         };
     };
     addBlacklist: {
@@ -441,6 +478,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
         };
     };
     login: {
@@ -477,6 +523,15 @@ export interface operations {
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -525,6 +580,15 @@ export interface operations {
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -597,6 +661,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
         };
     };
     requestBook: {
@@ -646,6 +719,15 @@ export interface operations {
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -710,6 +792,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
         };
     };
     booksOwned: {
@@ -747,6 +838,15 @@ export interface operations {
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -800,6 +900,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
         };
     };
     getBookOwners: {
@@ -809,7 +918,10 @@ export interface operations {
                 page?: number;
             };
             header?: never;
-            path?: never;
+            path: {
+                /** @description ISBN of book in question */
+                ISBN: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -834,6 +946,15 @@ export interface operations {
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -873,6 +994,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
         };
     };
     logout: {
@@ -905,6 +1035,15 @@ export interface operations {
             };
             /** @description Problem Detail with message specific to the parameter violation detected from the request */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };

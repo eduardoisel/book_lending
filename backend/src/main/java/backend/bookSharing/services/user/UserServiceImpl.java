@@ -153,13 +153,13 @@ public class UserServiceImpl implements UserService {
         Optional<User> searchedUser = userRepo.findByEmail(email);
 
         if (searchedUser.isEmpty()) {
-            throw new UserAuthenticationError.UserOrPasswordAreInvalid();
+            throw new UserAuthenticationError.UserDoesNotExist();
         }
 
         User user = searchedUser.get();
 
         if (!passwordValidation.validatePassword(password, user.getValidationInfo())) {
-            throw new UserAuthenticationError.UserOrPasswordAreInvalid();
+            throw new UserAuthenticationError.PasswordIsInvalid();
         }
 
         String token = tokenValidation.generateTokenValue();

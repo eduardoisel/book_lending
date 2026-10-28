@@ -5,6 +5,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 import backend.bookSharing.TestData;
 import backend.bookSharing.http.returns.ListedData;
+import backend.bookSharing.repository.entities.Owned;
 import backend.bookSharing.repository.entities.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class UserControllerTest extends ControllerTestBase {
         String isbn = TestData.databaseBooks[0].getIsbnThirteen();
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/owned/{isbn}", isbn)
+                        MockMvcRequestBuilders.post("/users/owned/{ISBN}", isbn)
                                 .with(user(insertedUsers.get(2))))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -40,7 +41,7 @@ public class UserControllerTest extends ControllerTestBase {
                         .getResponse()
                         .getContentAsString();
 
-        ListedData listedData = objectMapper.readValue(returned, ListedData.class);
+        ListedData<Owned> listedData = objectMapper.readValue(returned, ListedData.class);
 
         assertEquals(
                 insertedOwned.stream()

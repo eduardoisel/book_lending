@@ -1,7 +1,8 @@
 package backend.bookSharing.http.data;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.ISBN;
 
 /**
  *
@@ -10,6 +11,6 @@ import com.fasterxml.jackson.annotation.Nulls;
  * @param timeInDays Duration of request
  */
 public record RequestCreation(
-        @JsonSetter(nulls = Nulls.FAIL) String isbn,
-        @JsonSetter(nulls = Nulls.FAIL) String ownerEmail,
-        @JsonSetter(nulls = Nulls.FAIL) Integer timeInDays) {}
+        @NotNull @ISBN(type = ISBN.Type.ANY) String isbn,
+        @NotNull String ownerEmail,
+        @NotNull @Min(value = 1, message = "Must be lent for at least one day") Integer timeInDays) {}

@@ -15,12 +15,28 @@ The controller folder contains the app's spring controllers.
 The authentication folder contains an authentication filter and an authentication entry point for bearer authentication.
 These are used on SecurityConfiguration, the class that defines which API endpoints need to be authenticated.
 
+## Data validation
+
+The usage of jakarta.validation annotations is not only for documentation, but for spring to check on parsing the data
+from the requests.
+
+For spring itself to validate it, never forget to use on of the following on the controller parameter:
+```
+@jakarta.validation.Valid;
+@org.springframework.validation.annotation.Validated;
+```
+
 ## Service exceptions handling
 
 An exception handler specifically for the service exception is used to read reflection data for the response.
 Possibly to be used on all expected service exceptions.
 
 # SpringDocs
+
+## Data validation
+
+The jakarta validation annotations are partly recognized by springdoc, and therefore they should always be used to 
+automatically generate the most complete possible API.
 
 ## Customizers used
 

@@ -51,8 +51,8 @@ public interface UserService extends UserDetailsService {
      * @param password password of {@link User}
      * @return login token
      */
-    @Transactional(
-            propagation = Propagation.REQUIRES_NEW) // with knowledge it is called by createUser
+    // even if called by createUser, if create user fails login is useless
+    @Transactional
     String login(String email, String password) throws UserAuthenticationError;
 
     /**

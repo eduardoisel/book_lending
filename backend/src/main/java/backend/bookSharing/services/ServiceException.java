@@ -1,5 +1,6 @@
 package backend.bookSharing.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
@@ -8,11 +9,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * At least for now it is assumed the subclass has annotations for the necessary information,
  * such as {@link ResponseStatus}
  */
+@RequiredArgsConstructor
 public abstract class ServiceException extends Exception {
 
-    //    public abstract HttpStatus getHttpStatus();
-    //
-    //    public String type() {
-    //        return "type-template";
-    //    }
+    // public final HttpStatus httpStatus;
+
+    // public final String detail;
+
 }

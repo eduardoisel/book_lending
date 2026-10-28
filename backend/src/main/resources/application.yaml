@@ -16,9 +16,12 @@ spring:
     url: jdbc:postgresql://localhost:5433/db
     username: dbuser
     password: changeit
+  #mvc: never use; makes default ResponseEntityExceptionHandler take priority to personal, simply use an exceptionHandler for throwable
+  #  problemdetails:
+  #    enabled: true
 
 
-# swagger-ui custom pattern
+  # swagger-ui custom pattern
   springdoc:
     show-login-endpoint: true
     swagger-ui:

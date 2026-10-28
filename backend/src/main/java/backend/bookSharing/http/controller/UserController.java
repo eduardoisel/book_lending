@@ -10,6 +10,7 @@ import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.ISBN;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,7 +76,9 @@ public class UserController {
     @PostMapping("owned/{ISBN}")
     @ResponseStatus(value = HttpStatus.OK)
     public void addBookOwned(
-            @PathVariable String ISBN, @AuthenticationPrincipal User authenticatedUser)
+            @PathVariable @ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY)
+                    String ISBN,
+            @AuthenticationPrincipal User authenticatedUser)
             throws OwnerShipAdditionError {
 
         service.addOwner(ISBN, authenticatedUser);

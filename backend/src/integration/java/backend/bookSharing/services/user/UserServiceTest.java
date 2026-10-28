@@ -71,12 +71,12 @@ public class UserServiceTest extends ServiceTestBase {
 
     @Test
     public void successfulLogin() {
+        String email = TestData.clearPasswordUsers[0].email();
+        String password = TestData.clearPasswordUsers[0].clearPassword();
         try {
-            userService.login(
-                    TestData.clearPasswordUsers[0].email(),
-                    TestData.clearPasswordUsers[0].clearPassword());
-        } catch (Exception _) {
-            fail("User login should be successful");
+            userService.login(email, password);
+        } catch (Exception e) {
+            fail("User login should be successful", e);
         }
     }
 
@@ -87,7 +87,7 @@ public class UserServiceTest extends ServiceTestBase {
         String validPassword = RandomValuesGenerator.password();
 
         assertThrowsExactly(
-                UserAuthenticationError.UserOrPasswordAreInvalid.class,
+                UserAuthenticationError.PasswordIsInvalid.class,
                 () -> userService.login(invalidEmail, validPassword));
     }
 
@@ -109,14 +109,14 @@ public class UserServiceTest extends ServiceTestBase {
                     userService.login(
                             TestData.clearPasswordUsers[0].email(),
                             TestData.clearPasswordUsers[0].clearPassword());
-        } catch (Exception _) {
-            fail("User login should be successful");
+        } catch (Exception e) {
+            fail("User login should be successful", e);
         }
 
         try {
             userService.logout(token);
-        } catch (Exception _) {
-            fail("User login should be successful");
+        } catch (Exception e) {
+            fail("User login should be successful", e);
         }
     }
 

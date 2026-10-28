@@ -11,24 +11,12 @@ public class BookControllerTest extends ControllerTestBase {
 
     @Test
     @WithMockUser
-    public void addBookByIsbn10() throws Exception {
-
-        String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/books/{isbn}", isbn10)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
-
-    @Test
-    @WithMockUser
     public void addBookByIsbn13() throws Exception {
 
-        String isbn13 = TestData.booksExclusiveFromApi[0].getIsbnThirteen();
+        String isbn13 = TestData.booksExclusiveFromApi[1].getIsbnThirteen();
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/books/{isbn}", isbn13)
+                        MockMvcRequestBuilders.post("/books/{ISBN}", isbn13)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -37,15 +25,15 @@ public class BookControllerTest extends ControllerTestBase {
     @WithMockUser
     public void addBookTwice() throws Exception {
 
-        String isbn10 = TestData.booksExclusiveFromApi[0].getIsbnTen();
+        String isbn13 = TestData.booksExclusiveFromApi[1].getIsbnThirteen();
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/books/{isbn}", isbn10)
+                        MockMvcRequestBuilders.post("/books/{ISBN}", isbn13)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/books/{isbn}", isbn10)
+                        MockMvcRequestBuilders.post("/books/{ISBN}", isbn13)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }

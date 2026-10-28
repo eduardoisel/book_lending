@@ -1,8 +1,5 @@
 package backend.bookSharing.http.data;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.Nulls;
+import jakarta.validation.constraints.NotNull;
 
-public record UserLogin(
-        @JsonSetter(nulls = Nulls.FAIL) String email,
-        @JsonSetter(nulls = Nulls.FAIL) String password) {}
+public record UserLogin(@NotNull String email, @NotNull String password) {}

@@ -35,9 +35,10 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @Size(max = maxEmailSize, message = "{validation.name.size.too_long}") private String email;
 
     /**
@@ -45,7 +46,7 @@ public class User implements UserDetails {
      */
     @JsonIgnore @Setter private Boolean locked = false;
 
-    @Column(name = "has_admin_powers")
+    @Column(name = "has_admin_powers", nullable = false)
     private Boolean isAdmin;
 
     @JsonIgnore @ToString.Exclude private PasswordValidationInfo validationInfo;

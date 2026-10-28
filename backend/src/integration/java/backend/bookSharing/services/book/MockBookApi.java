@@ -9,6 +9,9 @@ import org.jspecify.annotations.Nullable;
 
 public class MockBookApi implements BookApi {
 
+    /*
+    Always return duplicate
+     */
     @Override
     @Nullable public Book getBook(String isbn) {
 
@@ -17,7 +20,7 @@ public class MockBookApi implements BookApi {
         }
 
         if (isbn.length() == 13) {
-            Optional<Book> b =
+            Optional<Book> searchedIsbn13Book =
                     Arrays.stream(TestData.allBooks)
                             .filter(
                                     book -> {
@@ -31,14 +34,14 @@ public class MockBookApi implements BookApi {
                                     })
                             .findFirst();
 
-            if (b.isEmpty()) {
+            if (searchedIsbn13Book.isEmpty()) {
                 throw new RuntimeException("Mock api has not found the book");
             }
 
-            return b.get();
+            return TestData.duplicate(searchedIsbn13Book.get());
         }
 
-        Optional<Book> b =
+        Optional<Book> searchedIsbn10Book =
                 Arrays.stream(TestData.allBooks)
                         .filter(
                                 book -> {
@@ -50,6 +53,6 @@ public class MockBookApi implements BookApi {
                                 })
                         .findFirst();
 
-        return b.map(TestData::duplicate).orElse(null);
+        return searchedIsbn10Book.map(TestData::duplicate).orElse(null);
     }
 }
