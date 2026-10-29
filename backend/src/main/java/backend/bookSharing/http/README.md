@@ -26,6 +26,16 @@ For spring itself to validate it, never forget to use on of the following on the
 @org.springframework.validation.annotation.Validated;
 ```
 
+### SpringDocs compatibility
+
+Some of the annotations are recognized by springdoc, and therefore they should always be used to
+automatically generate the most complete possible API. Class <mark>org.springdoc.core.utils.SchemaUtils</mark> 
+should inform you of all recognized annotations. 
+
+Note: <mark>Pattern</mark> annotation for regex can be applied multiple times on the same element, and it will be
+validated by spring, but this does not seem to translate to the yaml file, and may not be possible due to it allowing
+only one [pattern](https://swagger.io/docs/specification/v3_0/data-models/data-types/#pattern) per parameter
+
 ## Service exceptions handling
 
 An exception handler specifically for the service exception is used to read reflection data for the response.
@@ -33,10 +43,7 @@ Possibly to be used on all expected service exceptions.
 
 # SpringDocs
 
-## Data validation
-
-The jakarta validation annotations are partly recognized by springdoc, and therefore they should always be used to 
-automatically generate the most complete possible API.
+All springDoes specific logic is to be placed on the [springdoc](./springdoc) folder
 
 ## Customizers used
 

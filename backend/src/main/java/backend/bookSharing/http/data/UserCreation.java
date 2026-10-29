@@ -16,6 +16,11 @@ import jakarta.validation.constraints.Size;
  */
 public record UserCreation(
         @NotNull String email,
-        @NotNull @Size(min = 8) @Pattern(regexp = ".*[a-z].*", message = "requires lower case char") @Pattern(regexp = ".*[A-Z].*", message = "requires upper case char") @Pattern(regexp = ".*[^a-z0-9A-Z].*", message = "requires special char") String password,
+        @NotNull @Size(min = 8) @Pattern(
+                        regexp = ".*(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-z0-9A-Z]).*",
+                        message =
+                                "Requires at least on of a lower, upper, digit and special digit"
+                                        + " each")
+                String password,
         @Min(-180) @Max(180) double x,
         @Min(-90) @Max(90) double y) {}

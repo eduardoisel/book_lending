@@ -2,10 +2,15 @@ package backend.bookSharing.http;
 
 import backend.bookSharing.http.returns.ValidationProblemDetail;
 import backend.bookSharing.services.ServiceException;
+import io.swagger.v3.core.converter.ModelConverter;
+import io.swagger.v3.core.jackson.ModelResolver;
+import io.swagger.v3.oas.models.media.Schema;
 import java.net.URI;
 import java.util.List;
+import org.springdoc.core.converters.PolymorphicModelConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +41,8 @@ public class ExceptionHandling {
     /**
      * Catches exceptions thrown by spring related to {@code jakarta.validation}, which includes things such as the
      * acceptable size for strings, the max and min values of numbers, and so on
+     * <p>
+     * TODO/Warning: Since exception is not runtime, it will no be recognized as possibly being thrown, and will not be on springDocs
      *
      * @param ex Exception
      * @return Problem Detail with message specific to the parameter violation detected from the request
@@ -79,7 +86,7 @@ public class ExceptionHandling {
         //            //problem.
         //
         //        }
-
+        HttpMessageNotReadableException
         return ProblemDetail.forStatusAndDetail(
                 ex.getClass().getAnnotation(ResponseStatus.class).value(), ex.getClass().getName());
     }

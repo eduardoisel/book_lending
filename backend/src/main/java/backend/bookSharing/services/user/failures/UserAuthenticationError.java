@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 public abstract sealed class UserAuthenticationError extends ServiceException
-        permits UserAuthenticationError.UserDoesNotExist, UserAuthenticationError.PasswordIsInvalid {
+        permits UserAuthenticationError.UserDoesNotExist,
+                UserAuthenticationError.PasswordIsInvalid {
 
     private UserAuthenticationError() {}
 

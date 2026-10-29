@@ -15,7 +15,6 @@ import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -51,7 +50,6 @@ public interface UserService extends UserDetailsService {
      * @param password password of {@link User}
      * @return login token
      */
-    // even if called by createUser, if create user fails login is useless
     @Transactional
     String login(String email, String password) throws UserAuthenticationError;
 

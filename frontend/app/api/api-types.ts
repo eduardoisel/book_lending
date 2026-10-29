@@ -271,7 +271,7 @@ export interface components {
             id?: number;
             isbnTen?: string;
             isbnThirteen?: string;
-            title: string;
+            title?: string;
             /** @enum {string} */
             language?: "English" | "Portuguese" | "Spanish" | "French" | "German" | "Russian" | "Japanese" | "Italian" | "Hebrew" | "Hungarian" | "Danish";
         };
@@ -401,15 +401,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -469,15 +460,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -521,8 +503,8 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
+            /** @description User does not exist */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -571,15 +553,6 @@ export interface operations {
              *         Given longitude is not possible
              */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -652,15 +625,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -710,15 +674,6 @@ export interface operations {
             };
             /** @description Account needs bearer authentication */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -783,15 +738,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -829,15 +775,6 @@ export interface operations {
             };
             /** @description User in question does not exist */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -891,15 +828,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -944,15 +872,6 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -983,15 +902,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ListedDataBook"];
-                };
-            };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -1026,15 +936,6 @@ export interface operations {
             };
             /** @description Account needs bearer authentication */
             401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ProblemDetail"];
-                };
-            };
-            /** @description Problem Detail with message specific to the parameter violation detected from the request */
-            422: {
                 headers: {
                     [name: string]: unknown;
                 };
