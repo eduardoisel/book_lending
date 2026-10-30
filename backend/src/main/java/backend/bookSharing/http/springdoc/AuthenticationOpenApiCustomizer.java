@@ -1,6 +1,7 @@
 package backend.bookSharing.http.springdoc;
 
 import backend.bookSharing.http.AuthorizationEndpoints;
+import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
@@ -11,9 +12,13 @@ import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
+import java.util.Arrays;
 import java.util.LinkedList;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.ISBN;
 import org.springdoc.core.customizers.OpenApiCustomizer;
+import org.springdoc.core.customizers.PropertyCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -99,5 +104,39 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
                 return;
             }
         }
+    }
+
+    //
+    //    public DelegatingMethodParameterCustomizer delegatingMethodParameterCustomizer() {
+    //        return new DelegatingMethodParameterCustomizer() {
+    //            @Override
+    //            public void customize(MethodParameter originalParameter, MethodParameter
+    // methodParameter) {
+    //
+    //            }
+    //        };
+    //    }
+
+    @Bean
+    PropertyCustomizer isbnPropertyCustomizer() {
+        return new PropertyCustomizer() {
+
+            @Override
+            public Schema<?> customize(Schema property, AnnotatedType type) {
+                if (type.getCtxAnnotations() != null) {
+                    boolean hasISBN =
+                            Arrays.stream(type.getCtxAnnotations())
+                                    .anyMatch(
+                                            annotation ->
+                                                    annotation.annotationType().equals(ISBN.class));
+
+                    if (hasISBN) {
+                        property.setFormat("ISBN");
+                        property.setPattern("^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)");
+                    }
+                }
+                return property;
+            }
+        };
     }
 }

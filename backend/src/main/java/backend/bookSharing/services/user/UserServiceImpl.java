@@ -112,19 +112,6 @@ public class UserServiceImpl implements UserService {
     public String createUser(String email, String password, double x, double y)
             throws UserCreationError {
 
-        if (x < -180 || x > 180) {
-            throw new UserCreationError.InvalidLongitude();
-        }
-        if (y < -90 || y > 90) {
-            throw new UserCreationError.InvalidLatitude();
-        }
-
-        try {
-            passwordValidation.isSafePassword(password);
-        } catch (Exception _) {
-            throw new UserCreationError.WeakPassword(); // todo communicate more specific
-        }
-
         Optional<User> emailSearch = userRepo.findByEmail(email);
 
         if (emailSearch.isPresent()) {

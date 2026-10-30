@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.ISBN;
 
 /**
  *
- * @param isbn       book identifier, either 10 or 13 numbers
+ * @param isbn       book identifier, either 10 or 13 numbers. Should also respect checksum
  * @param ownerEmail unique identifier of book's owner
  * @param timeInDays Duration of request
  */

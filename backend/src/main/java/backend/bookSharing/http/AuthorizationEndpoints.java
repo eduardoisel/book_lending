@@ -54,6 +54,8 @@ public class AuthorizationEndpoints {
      * for other matches. This means on conflict one should place the most specific permissions first
      */
     public static final Permission[] permissions = {
+        new Permission(
+                new ImposePermission.Authenticated(), "/books/owners/{ISBN}", HttpMethod.GET),
         new Permission(new ImposePermission.PermitAll(), "/**", HttpMethod.GET),
         new Permission(new ImposePermission.PermitAll(), "/userAuth/**", HttpMethod.POST),
         new Permission(new ImposePermission.Authenticated(), "/users/**", HttpMethod.POST),

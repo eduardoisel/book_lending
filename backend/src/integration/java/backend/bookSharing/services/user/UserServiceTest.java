@@ -38,22 +38,6 @@ public class UserServiceTest extends ServiceTestBase {
     }
 
     @Test
-    public void userCreationWithWeakPassword() {
-
-        String validUniqueEmail = RandomValuesGenerator.email();
-        String invalidPassword = "weak";
-
-        int validLongitude = RandomValuesGenerator.randomBetween(-180, 180);
-        int validLatitude = RandomValuesGenerator.randomBetween(-90, 90);
-
-        assertThrowsExactly(
-                UserCreationError.WeakPassword.class,
-                () ->
-                        userService.createUser(
-                                validUniqueEmail, invalidPassword, validLongitude, validLatitude));
-    }
-
-    @Test
     public void userCreationWithNonUniqueEmail() {
 
         String repeatedEmail = TestData.users.getFirst().getEmail();

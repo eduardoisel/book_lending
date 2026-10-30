@@ -4,7 +4,6 @@ import backend.bookSharing.repository.entities.PasswordValidationInfo;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.regex.Pattern;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -44,52 +43,5 @@ public class PasswordValidation {
      */
     public String passwordEncoding(String password, String salt) {
         return passwordEncoder.encode(password + salt);
-    }
-
-    public static class InsufficientSizeException extends Exception {}
-
-    public static class NoLowerCaseException extends Exception {}
-
-    public static class NoUpperCaseException extends Exception {}
-
-    public static class NoSpecialCharException extends Exception {}
-
-    /**
-     * Checks if password contains various symbols as a strength check
-     *
-     * @param password raw password
-     *
-     * @throws InsufficientSizeException if is too small
-     *
-     * @throws NoLowerCaseException if it has no lower case character
-     *
-     * @throws NoUpperCaseException if it has no upper case character
-     *
-     * @throws NoSpecialCharException if it has no special character
-     *
-     */
-    public void isSafePassword(String password)
-            throws InsufficientSizeException,
-                    NoLowerCaseException,
-                    NoUpperCaseException,
-                    NoSpecialCharException {
-
-        if (password.length() < 8) {
-            throw new InsufficientSizeException();
-        }
-
-        if (!password.matches(".*[a-z].*")) {
-            throw new NoLowerCaseException();
-        }
-
-        if (!password.matches(".*[A-Z].*")) {
-            throw new NoUpperCaseException();
-        }
-
-        Pattern specialCharCheck = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
-
-        if (!specialCharCheck.matcher(password).find()) {
-            throw new NoSpecialCharException();
-        }
     }
 }

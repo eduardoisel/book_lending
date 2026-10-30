@@ -17,23 +17,24 @@ These are used on SecurityConfiguration, the class that defines which API endpoi
 
 ## Data validation
 
-The usage of jakarta.validation annotations is not only for documentation, but for spring to check on parsing the data
-from the requests.
+The usage of <mark>jakarta.validation</mark> annotations is not only for documentation, but for spring to check on
+parsing the data from the requests.
 
 For spring itself to validate it, never forget to use on of the following on the controller parameter:
 ```
-@jakarta.validation.Valid;
-@org.springframework.validation.annotation.Validated;
+jakarta.validation.@Valid;
 ```
+
+
 
 ### SpringDocs compatibility
 
-Some of the annotations are recognized by springdoc, and therefore they should always be used to
+Some of the annotations are recognized by springDoc, and therefore they should always be used to
 automatically generate the most complete possible API. Class <mark>org.springdoc.core.utils.SchemaUtils</mark> 
 should inform you of all recognized annotations. 
 
 Note: <mark>Pattern</mark> annotation for regex can be applied multiple times on the same element, and it will be
-validated by spring, but this does not seem to translate to the yaml file, and may not be possible due to it allowing
+validated by spring, but this does not seem to translate to the YAML file, and may not be possible due to it allowing
 only one [pattern](https://swagger.io/docs/specification/v3_0/data-models/data-types/#pattern) per parameter
 
 ## Service exceptions handling
@@ -62,14 +63,14 @@ http status and only exceptionHandlers with @ResponseStatus are automatically do
 
 Spring security authorization control is not automatic, nor it seems possible to access the information for an endpoint
 related to its necessary authentication. To circumvent this issue, data classes were created and stored in
-[the project's code](./AuthorizationEndpoints.java) so it can be used easily by spring security and sprindoc at the same 
+[the project's code](./AuthorizationEndpoints.java) so it can be used easily by spring security and sprinDoc at the same 
 time
 
 
 ## Using not automatically detected responses 
 
-Some responses such as the default exception handler response will not be automatically detected if do not also
-use them automatically. If this is the case, use the code below on a configuration class to register it.
+Some responses such as the default exception handler response will not be automatically detected if you do not also
+use them directly. If this is the case, use the code below on a configuration class to register it.
 
 ```
 @Bean
@@ -96,7 +97,7 @@ field of the related annotations must be added explicitly to the Caffeine cache 
 exception being thrown when calling to that api endpoint.
 
 Annotations have fields that use [spring Expression Language](https://docs.spring.io/spring-framework/reference/core/expressions.html).
-You can use them to indicate when caching should not be applied. As an example, when browsing books (which cannot be
+You can use them to indicate when caching should not be applied. For example, when browsing books (which cannot be
 removed from the database, at least so far), the only condition that may deprecate a list of returned books is more books
 being added, either leading to the page being completed or a next page being created. With these fields, we can say the cache
 should not save the value if the ListedData.hasNextPage() method call is false.
@@ -112,4 +113,4 @@ Once you request data from the server, the response will include header Etag. If
 value on the request header [If-None-Match](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/If-None-Match),
 the filter will generate the Etag again from the retrieved data and compare it to the one received on the request. On
 match, it will automatically switch to sending a "Not modified" status response, with an empty body as client should have
-its the previous value cached.
+its previous value cached.

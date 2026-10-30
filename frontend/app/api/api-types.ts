@@ -233,6 +233,35 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        FieldError: {
+            field?: string;
+            message?: string;
+        };
+        ValidationProblemDetail: {
+            /** Format: uri */
+            type?: string;
+            title?: string;
+            /** Format: int32 */
+            status?: number;
+            detail?: string;
+            /** Format: uri */
+            instance?: string;
+            properties?: {
+                [key: string]: unknown;
+            };
+            validationIssues?: components["schemas"]["FieldError"][];
+        };
+        /**
+         * @description In special class to contain validation annotations, helps both spring and code recognize that it has restriction due
+         *      to it being glued to the class
+         */
+        IsbnString: {
+            /**
+             * Format: ISBN
+             * @description ISBN string, either ISBN 10 or 13. Should also respect ISBN checksum
+             */
+            ISBN: string;
+        };
         UserLogin: {
             email: string;
             password: string;
@@ -276,7 +305,10 @@ export interface components {
             language?: "English" | "Portuguese" | "Spanish" | "French" | "German" | "Russian" | "Japanese" | "Italian" | "Hebrew" | "Hungarian" | "Danish";
         };
         RequestCreation: {
-            /** @description book identifier, either 10 or 13 numbers */
+            /**
+             * Format: ISBN
+             * @description book identifier, either 10 or 13 numbers. Should also respect checksum
+             */
             isbn: string;
             /** @description unique identifier of book's owner */
             ownerEmail: string;
@@ -287,7 +319,10 @@ export interface components {
             timeInDays: number;
         };
         LendCreation: {
-            /** @description book identifier, either 10 or 13 numbers */
+            /**
+             * Format: ISBN
+             * @description book identifier, either 10 or 13 numbers
+             */
             isbn: string;
             /** @description unique identifier of book's requester */
             receiverEmail: string;
@@ -361,7 +396,7 @@ export interface operations {
                 Authorization: string;
             };
             path: {
-                ISBN: string;
+                ISBN: components["schemas"]["IsbnString"];
             };
             cookie?: never;
         };
@@ -399,6 +434,15 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -460,6 +504,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
+                };
+            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -512,6 +565,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
+                };
+            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -546,18 +608,22 @@ export interface operations {
                     "*/*": components["schemas"]["LoginToken"];
                 };
             };
-            /**
-             * @description Email already attached to one user;
-             *         Password is not safe enough. Exact requirements to be communicated better;
-             *         Given latitude is not possible;
-             *         Given longitude is not possible
-             */
+            /** @description Email already attached to one user */
             400: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -580,7 +646,7 @@ export interface operations {
             };
             path: {
                 /** @description ISBN to identify book */
-                ISBN: string;
+                ISBN: components["schemas"]["IsbnString"];
             };
             cookie?: never;
         };
@@ -623,6 +689,15 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -679,6 +754,15 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -738,6 +822,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
+                };
+            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -780,6 +873,15 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -828,6 +930,15 @@ export interface operations {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
                 };
             };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
+                };
+            };
             /** @description Internal Server Error */
             500: {
                 headers: {
@@ -845,10 +956,13 @@ export interface operations {
                 /** @description page number, starts at 0 */
                 page?: number;
             };
-            header?: never;
+            header: {
+                /** @description Authorization header */
+                Authorization: string;
+            };
             path: {
                 /** @description ISBN of book in question */
-                ISBN: string;
+                ISBN: components["schemas"]["IsbnString"];
             };
             cookie?: never;
         };
@@ -863,6 +977,15 @@ export interface operations {
                     "*/*": components["schemas"]["ListedDataUser"];
                 };
             };
+            /** @description Account needs bearer authentication */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
             /** @description Book does not exist on database */
             404: {
                 headers: {
@@ -870,6 +993,15 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -902,6 +1034,15 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ListedDataBook"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */
@@ -941,6 +1082,15 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetail"];
+                };
+            };
+            /** @description Problem Detail with message specific to the parameter violations detected from the request */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ValidationProblemDetail"];
                 };
             };
             /** @description Internal Server Error */

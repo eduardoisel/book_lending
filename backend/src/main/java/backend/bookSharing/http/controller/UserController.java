@@ -1,5 +1,6 @@
 package backend.bookSharing.http.controller;
 
+import backend.bookSharing.http.data.IsbnString;
 import backend.bookSharing.http.returns.ListedData;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Request;
@@ -9,8 +10,8 @@ import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
 import backend.bookSharing.services.user.failures.OwnershipRequestSearchError;
 import backend.bookSharing.services.user.failures.UserLockingError;
 import backend.bookSharing.services.user.failures.UserOwnershipSearchError;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.ISBN;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,12 +77,10 @@ public class UserController {
     @PostMapping("owned/{ISBN}")
     @ResponseStatus(value = HttpStatus.OK)
     public void addBookOwned(
-            @PathVariable @ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY)
-                    String ISBN,
-            @AuthenticationPrincipal User authenticatedUser)
+            @Valid @PathVariable IsbnString ISBN, @AuthenticationPrincipal User authenticatedUser)
             throws OwnerShipAdditionError {
 
-        service.addOwner(ISBN, authenticatedUser);
+        service.addOwner(ISBN.ISBN(), authenticatedUser);
     }
 
     @PostMapping("blacklist/{email}")
