@@ -25,7 +25,18 @@ For spring itself to validate it, never forget to use on of the following on the
 jakarta.validation.@Valid;
 ```
 
+This is needed on controller method parameters and complex class fields, as a way to signal that fields has more
+validations inside of it.
 
+### On path parameter transformed to class
+
+This is being done on ISBN values as a way to attach the validation annotations, helping avoid the coder forget to place
+them every time it's used on the path (which could be a lot on this project). It also helps springDoc, as a customizer 
+is able to put a pattern regex for ISBN on the openapi-docs, something the [Property customizer](./springdoc/SpringDocConfiguration.java)
+cannot do on param strings.
+
+What one needs to have in mind when doing this is that not only will you need the @Valid annotation on the parameter,
+in this specific cases the class itself will need the <mark>@Validated</mark> annotation (reason unknown).
 
 ### SpringDocs compatibility
 
@@ -35,7 +46,13 @@ should inform you of all recognized annotations.
 
 Note: <mark>Pattern</mark> annotation for regex can be applied multiple times on the same element, and it will be
 validated by spring, but this does not seem to translate to the YAML file, and may not be possible due to it allowing
-only one [pattern](https://swagger.io/docs/specification/v3_0/data-models/data-types/#pattern) per parameter
+only one [pattern](https://swagger.io/docs/specification/v3_0/data-models/data-types/#pattern) per parameter.
+
+### See more
+
+https://docs.spring.io/spring-framework/reference/core/validation.html
+
+https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-validation.html
 
 ## Service exceptions handling
 

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService service;
@@ -49,7 +51,7 @@ public class UserController {
 
         Page<Book> search = service.getOwnedBooks(userId, page);
 
-        return new ListedData<Book>(search.toList(), search.hasNext(), search.hasPrevious());
+        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious());
     }
 
     /**
@@ -71,9 +73,14 @@ public class UserController {
 
         Page<Request> search = service.getRequestsOfBook(userId, bookId, page);
 
-        return new ListedData<Request>(search.toList(), search.hasNext(), search.hasPrevious());
+        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious());
     }
 
+    /**
+     * Add book identified by ISBN to list of owned books
+     * @param ISBN  book identifier
+     * @param authenticatedUser authenticated user
+     */
     @PostMapping("owned/{ISBN}")
     @ResponseStatus(value = HttpStatus.OK)
     public void addBookOwned(

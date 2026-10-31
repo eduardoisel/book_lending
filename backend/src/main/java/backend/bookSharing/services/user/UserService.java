@@ -30,7 +30,7 @@ public interface UserService extends UserDetailsService {
             throws OwnershipRequestSearchError;
 
     /**
-     * @return a {@link User} that may be null. Is specifically not either to avoid rollback on failure, as on failure
+     * @return a {@link User} that may be null. Does not throw exception to avoid rollback on failure, as on failure
      * token is to be removed unless it did not exist in the first place
      */
     @Transactional

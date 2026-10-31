@@ -106,37 +106,4 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
         }
     }
 
-    //
-    //    public DelegatingMethodParameterCustomizer delegatingMethodParameterCustomizer() {
-    //        return new DelegatingMethodParameterCustomizer() {
-    //            @Override
-    //            public void customize(MethodParameter originalParameter, MethodParameter
-    // methodParameter) {
-    //
-    //            }
-    //        };
-    //    }
-
-    @Bean
-    PropertyCustomizer isbnPropertyCustomizer() {
-        return new PropertyCustomizer() {
-
-            @Override
-            public Schema<?> customize(Schema property, AnnotatedType type) {
-                if (type.getCtxAnnotations() != null) {
-                    boolean hasISBN =
-                            Arrays.stream(type.getCtxAnnotations())
-                                    .anyMatch(
-                                            annotation ->
-                                                    annotation.annotationType().equals(ISBN.class));
-
-                    if (hasISBN) {
-                        property.setFormat("ISBN");
-                        property.setPattern("^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)");
-                    }
-                }
-                return property;
-            }
-        };
-    }
 }

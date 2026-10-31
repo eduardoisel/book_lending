@@ -18,6 +18,10 @@ Basic data violation refers to checks that can be done without access to the dat
 format, meaning a request can be detected as useless immediately. The same can be applied to null values, and
 numbers that need to be in a specific interval.
 
+If one decides to transfer the data validation to the service, there are 2 caveats to beware:
+* the class itself (or interface) will need the <mark>org.springframework.validation.annotation.Validated</mark> to actually validate values found on parameters
+* SpringDoc is expecting the annotations for documentation. This is an issue if annotations added directly on the parameter (such as a @Positive on a number) is moved, as it will only check the controller param and not check if the service will require more validations. One can create wrapper data class with the basic value, place the annotation there and receive it directly on the controller
+
 ## Return types
 
 Uses the base of [declarative methods](https://docs.spring.io/spring-framework/reference/data-access/transaction/declarative/rolling-back.html)

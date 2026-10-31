@@ -1,9 +1,7 @@
-package backend.bookSharing.http;
+package backend.bookSharing.http.controller;
 
 import backend.bookSharing.http.returns.ValidationProblemDetail;
 import backend.bookSharing.services.ServiceException;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Path;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;

@@ -12,12 +12,14 @@ import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.ISBN;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
+@Validated
 public class BookController {
 
     private final BookService service;
@@ -54,7 +57,7 @@ public class BookController {
 
         List<Book> list = books.toList();
 
-        return new ListedData<Book>(list, books.hasNext(), books.hasPrevious());
+        return new ListedData<>(list, books.hasNext(), books.hasPrevious());
     }
 
     /**
@@ -64,7 +67,6 @@ public class BookController {
      * @param page page number, starts at 0
      * @param user user doing the request
      * @return list of books
-     * @throws BookOwnersSearchError
      */
     @GetMapping("/owners/{ISBN}")
     // @Cacheable("bookOwners")
@@ -78,7 +80,7 @@ public class BookController {
 
         Page<User> users = service.getOwnersOfBook(ISBN.ISBN(), page, user.getLocation());
 
-        return new ListedData<User>(users.toList(), users.hasNext(), users.hasPrevious());
+        return new ListedData<>(users.toList(), users.hasNext(), users.hasPrevious());
     }
 
     /**
@@ -91,8 +93,8 @@ public class BookController {
     @PostMapping("/{ISBN}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Book postBook(@Valid @PathVariable IsbnString ISBN) throws BookAdditionError {
-        return service.addBookFromApi(ISBN.ISBN());
+    public Book postBook(@PathVariable @NotNull @ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY)String ISBN) throws BookAdditionError {
+        return service.addBookFromApi(ISBN);
     }
 
     @PostMapping("/request")
