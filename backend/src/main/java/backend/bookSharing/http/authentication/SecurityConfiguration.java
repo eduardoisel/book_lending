@@ -58,6 +58,9 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    /**
+     * Disable cors for localhost testing with browser
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

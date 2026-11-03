@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 // import org.springframework.data.repository.query.ValueExpressionDelegate
 
 /*
- Automatically implemented
-
- Extra functions seem to work only if fields is book are changed to not have "_"
+ Extra functions seem to work only if fields in book are changed to not have "_"
 */
 public interface BookRepository extends JpaRepository<Book, Integer> {
 

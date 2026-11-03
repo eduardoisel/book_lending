@@ -12,10 +12,8 @@ import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.ISBN;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -93,8 +91,8 @@ public class BookController {
     @PostMapping("/{ISBN}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Book postBook(@PathVariable @NotNull @ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY)String ISBN) throws BookAdditionError {
-        return service.addBookFromApi(ISBN);
+    public Book postBook(@Valid @PathVariable IsbnString ISBN) throws BookAdditionError {
+        return service.addBookFromApi(ISBN.ISBN());
     }
 
     @PostMapping("/request")

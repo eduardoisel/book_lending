@@ -1,24 +1,16 @@
 package backend.bookSharing.http.springdoc;
 
 import backend.bookSharing.http.AuthorizationEndpoints;
-import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
-import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import java.util.Arrays;
-import java.util.LinkedList;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.ISBN;
 import org.springdoc.core.customizers.OpenApiCustomizer;
-import org.springdoc.core.customizers.PropertyCustomizer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -84,20 +76,22 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
                         operation.getResponses().addApiResponse("401", forbiddenResponse);
 
                         // add authorization header as path parameter
-
+                        /*
                         LinkedList<Parameter> parameters =
                                 (operation.getParameters() != null)
-                                        ? new LinkedList<>(operation.getParameters())
+                                        ? new
+                                          LinkedList<>(operation.getParameters())
                                         : new LinkedList<>();
                         Parameter authorizationHeaderParameter =
                                 new Parameter()
                                         .name("Authorization")
                                         .description("Authorization header")
                                         .in("header")
-                                        .schema(new StringSchema())
+                                        .schema(new Schema<>().$ref("#/components/headers/Authentication"))
                                         .required(true);
                         parameters.add(authorizationHeaderParameter);
                         operation.setParameters(parameters);
+                        */
                     }
                     case AuthorizationEndpoints.ImposePermission.PermitAll _ -> {}
                 }
@@ -105,5 +99,4 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
             }
         }
     }
-
 }

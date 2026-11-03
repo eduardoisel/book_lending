@@ -46,8 +46,7 @@ public class UserAuthenticationController {
      */
     @PostMapping("login")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public LoginToken login(@Valid @RequestBody UserLogin body)
-            throws UserAuthenticationError {
+    public LoginToken login(@Valid @RequestBody UserLogin body) throws UserAuthenticationError {
         return new LoginToken(service.login(body.email(), body.password()));
     }
 

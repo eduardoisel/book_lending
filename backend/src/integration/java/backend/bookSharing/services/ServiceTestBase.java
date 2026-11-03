@@ -6,7 +6,6 @@ import backend.bookSharing.TestData;
 import backend.bookSharing.data.OwnedBooks;
 import backend.bookSharing.repository.BookRepository;
 import backend.bookSharing.repository.OwnedRepository;
-import backend.bookSharing.repository.TokenRepository;
 import backend.bookSharing.repository.UserRepository;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.Owned;
@@ -29,8 +28,6 @@ public class ServiceTestBase extends PostgresDatabase {
     @Autowired private UserRepository userRepository;
 
     @Autowired private OwnedRepository ownedRepository;
-
-    @Autowired private TokenRepository tokenRepository;
 
     /**
      * Will be changed by hibernate to have the generated ID, and therefore can be used to inserts that depend on user

@@ -41,7 +41,7 @@ public class UserController {
      * @param page   page number. First is 0
      * @return list of owned books
      */
-    @GetMapping("owned/{userId}")
+    @GetMapping("ownedBy/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ListedData<Book> booksOwned(
@@ -62,7 +62,7 @@ public class UserController {
      * @param page   pagination parameter. First page is 0
      * @return list of requests
      */
-    @GetMapping("owned/{userId}/requests/{bookId}")
+    @GetMapping("ownedBy/{userId}/requests/{bookId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ListedData<Request> bookRequests(
@@ -90,6 +90,10 @@ public class UserController {
         service.addOwner(ISBN.ISBN(), authenticatedUser);
     }
 
+    /**
+     * Block blacklist email from the API
+     * @param email user email
+     */
     @PostMapping("blacklist/{email}")
     @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasRole('ROLE_ADMIN')")

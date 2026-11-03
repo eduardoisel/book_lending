@@ -2,6 +2,8 @@ package backend.bookSharing.http.controller;
 
 import backend.bookSharing.http.returns.ValidationProblemDetail;
 import backend.bookSharing.services.ServiceException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,12 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * Does not extend {@link org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler} since
@@ -36,6 +40,33 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
     public ProblemDetail handleThrowable(Throwable ex) {
         ProblemDetail detail =
                 ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        detail.setTitle(ex.getClass().getName());
+        return detail;
+    }
+
+    // 404
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseBody
+    public ProblemDetail handleNoResourceFoundException(NoResourceFoundException ex) {
+        ProblemDetail detail =
+                ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        detail.setType(URI.create("not-found"));
+        detail.setTitle(ex.getClass().getName());
+        return detail;
+    }
+
+    // 405
+    /**
+     * Thrown when requesting a not allowed method
+     * @param ex Specific instance of bad request
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ProblemDetail handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ProblemDetail detail =
+                ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        detail.setType(URI.create("not-supported"));
         detail.setTitle(ex.getClass().getName());
         return detail;
     }
@@ -102,49 +133,49 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
                 fieldErrors);
     }
 
-//    /**
-//     *
-//     * validation exception, this one triggered by validations done on the server
-//     * @param ex list of constraints with the parameter name attached to the requirement message
-//     * @return Validation Problem Detail with message specific to the parameter violations detected from the request
-//     */
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    @ResponseBody
-//    public ValidationProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
-//
-//        LinkedList<ValidationProblemDetail.FieldError> fieldErrors = new LinkedList<>();
-//
-//        ex.getConstraintViolations()
-//                .forEach(
-//                        violation -> {
-//                            Path path = violation.getPropertyPath();
-//
-//                            String fieldName = null;
-//
-//                            /*
-//                            Nodes go from method node to parameter node (and if param is data class goes to its
-//                            fields until is the one with the violation)
-//                             */
-//                            for (Path.Node node : path) {
-//                                fieldName = node.getName();
-//                            }
-//
-//                            if (fieldName == null) {
-//                                throw new IllegalStateException(
-//                                        "Path node field is null, should have been replaced");
-//                            }
-//
-//                            fieldErrors.add(
-//                                    new ValidationProblemDetail.FieldError(
-//                                            fieldName, violation.getMessage()));
-//                        });
-//
-//        return new ValidationProblemDetail(
-//                HttpStatus.UNPROCESSABLE_CONTENT.value(),
-//                "validation issue",
-//                URI.create("todo-replace"),
-//                fieldErrors);
-//    }
+    /**
+     *
+     * validation exception, this one triggered by validations done on the service
+     * @param ex list of constraints with the parameter name attached to the requirement message
+     * @return Validation Problem Detail with message specific to the parameter violations detected from the request
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseBody
+    public ValidationProblemDetail handleConstraintViolation(ConstraintViolationException ex) {
+
+        LinkedList<ValidationProblemDetail.FieldError> fieldErrors = new LinkedList<>();
+
+        ex.getConstraintViolations()
+                .forEach(
+                        violation -> {
+                            Path path = violation.getPropertyPath();
+
+                            String fieldName = null;
+
+                            /*
+                            Nodes go from method node to parameter node (and if param is data class goes to its
+                            fields until is the one with the violation)
+                             */
+                            for (Path.Node node : path) {
+                                fieldName = node.getName();
+                            }
+
+                            if (fieldName == null) {
+                                throw new IllegalStateException(
+                                        "Path node field is null, should have been replaced");
+                            }
+
+                            fieldErrors.add(
+                                    new ValidationProblemDetail.FieldError(
+                                            fieldName, violation.getMessage()));
+                        });
+
+        return new ValidationProblemDetail(
+                HttpStatus.UNPROCESSABLE_CONTENT.value(),
+                "validation issue",
+                URI.create("todo-replace"),
+                fieldErrors);
+    }
 
     /**
      *

@@ -23,7 +23,6 @@ public class BearerTokenAuthenticationFilter
     // implemented
 
     //        private final UserDetailsService userDetailsService;
-    //        private final TokenService tokenService;
 
     private final UserService service;
 

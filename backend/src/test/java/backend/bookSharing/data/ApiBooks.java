@@ -6,7 +6,7 @@ import backend.bookSharing.repository.entities.Book;
 
 public class ApiBooks {
     public static Book[] books = {
-        new Book("1234567890", "1234567890321", "Test book", English),
+        new Book("0671876813", "9780671876814", "Flag in Exile", English),
         new Book(null, "9781800649392", "Learning statistics with Jamovi", English)
     };
 }

@@ -80,24 +80,7 @@ http status and only exceptionHandlers with @ResponseStatus are automatically do
 
 Spring security authorization control is not automatic, nor it seems possible to access the information for an endpoint
 related to its necessary authentication. To circumvent this issue, data classes were created and stored in
-[the project's code](./AuthorizationEndpoints.java) so it can be used easily by spring security and sprinDoc at the same 
-time
-
-
-## Using not automatically detected responses 
-
-Some responses such as the default exception handler response will not be automatically detected if you do not also
-use them directly. If this is the case, use the code below on a configuration class to register it.
-
-```
-@Bean
-    public OpenApiCustomizer schemaCustomizer() {
-        ResolvedSchema resolvedSchema =
-                ModelConverters.getInstance()
-                        .resolveAsResolvedSchema(new AnnotatedType(YourClass.class));
-        return openApi -> openApi.schema(resolvedSchema.schema.getName(), resolvedSchema.schema);
-    }
-```
+[the project's code](./AuthorizationEndpoints.java) so it can be used easily by spring security and springDoc at the same time.
 
 # Caching (NOT HTTP cache)
 

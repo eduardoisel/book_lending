@@ -56,7 +56,7 @@ repositories {
 //https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide
 dependencies {
     // automatic documentation (spring-docs)
-    // https://springdoc.org/faq.html#_what_is_the_compatibility_matrix_of_springdoc_openapi_with_spring_boot
+    // https://springdoc.org/faq.html#_what_is_the_compatibility_matrix_of_springdoc_openapi_with_spring_boot version compatibility
     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 
@@ -76,8 +76,10 @@ dependencies {
 
     //spring boot dependencies below
 
+
     implementation("org.springframework.boot:spring-boot-starter-web")
 
+    // https://www.baeldung.com/spring-boot-actuators
     // Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 

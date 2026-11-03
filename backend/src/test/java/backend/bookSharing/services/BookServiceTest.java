@@ -1,4 +1,4 @@
-package services;
+package backend.bookSharing.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -21,7 +21,6 @@ import backend.bookSharing.services.book.BookServiceImpl;
 import backend.bookSharing.services.book.api.BookApi;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
-import backend.bookSharing.services.user.UserService;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -32,14 +31,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith({MockitoExtension.class, SpringExtension.class})
 @RepositoryMocks
 public class BookServiceTest {
-
-    @MockitoBean private UserService userService;
 
     @Autowired private OwnedRepository ownedRepo;
 
@@ -175,8 +171,6 @@ public class BookServiceTest {
                 .thenReturn(Optional.of(new Request(owned, receiver.getId(), 5)));
 
         when(lendRepo.existsById(new LendId(owned.getId(), receiver.getId()))).thenReturn(false);
-
-        when(userService.checkAuthentication(anyString())).thenReturn(lender);
 
         try {
             service.lendBook(book.getIsbnTen(), receiver.getEmail(), lender);
