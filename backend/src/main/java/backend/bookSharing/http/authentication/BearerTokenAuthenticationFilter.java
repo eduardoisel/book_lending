@@ -47,14 +47,8 @@ public class BearerTokenAuthenticationFilter
             return;
         }
 
-        LinkedList<GrantedAuthority> role = new LinkedList<>();
-
-        if (user.getIsAdmin()) {
-            role.add((GrantedAuthority) () -> "ROLE_ADMIN");
-        }
-
         UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(user, token, role);
+                new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);

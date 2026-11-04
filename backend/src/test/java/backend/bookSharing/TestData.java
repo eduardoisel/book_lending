@@ -82,9 +82,9 @@ public class TestData {
             Arrays.stream(coordinates).map(geometryFactory::createPoint).toList();
 
     public static ClearPasswordUser[] clearPasswordUsers = {
-        new ClearPasswordUser(points.getFirst(), "portugal@gmail.com", "password1"),
-        new ClearPasswordUser(points.get(1), "england@gmail.com", "password2"),
-        new ClearPasswordUser(points.get(2), "us@gmail.com", "password3"),
+        new ClearPasswordUser(points.getFirst(), "portugal@gmail.com", "password1", true),
+        new ClearPasswordUser(points.get(1), "england@gmail.com", "password2", false),
+        new ClearPasswordUser(points.get(2), "us@gmail.com", "password3", false),
     };
 
     public static Boolean isEmailUnique(@NonNull String email) {
@@ -114,6 +114,6 @@ public class TestData {
      * @return Instance with auto generated id NOT set
      */
     public static User duplicate(User user) {
-        return new User(user.getLocation(), user.getEmail(), user.getValidationInfo());
+        return new User(user.getLocation(), user.getEmail(), user.getValidationInfo(), user.getIsAdmin());
     }
 }

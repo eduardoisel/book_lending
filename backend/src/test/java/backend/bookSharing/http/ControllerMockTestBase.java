@@ -2,9 +2,11 @@ package backend.bookSharing.http;
 
 import backend.bookSharing.http.authentication.BearerTokenAuthenticationEntryPoint;
 import backend.bookSharing.http.authentication.SecurityConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.request.AbstractMockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import tools.jackson.databind.json.JsonMapper;
 
 /*
 
@@ -16,4 +18,10 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
  */
 @ServiceMocks
 @Import({SecurityConfiguration.class, BearerTokenAuthenticationEntryPoint.class})
-public class ControllerMockTestBase {}
+public class ControllerMockTestBase {
+
+    /**
+     * parser for testing
+     */
+    @Autowired protected JsonMapper jsonMapper;
+}

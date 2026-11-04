@@ -135,7 +135,7 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
 
     /**
      *
-     * validation exception, this one triggered by validations done on the service
+     * validation exception, this one triggered by validations done on classes with @Validated
      * @param ex list of constraints with the parameter name attached to the requirement message
      * @return Validation Problem Detail with message specific to the parameter violations detected from the request
      */
@@ -185,7 +185,9 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ProblemDetail handleException(Exception ex) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problemDetail.setType(URI.create("insufficient_authority"));
+        return problemDetail;
     }
 
     @ExceptionHandler(ServiceException.class)

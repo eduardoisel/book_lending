@@ -40,6 +40,8 @@ Above is the structure of the src folder. The main and test folders are standard
 folders serves for automation of the local database creation, that can be activated with Gradle.
 
 The integration folder is the new sourceSet created by a Gradle Plugin, as a way to organize tests.
+All functionalities possible to test with unit tests should be placed on the general test folder. Integration testing
+helps check if the hibernate configuration is well done (as a lot can only be done at runtime).
 
 # Terraform
 Terraform is a tool to manage cloud resources, and [this folder](./terraform) contains the instructions to create
@@ -102,18 +104,8 @@ of your API.
 * http://localhost:8080/swagger-ui.html for request interactive gui
 * http://localhost:8080/v3/api-docs.yaml to download yaml
 
-The project required configuring springdoc to be more complete, as described in the
-[http md](./src/main/java/backend/bookSharing/http/README.md).
-
-#### Spring docs limitations
-
-The endpoint parameters are based on the parameters the corresponding method uses,
-along with the option to use authentication (set to use Bearer authentication), which will always appear regardless of
-it being necessary.
-
-As explained on the [http md](./src/main/java/backend/bookSharing/http/README.md),
-http get request can use the header "If-None-Match", receiving a not modified status response if the value is valid.
-Spring docs will not tell you this since it is done by a filter, instead of the controller methods.
+Despite reading some information automatically, needs manual configuration to display all information. See more
+[on the http section](./src/main/java/backend/bookSharing/http/README.md).
 
 ### Javadoc
 

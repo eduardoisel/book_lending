@@ -5,7 +5,8 @@ import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.services.PasswordValidation;
 import org.locationtech.jts.geom.Point;
 
-public record ClearPasswordUser(Point location, String email, String clearPassword) {
+public record ClearPasswordUser(
+        Point location, String email, String clearPassword, Boolean isAdmin) {
 
     private static final PasswordValidation passwordValidation = new PasswordValidation();
 
@@ -15,6 +16,7 @@ public record ClearPasswordUser(Point location, String email, String clearPasswo
                 this.location,
                 this.email,
                 new PasswordValidationInfo(
-                        passwordValidation.passwordEncoding(this.clearPassword, salt), salt));
+                        passwordValidation.passwordEncoding(this.clearPassword, salt), salt),
+                this.isAdmin);
     }
 }

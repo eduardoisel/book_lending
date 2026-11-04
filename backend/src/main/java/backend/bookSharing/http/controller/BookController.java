@@ -82,6 +82,8 @@ public class BookController {
     }
 
     /**
+     *
+     * todo: to remove, service should check and add the book to the database by itself whenever specifically requested
      * Add a book to the system so it can be recognized, by giving an id and letting the server check if it exists
      *
      * @param ISBN ISBN to identify book

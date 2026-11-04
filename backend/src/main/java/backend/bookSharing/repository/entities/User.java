@@ -23,6 +23,9 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * @implNote Since a user's role is none or being an admin, value indicating it is a boolean {@link User#isAdmin}
+ */
 @Getter
 @Entity()
 @Table(name = "App_User")
@@ -89,9 +92,15 @@ public class User implements UserDetails {
         this.isAdmin = isAdmin;
     }
 
+    /**
+     * @return admin authority or none
+     */
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.isAdmin) {
+            return List.of((GrantedAuthority) () -> "ROLE_ADMIN");
+        }
         return List.of();
     }
 

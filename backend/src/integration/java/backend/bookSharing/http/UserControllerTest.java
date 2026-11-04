@@ -10,7 +10,7 @@ import backend.bookSharing.repository.entities.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import tools.jackson.databind.ObjectMapper;
 
@@ -23,7 +23,7 @@ public class UserControllerTest extends ControllerTestBase {
         String isbn = TestData.databaseBooks[0].getIsbnThirteen();
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.post("/users/owned/{ISBN}", isbn)
+                        post("/users/owned/{ISBN}", isbn)
                                 .with(user(insertedUsers.get(2))))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -35,7 +35,7 @@ public class UserControllerTest extends ControllerTestBase {
         User owner = insertedUsers.getFirst();
 
         String returned =
-                mockMvc.perform(MockMvcRequestBuilders.get("/users/owned/{userId}", owner.getId()))
+                mockMvc.perform(get("/users/owned/{userId}", owner.getId()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andReturn()
                         .getResponse()
