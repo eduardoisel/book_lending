@@ -28,9 +28,9 @@ public class Main {
     TODO find a better place to put the bean
      */
     @Bean
-    public FilterRegistrationBean<?> shallowEtagHeaderFilter() {
+    public FilterRegistrationBean<ShallowEtagHeaderFilter> shallowEtagHeaderFilter() {
 
-        FilterRegistrationBean<?> filterRegistrationBean =
+        FilterRegistrationBean<ShallowEtagHeaderFilter> filterRegistrationBean =
                 new FilterRegistrationBean<>(new ShallowEtagHeaderFilter());
         filterRegistrationBean.addUrlPatterns("/*"); // limited to http get by filter
         return filterRegistrationBean;

@@ -42,7 +42,6 @@ public class UserAuthenticationController {
      *
      * @param body information necessary to login
      * @return login token
-     * @throws UserAuthenticationError
      */
     @PostMapping("login")
     @ResponseStatus(value = HttpStatus.CREATED)

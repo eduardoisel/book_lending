@@ -41,8 +41,9 @@ in this specific cases the class itself will need the <mark>@Validated</mark> an
 ### SpringDocs compatibility
 
 Some of the annotations are recognized by springDoc, and therefore they should always be used to
-automatically generate the most complete possible API. Class <mark>org.springdoc.core.utils.SchemaUtils</mark> 
-should inform you of all recognized annotations. 
+automatically generate the most complete possible API. Class <mark>org.springdoc.core.utils.SchemaUtils</mark>should 
+inform you of all recognized annotations, although the actual checking of annotations is done by
+<mark>io.swagger.v3.core.jackson.ModelResolver</mark>.
 
 Note: <mark>Pattern</mark> annotation for regex can be applied multiple times on the same element, and it will be
 validated by spring, but this does not seem to translate to the YAML file, and may not be possible due to it allowing
@@ -61,7 +62,7 @@ Possibly to be used on all expected service exceptions.
 
 # SpringDocs
 
-All springDoes specific logic is to be placed on the [springdoc](./springdoc) folder
+All springDoes specific logic is to be placed on the [springdoc](./springdoc) folder.
 
 ## Customizers used
 

@@ -114,6 +114,7 @@ public class TestData {
      * @return Instance with auto generated id NOT set
      */
     public static User duplicate(User user) {
-        return new User(user.getLocation(), user.getEmail(), user.getValidationInfo(), user.getIsAdmin());
+        return new User(
+                user.getLocation(), user.getEmail(), user.getValidationInfo(), user.getIsAdmin());
     }
 }

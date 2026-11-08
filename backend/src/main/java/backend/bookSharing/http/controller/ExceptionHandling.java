@@ -185,7 +185,8 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ProblemDetail handleException(Exception ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        ProblemDetail problemDetail =
+                ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
         problemDetail.setType(URI.create("insufficient_authority"));
         return problemDetail;
     }

@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -107,9 +106,7 @@ public class UserControllerMockTest extends ControllerMockTestBase {
     }
 
     /**
-     * fails on filter due to null header, but unlike {@link #blacklistEmailUnauthenticatedFailure()},
-     * one that also does not have header and also lacks {@link WithMockUser},
-     * will have status {@link HttpStatus#FORBIDDEN}
+     * fails while being authenticated with mock user (that has no roles), leads to Forbidden
      */
     @Test
     @WithMockUser
@@ -121,16 +118,10 @@ public class UserControllerMockTest extends ControllerMockTestBase {
     void addBookAsOwnedAuthenticatedWithRoleSuccess() throws Exception {
         doNothing().when(userService).lockAccount(anyString());
 
-        User adminUser = TestData.users.getFirst(); //get(1)
+        User adminUser = TestData.users.getFirst(); // get(1)
         assertTrue(adminUser.getIsAdmin());
 
-        when(userService.checkAuthentication(anyString())).thenReturn(adminUser);
-
-        mockMvc.perform(
-                        post("/users/blacklist/{email}", "email")
-                                //.header("Authorization", "Bearer not null")
-                                .with(user(adminUser))
-                )
+        mockMvc.perform(post("/users/blacklist/{email}", "email").with(user(adminUser)))
                 .andExpect(status().isOk());
     }
 }
