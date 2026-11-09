@@ -34,10 +34,10 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
 
     todo add handler for repo exceptions specifically
      */
-    @ExceptionHandler(Throwable.class)
+    @ExceptionHandler(Exception.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ProblemDetail handleThrowable(Throwable ex) {
+    public ProblemDetail handleException(Exception ex) {
         ProblemDetail detail =
                 ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         detail.setTitle(ex.getClass().getName());
@@ -184,7 +184,7 @@ public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
      * @return ProblemDetail with a detail message from the exception
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ProblemDetail handleException(Exception ex) {
+    public ProblemDetail handleAuthorizationDeniedException(Exception ex) {
         ProblemDetail problemDetail =
                 ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
         problemDetail.setType(URI.create("insufficient_authority"));

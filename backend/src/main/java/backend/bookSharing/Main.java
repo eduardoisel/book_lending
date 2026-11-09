@@ -5,12 +5,15 @@ import java.time.Duration;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.FilterRegistration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.ShallowEtagHeaderFilter;
 
 @SpringBootApplication
+@EnableAutoConfiguration
 public class Main {
 
     @Bean
@@ -23,17 +26,21 @@ public class Main {
         return new GeometryFactory(new PrecisionModel(), 4326);
     }
 
+    @Bean
+    AntPathMatcher antPathMatcher() {
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        pathMatcher.setCaseSensitive(false);
+        return pathMatcher;
+    }
+
     /*
     From https://www.baeldung.com/etags-for-rest-with-spring
     TODO find a better place to put the bean
      */
     @Bean
-    public FilterRegistrationBean<ShallowEtagHeaderFilter> shallowEtagHeaderFilter() {
-
-        FilterRegistrationBean<ShallowEtagHeaderFilter> filterRegistrationBean =
-                new FilterRegistrationBean<>(new ShallowEtagHeaderFilter());
-        filterRegistrationBean.addUrlPatterns("/*"); // limited to http get by filter
-        return filterRegistrationBean;
+    @FilterRegistration(urlPatterns = "/*")
+    public ShallowEtagHeaderFilter shallowEtagHeaderFilter() {
+        return new ShallowEtagHeaderFilter();
     }
 
     public static void main(String[] args) {

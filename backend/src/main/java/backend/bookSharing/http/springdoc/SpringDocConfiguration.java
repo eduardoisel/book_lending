@@ -6,22 +6,18 @@ import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.StringSchema;
-import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import java.util.Arrays;
 import org.hibernate.validator.constraints.ISBN;
-import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.customizers.PropertyCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.method.HandlerMethod;
 
 @Configuration
 public class SpringDocConfiguration {
@@ -31,6 +27,8 @@ public class SpringDocConfiguration {
     https://spec.openapis.org/oas/latest#security-scheme-object
     Link above
      */
+
+    static String BEARER_SECURITY_SCHEME = "bearer";
 
     /**
      * Does not apply the security scheme to any endpoint, only describes it. Using {@link SecurityRequirement} where
@@ -44,7 +42,7 @@ public class SpringDocConfiguration {
                                 // openApi TypeScript tool ignores security schema
                                 // would need to make it explicit parameter for it to be translated
                                 .addSecuritySchemes(
-                                        "bearer",
+                                        BEARER_SECURITY_SCHEME,
                                         new SecurityScheme()
                                                 .type(SecurityScheme.Type.HTTP)
                                                 .scheme("bearer")
@@ -77,7 +75,6 @@ public class SpringDocConfiguration {
     // methodParameter) {
     //
     //            }
-    //        };
     //    }
 
     @Bean
@@ -119,22 +116,6 @@ public class SpringDocConfiguration {
                 }
 
                 return super.resolveRequiredMode(schema);
-            }
-        };
-    }
-
-    /**
-     * Todo would describe what filter does. Not operational in the slightest
-     * @return
-     */
-    // @Bean
-    // @ConditionalOnBean(FilterRegistrationBean.class)
-    OperationCustomizer operationCustomizer() {
-        return new OperationCustomizer() {
-            @Override
-            public Operation customize(Operation operation, HandlerMethod handlerMethod) {
-                return operation.addParametersItem(
-                        new Parameter().in("header").name(HttpHeaders.ETAG).required(false));
             }
         };
     }
