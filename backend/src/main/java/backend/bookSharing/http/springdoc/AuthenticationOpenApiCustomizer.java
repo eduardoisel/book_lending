@@ -86,7 +86,7 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
 
                 operation
                         .getResponses()
-                        .addApiResponse(HttpStatus.UNAUTHORIZED.toString(), forbiddenResponse);
+                        .addApiResponse(String.valueOf(HttpStatus.UNAUTHORIZED.value()), forbiddenResponse);
 
                 // add authorization header as path parameter
                 /*

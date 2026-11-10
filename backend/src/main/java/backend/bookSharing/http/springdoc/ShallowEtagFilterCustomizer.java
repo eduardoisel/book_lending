@@ -46,7 +46,7 @@ public class ShallowEtagFilterCustomizer implements OpenApiCustomizer {
                                 getOperation
                                         .getResponses()
                                         .addApiResponse(
-                                                HttpStatus.NOT_MODIFIED.toString(),
+                                                String.valueOf(HttpStatus.NOT_MODIFIED.value()),
                                                 notModifiedResponse);
 
                                 getOperation.addParametersItem(
