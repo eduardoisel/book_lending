@@ -3,6 +3,7 @@ package backend.bookSharing.http.springdoc;
 import backend.bookSharing.Main;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
+import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import jakarta.servlet.ServletContext;
@@ -53,6 +54,7 @@ public class ShallowEtagFilterCustomizer implements OpenApiCustomizer {
                                         new Parameter()
                                                 .in("header")
                                                 .name(HttpHeaders.ETAG)
+                                                .schema(new StringSchema())
                                                 .required(false)
                                                 .description("Shallow tag"));
                             }

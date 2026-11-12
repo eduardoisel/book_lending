@@ -86,24 +86,19 @@ public class AuthenticationOpenApiCustomizer implements OpenApiCustomizer {
 
                 operation
                         .getResponses()
-                        .addApiResponse(String.valueOf(HttpStatus.UNAUTHORIZED.value()), forbiddenResponse);
+                        .addApiResponse(
+                                String.valueOf(HttpStatus.UNAUTHORIZED.value()), forbiddenResponse);
 
                 // add authorization header as path parameter
                 /*
-                LinkedList<Parameter> parameters =
-                        (operation.getParameters() != null)
-                                ? new
-                                  LinkedList<>(operation.getParameters())
-                                : new LinkedList<>();
                 Parameter authorizationHeaderParameter =
                         new Parameter()
                                 .name("Authorization")
                                 .description("Authorization header")
                                 .in("header")
-                                .schema(new Schema<>().$ref("#/components/headers/Authentication"))
+                                .schema(new Schema<>().$ref("#/components/headers/Authorization"))
                                 .required(true);
-                parameters.add(authorizationHeaderParameter);
-                operation.setParameters(parameters);
+                operation.addParametersItem(authorizationHeaderParameter);
                 */
             }
             case AuthorizationEndpoints.ImposePermission.PermitAll _ -> {}
