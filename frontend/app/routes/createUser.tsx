@@ -1,7 +1,10 @@
 import React, { useReducer } from 'react';
 import { Navigate, useLocation } from 'react-router';
 import { useAuthenticationContext, type AuthenticationState } from '../context/userAuthentication';
-import {createUser} from '../api/requests';
+import {zodCreateUser} from '../api/requests';
+import { ZodError } from 'zod';
+
+//import {useQuery} from '@tanstack/react-query';
 
 type State =
     | { tag: 'editing'; error?: string; inputs: { username: string; password: string, x: number, y: number } }
@@ -46,6 +49,8 @@ function reduce(state: State, action: Action): State {
     }
 }
 
+
+// zodcreateUser({ email: "john@example.com", password: "password", x: 0, y: 0 });
 /**
  * 
  * @returns React gui object
@@ -79,21 +84,22 @@ export default function CreateUser() {
         const y = state.inputs.y;
 
         try {
-            const result = await createUser(username, password, x, y);
+            const result = await zodCreateUser({ email: username, password, x, y });
 
-            if (result.type === 'failure') {
-                // Handle error case
-                dispatch({ type: 'error', message: result.info.detail});
-                return;
-            }
+            //if (result.type === 'failure') {
+            //    // Handle error case
+            //    dispatch({ type: 'error', message: result.info.detail});
+            //    return;
+            //}
 
             // On successful login, update the context state
-            authState.auth(username, result.info.token);
+            authState.auth(username, result.token); //result.info.token
 
             // Transition to the done state
             dispatch({ type: 'success' });
         } catch (error) {
-            console.error('Error during login:', error);
+            console.error('Error during user creation:');
+            console.log(error)
             dispatch({ type: 'error', message: 'Operation could not be completed' });
         }
     }
@@ -124,6 +130,8 @@ export default function CreateUser() {
                         name="password"
                         value={password}
                         onChange={handleChange}
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        min="8"
                     />
                 </div>
                 <div>

@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prebuild": "typed-openapi ./app/api/openapi-docs.yaml --output ./app/api/typed-openapi/schema.ts --runtime zod",
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
@@ -13,10 +14,11 @@
     "@react-router/serve": "^8.5.0",
     "isbot": "^5.1.36",
     "js-cookie": "^3.0.8",
-    "openapi-fetch": "^0.17.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router": "^8.5.0"
+    "react-router": "^8.5.0",
+    "typed-openapi": "^4.1.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@react-router/dev": "^8.5.0",

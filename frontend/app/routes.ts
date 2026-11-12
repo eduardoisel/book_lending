@@ -5,6 +5,7 @@ export default [
 
     route("login", "routes/login.tsx"),
     route("createUser", "routes/createUser.tsx"),
+    route("ownersOfBook", "routes/ownersOfBook.tsx"),
 
     
 

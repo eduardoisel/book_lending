@@ -1,3 +1,30 @@
+# Personal changes
+
+Below is the auto generated readme for react router.
+
+## Backend API access
+
+[typed-openapi](https://github.com/astahmer/typed-openapi) is being used to generate the base typescript code to access the API.
+
+The base information about the api should come from the open-api doc, and the extraction of the information should be automatized.
+To get this information one should run the prebuild script defined in the project's [package.json](./package.json) with the command
+
+
+```bash
+npm run prebuild
+```
+The command above uses a yaml file found in the project, but it can be substituted by url of localhost.
+
+One can extract the zod restrictions with [toJsonSchema function](https://zod.dev/json-schema#ztojsonschema) so they can be applied on the inputs.
+
+The prebuild can also have the --default-fetcher option to automatically create a client.
+
+### Why this openapi generator
+
+Started by using [openapi-typescript](https://github.com/openapi-ts/openapi-typescript/tree/main) along with its client openapi-fetch, but this did not 
+include validation restrictions or security schema.
+
+
 # Welcome to React Router!
 
 A modern, production-ready template for building full-stack React applications using React Router.

@@ -12,19 +12,22 @@ paths:
     post:
       tags:
       - user-controller
+      summary: Add book identified by ISBN to list of owned books
+      description: Add book identified by ISBN to list of owned books
       operationId: addBookOwned
       parameters:
       - name: ISBN
         in: path
-        required: true
-        schema:
-          $ref: "#/components/schemas/IsbnString"
-      - name: Authorization
-        in: header
-        description: Authorization header
+        description: book identifier
         required: true
         schema:
           type: string
+          format: ISBN
+          description: "ISBN string, either ISBN 10 or 13. Should also respect ISBN\
+            \ checksum"
+          maxLength: 13
+          minLength: 10
+          pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
       responses:
         "500":
           description: Internal Server Error
@@ -33,8 +36,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -65,16 +68,13 @@ paths:
     post:
       tags:
       - user-controller
+      summary: Block blacklist email from the API
+      description: Block blacklist email from the API
       operationId: addBlacklist
       parameters:
       - name: email
         in: path
-        required: true
-        schema:
-          type: string
-      - name: Authorization
-        in: header
-        description: Authorization header
+        description: user email
         required: true
         schema:
           type: string
@@ -86,8 +86,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -134,8 +134,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -178,8 +178,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -200,10 +200,12 @@ paths:
     post:
       tags:
       - book-controller
-      summary: "Add a book to the system so it can be recognized, by giving an id\
-        \ and letting the server check if it exists"
-      description: "Add a book to the system so it can be recognized, by giving an\
-        \ id and letting the server check if it exists"
+      summary: |-
+        todo: to remove, service should check and add the book to the database by itself whenever specifically requested
+         Add a book to the system so it can be recognized, by giving an id and letting the server check if it exists
+      description: |-
+        todo: to remove, service should check and add the book to the database by itself whenever specifically requested
+         Add a book to the system so it can be recognized, by giving an id and letting the server check if it exists
       operationId: postBook
       parameters:
       - name: ISBN
@@ -211,13 +213,13 @@ paths:
         description: ISBN to identify book
         required: true
         schema:
-          $ref: "#/components/schemas/IsbnString"
-      - name: Authorization
-        in: header
-        description: Authorization header
-        required: true
-        schema:
           type: string
+          format: ISBN
+          description: "ISBN string, either ISBN 10 or 13. Should also respect ISBN\
+            \ checksum"
+          maxLength: 13
+          minLength: 10
+          pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
       responses:
         "500":
           description: Internal Server Error
@@ -226,8 +228,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -265,13 +267,6 @@ paths:
       tags:
       - book-controller
       operationId: requestBook
-      parameters:
-      - name: Authorization
-        in: header
-        description: Authorization header
-        required: true
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -286,8 +281,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -316,13 +311,6 @@ paths:
       tags:
       - book-controller
       operationId: lendBook
-      parameters:
-      - name: Authorization
-        in: header
-        description: Authorization header
-        required: true
-        schema:
-          type: string
       requestBody:
         content:
           application/json:
@@ -337,8 +325,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -363,7 +351,7 @@ paths:
                 $ref: "#/components/schemas/ProblemDetail"
       security:
       - bearer: []
-  /users/owned/{userId}:
+  /users/ownedBy/{userId}:
     get:
       tags:
       - user-controller
@@ -386,6 +374,12 @@ paths:
           type: integer
           format: int32
           default: 0
+      - name: ETag
+        in: header
+        description: Shallow tag
+        required: false
+        schema:
+          type: string
       responses:
         "500":
           description: Internal Server Error
@@ -394,8 +388,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -412,7 +406,9 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
-  /users/owned/{userId}/requests/{bookId}:
+        "304":
+          description: Content not modified
+  /users/ownedBy/{userId}/requests/{bookId}:
     get:
       tags:
       - user-controller
@@ -442,6 +438,12 @@ paths:
           type: integer
           format: int32
           default: 0
+      - name: ETag
+        in: header
+        description: Shallow tag
+        required: false
+        schema:
+          type: string
       responses:
         "500":
           description: Internal Server Error
@@ -450,8 +452,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -468,6 +470,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
+        "304":
+          description: Content not modified
   /books/owners/{ISBN}:
     get:
       tags:
@@ -481,7 +485,13 @@ paths:
         description: ISBN of book in question
         required: true
         schema:
-          $ref: "#/components/schemas/IsbnString"
+          type: string
+          format: ISBN
+          description: "ISBN string, either ISBN 10 or 13. Should also respect ISBN\
+            \ checksum"
+          maxLength: 13
+          minLength: 10
+          pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
       - name: page
         in: query
         description: "page number, starts at 0"
@@ -490,10 +500,10 @@ paths:
           type: integer
           format: int32
           default: 0
-      - name: Authorization
+      - name: ETag
         in: header
-        description: Authorization header
-        required: true
+        description: Shallow tag
+        required: false
         schema:
           type: string
       responses:
@@ -504,8 +514,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -528,6 +538,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
+        "304":
+          description: Content not modified
       security:
       - bearer: []
   /books/:
@@ -546,36 +558,10 @@ paths:
           type: integer
           format: int32
           default: 0
-      responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
-        "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ValidationProblemDetail"
-        "200":
-          description: list of books
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/ListedDataBook"
-  /userAuth/logout:
-    delete:
-      tags:
-      - user-authentication-controller
-      operationId: logout
-      parameters:
-      - name: Authorization
+      - name: ETag
         in: header
-        description: Authorization header
-        required: true
+        description: Shallow tag
+        required: false
         schema:
           type: string
       responses:
@@ -586,8 +572,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetail"
         "422":
-          description: Problem Detail with message specific to the parameter violations
-            detected from the request
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ValidationProblemDetail"
+        "200":
+          description: list of books
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ListedDataBook"
+        "304":
+          description: Content not modified
+  /userAuth/logout:
+    delete:
+      tags:
+      - user-authentication-controller
+      operationId: logout
+      responses:
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "422":
+          description: Validation Problem detail with message specific to the parameter
+            violations detected from the request
           content:
             application/problem+json:
               schema:
@@ -623,6 +636,8 @@ components:
         properties:
           type: object
           additionalProperties: {}
+      required:
+      - status
     FieldError:
       type: object
       properties:
@@ -653,20 +668,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/FieldError"
-    IsbnString:
-      type: object
-      description: |-
-        In special class to contain validation annotations, helps both spring and code recognize that it has restriction due
-         to it being glued to the class
-      properties:
-        ISBN:
-          type: string
-          format: ISBN
-          description: "ISBN string, either ISBN 10 or 13. Should also respect ISBN\
-            \ checksum"
-          pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
       required:
-      - ISBN
+      - status
     UserLogin:
       type: object
       properties:
@@ -715,6 +718,8 @@ components:
       required:
       - email
       - password
+      - x
+      - "y"
     Book:
       type: object
       description: |-
@@ -755,6 +760,8 @@ components:
           format: ISBN
           description: "book identifier, either 10 or 13 numbers. Should also respect\
             \ checksum"
+          maxLength: 13
+          minLength: 10
           pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
         ownerEmail:
           type: string
@@ -775,6 +782,8 @@ components:
           type: string
           format: ISBN
           description: "book identifier, either 10 or 13 numbers"
+          maxLength: 13
+          minLength: 10
           pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
         receiverEmail:
           type: string
@@ -785,14 +794,16 @@ components:
       - receiverEmail
     ListedDataBook:
       type: object
-      description: Generic data class for a list of possibly incomplete data.
+      description: "Listed data, possibly not complete."
       properties:
         data:
           type: array
+          description: This slice of the data
           items:
             $ref: "#/components/schemas/Book"
         hasNextPage:
           type: boolean
+          description: has more data to retrieve
         hasPreviousPage:
           type: boolean
       required:
@@ -801,14 +812,16 @@ components:
       - hasPreviousPage
     ListedDataRequest:
       type: object
-      description: Generic data class for a list of possibly incomplete data.
+      description: "Listed data, possibly not complete."
       properties:
         data:
           type: array
+          description: This slice of the data
           items:
             $ref: "#/components/schemas/Request"
         hasNextPage:
           type: boolean
+          description: has more data to retrieve
         hasPreviousPage:
           type: boolean
       required:
@@ -868,16 +881,20 @@ components:
           type: boolean
         enabled:
           type: boolean
+      required:
+      - enabled
     ListedDataUser:
       type: object
-      description: Generic data class for a list of possibly incomplete data.
+      description: "Listed data, possibly not complete."
       properties:
         data:
           type: array
+          description: This slice of the data
           items:
             $ref: "#/components/schemas/User"
         hasNextPage:
           type: boolean
+          description: has more data to retrieve
         hasPreviousPage:
           type: boolean
       required:
@@ -885,7 +902,7 @@ components:
       - hasNextPage
       - hasPreviousPage
   headers:
-    Authentication:
+    Authorization:
       description: Bearer token required
       required: true
       schema:

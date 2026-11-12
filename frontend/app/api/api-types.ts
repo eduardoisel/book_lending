@@ -13,6 +13,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /**
+         * Add book identified by ISBN to list of owned books
+         * @description Add book identified by ISBN to list of owned books
+         */
         post: operations["addBookOwned"];
         delete?: never;
         options?: never;
@@ -251,17 +255,6 @@ export interface components {
             };
             validationIssues?: components["schemas"]["FieldError"][];
         };
-        /**
-         * @description In special class to contain validation annotations, helps both spring and code recognize that it has restriction due
-         *      to it being glued to the class
-         */
-        IsbnString: {
-            /**
-             * Format: ISBN
-             * @description ISBN string, either ISBN 10 or 13. Should also respect ISBN checksum
-             */
-            ISBN: string;
-        };
         UserLogin: {
             email: string;
             password: string;
@@ -391,12 +384,10 @@ export interface operations {
     addBookOwned: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path: {
-                ISBN: components["schemas"]["IsbnString"];
+                /** @description book identifier */
+                ISBN: string;
             };
             cookie?: never;
         };
@@ -459,10 +450,7 @@ export interface operations {
     addBlacklist: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path: {
                 email: string;
             };
@@ -640,13 +628,10 @@ export interface operations {
     postBook: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path: {
                 /** @description ISBN to identify book */
-                ISBN: components["schemas"]["IsbnString"];
+                ISBN: string;
             };
             cookie?: never;
         };
@@ -714,10 +699,7 @@ export interface operations {
     requestBook: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -779,10 +761,7 @@ export interface operations {
     lendBook: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };
@@ -956,13 +935,10 @@ export interface operations {
                 /** @description page number, starts at 0 */
                 page?: number;
             };
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path: {
                 /** @description ISBN of book in question */
-                ISBN: components["schemas"]["IsbnString"];
+                ISBN: string;
             };
             cookie?: never;
         };
@@ -1059,10 +1035,7 @@ export interface operations {
     logout: {
         parameters: {
             query?: never;
-            header: {
-                /** @description Authorization header */
-                Authorization: string;
-            };
+            header?: never;
             path?: never;
             cookie?: never;
         };

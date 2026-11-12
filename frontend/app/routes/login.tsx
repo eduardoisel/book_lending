@@ -78,14 +78,16 @@ export default function Login() {
         try {
             const result = await loginUser(username, password);
 
+            /*
             if (result.type === 'failure') {
                 // Handle error case
-                dispatch({ type: 'error', message: result.info.detail});
+                dispatch({ type: 'error', message: (result.info.detail as string) || 'Operation could not be completed' });
                 return;
             }
+            */
 
             // On successful login, update the context state
-            authState.auth(username, result.info.token);
+            authState.auth(username, result.token);
 
             // Transition to the done state
             dispatch({ type: 'success' });

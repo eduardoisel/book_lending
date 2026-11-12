@@ -96,6 +96,8 @@ export function Welcome() {
               <Link to="/login">Go to Login</Link>
               <p></p>
               <Link to="/createUser">Go to Create User</Link>
+              <p></p>
+              <Link to="/ownersOfBook">Go to Owners of Book</Link>
             </div>
             
           )}
