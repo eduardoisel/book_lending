@@ -4,6 +4,7 @@ import logoLight from "./logo-light.svg";
 import { useAuthenticationContext } from "~/context/userAuthentication";
 import { logoutUser } from "~/api/requests";
 import { useState } from "react";
+import { TypedStatusError } from "~/api/typed-openapi/schema";
 
 
 function Logout(){
@@ -17,15 +18,22 @@ function Logout(){
 
     try {
       const result = await logoutUser();
+      /*
       if (result.type === 'success') {
       auth.unsetAuth();
       }
       else {
         console.error("Error logging out:", result.info.detail);
       }
+        */
+       auth.unsetAuth();
     }
     catch (error) {
       console.error("Error logging out:", error);
+
+      if (error instanceof TypedStatusError && error.status === 401) {
+        auth.unsetAuth();
+      }
     }
     finally {
       setIsSubmitting(false);

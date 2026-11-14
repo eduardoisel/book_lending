@@ -1,4 +1,4 @@
-import {EndpointByMethod, RequestCreation, UserCreation, type EndpointParameters, type EndpointParameterStyles, type Fetcher, type FetcherResponse, type Method, type RequestFormat, type SecurityRequirements} from "./typed-openapi/schema"
+import {EndpointByMethod, RequestCreation, UserCreation, type EndpointParameters, type EndpointParameterStyles, type ErrorStatusCode, type Fetcher, type FetcherResponse, type InferSchemaValue, type Method, type RequestFormat, type SecurityRequirements} from "./typed-openapi/schema"
 
 import { createApiClient } from "./typed-openapi/schema";
 import { z } from "zod"; // if runtime=zod
@@ -51,8 +51,10 @@ const fetchMethod : Fetcher["fetch"] =
 
     };
 
+/**
+* client points to localhost:8080, and has validation on input enabled. Assumes that the server does not need validation
+*/
 const api = createApiClient({fetch: fetchMethod}, "http://localhost:8080", { validate: "input" });
-
 
 //TEndPoint["/users/ownedBy/{userId}/requests/{bookId}"]
 export async function zodgetBookRequests(userId: number, bookId: number, page?: number) {
@@ -62,12 +64,11 @@ export async function zodgetBookRequests(userId: number, bookId: number, page?: 
       userId: userId,
       bookId: bookId
     },
-    query: {page: page}
+    query: {page: page},
+    withResponse: true
   });
 
 }
-
-
 
 //RequestCreation; // TypeScript type for request creation
 //const temp: string = z.toJSONSchema(RequestCreation); // JSON Schema for request creation
@@ -82,24 +83,32 @@ export async function zodpostBookRequest(requestCreation: RequestCreation) {
 }
 
 
-
+export const userCreationZod = EndpointByMethod["post"]["/userAuth/createUser"]
+/**
+ * {@link userCreationMethod}
+ * @param userCreation 
+ * @returns 
+ */
 export function zodCreateUser(userCreation: UserCreation) {
   return api.post("/userAuth/createUser", {
     body: userCreation  // {email, password, x, y}
   });
 }
 
+
+export const getBookOwners = EndpointByMethod.get["/books/owners/{ISBN}"]
 /**
  * {@link EndpointByMethod.get get methods}, does not seem to be able to point to specific path
  * @param ISBN 
  * @param page 
  * @returns 
  */
-export function zodBookOwners(ISBN: string, page: number = 0): Promise<Schemas.ListedDataUser> {
-  console.log('Hello from zodBookOwners');
+export function zodBookOwners(ISBN: string, page: number = 0){//: Promise<Schemas.ListedDataUser> {
+  //console.log('Hello from zodBookOwners');
   return api.get("/books/owners/{ISBN}", {
     path: { ISBN: ISBN },
-    query: { page }
+    query: { page },
+    withResponse: true,
   });
 }
 
@@ -111,7 +120,6 @@ export function loginUser(email: string, password: string): Promise<Schemas.Logi
 
 }
 
-export function logoutUser(token: string): Promise<unknown> {
-  return api.delete("/userAuth/logout", 
-    { overrides: { headers: { Authorization: `Bearer ${token}` } } });
+export function logoutUser(): Promise<unknown> {
+  return api.delete("/userAuth/logout", );
   }

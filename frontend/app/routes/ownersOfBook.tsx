@@ -1,10 +1,11 @@
 import React, { useReducer } from 'react';
 import { Navigate, useLocation } from 'react-router';
 import { useAuthenticationContext, type AuthenticationState } from '../context/userAuthentication';
-import {zodBookOwners, zodCreateUser} from '../api/requests';
-import { ZodError } from 'zod';
+import {zodBookOwners, getBookOwners} from '../api/requests';
+import { ZodError, ZodObject, ZodString } from 'zod';
 import type { Schemas } from '~/api/typed-openapi/schema.types';
 import { TypedStatusError } from '~/api/typed-openapi/schema';
+import type { ZodStandardJSONSchemaPayload, $strict, JSONSchema } from 'zod/v4/core';
 
 //import {useQuery} from '@tanstack/react-query';
 
@@ -47,6 +48,35 @@ function reduce(state: State, action: Action): State {
     }
 }
 
+const zodPathParameters: Record<string, JSONSchema._JSONSchema> = getBookOwners.parameters.path.toJSONSchema().properties!!; 
+
+const ISBNRestrictions: InputRestrictions = zodPathParameters["ISBN"] as JSONSchema.JSONSchema;
+
+const queryParameters = getBookOwners.parameters.query.toJSONSchema(); // page paramater
+
+/**
+ * Eventual full list of restrictions openapi can communicate about a value, extracted through zod.
+ * 
+ * To be placed on utils for all.
+ * 
+ * Todo find solution for exclusive minimum and maximum, html input does not have any equivalent
+ * 
+ * @param max max number value
+ * @param maxLength max text length
+ * @param min min number value
+ * @param minLength min text length
+ * @param pattern string regex restriction
+ * @param step for numbers, smallest difference a valid value can have. Not directly on zod?
+ */
+type InputRestrictions = {
+    max?: number | string | undefined;
+    maxLength?: number | undefined;
+    min?: number | string | undefined;
+    minLength?: number | undefined;
+    pattern?: string | undefined;
+    //required?: true | undefined; //from zod comes as string array. To test wtih other requests
+    step?: string | undefined;
+}
 
 /**
  * 
@@ -65,6 +95,8 @@ export default function OwnersOfBook() {
         if (state.tag !== 'editing') {
             return;
         }
+        console.log("AAAA ", zodPathParameters)
+        console.log("BBBBB ", ISBNRestrictions);
 
         //console.log("Changing to submitting");
         dispatch({ type: 'submit' }); //only happens later? uncomment logs to check
@@ -77,18 +109,29 @@ export default function OwnersOfBook() {
         try {
             const result = await zodBookOwners(isbn, page);
 
-            // Transition to the done state
-            dispatch({ type: 'success', data: result });
+            if (result.status === 200) {
+                // Transition to the done state
+                dispatch({ type: 'success', data: result.data });
+            }
+            else {
+                console.error(`Unexpected status code ${result.status} from zodBookOwners`);
+                dispatch({ type: 'error', message: `Unexpected status code ${result.status}` });
+            }
+
+            
         } catch (error) {
             console.error('Error during book owner search:');
             if (error instanceof ZodError) {
                 console.error('Zod validation error:', error);
                 dispatch({ type: 'error', message: 'Validation error' });
-            } else if (error instanceof TypedStatusError && error.status === 422) {
+            } 
+            /*
+            else if (error instanceof TypedStatusError && error.status === 422) {
                 const errorData = await error.response.json() as Schemas.ValidationProblemDetail;
-                console.error('Validation error from API:', errorData);
-                
-            } else {
+                console.error('Validation error from API:', errorData);    
+            }
+            */
+            else {
                 console.error('Unexpected error:', error);
                 dispatch({ type: 'error', message: 'Operation could not be completed' });
             }
@@ -96,7 +139,7 @@ export default function OwnersOfBook() {
         }
     }
 
-    const isbn = state.inputs.ISBN;
+    const isbn = state.inputs.ISBN; 
 
     return (
         <div>
@@ -110,6 +153,7 @@ export default function OwnersOfBook() {
                         name="ISBN"
                         value={isbn}
                         onChange={handleChange}
+                        {... ISBNRestrictions}
                     />
                 </div>
                 <div>
