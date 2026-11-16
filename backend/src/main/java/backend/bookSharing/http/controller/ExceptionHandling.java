@@ -29,10 +29,9 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @ControllerAdvice
 public class ExceptionHandling { // extends ResponseEntityExceptionHandler {
 
-    /*
-    To enforce RFC 9457 for all exceptions
-
-    todo add handler for repo exceptions specifically
+    /**
+     * To enforce RFC 9457 for all exceptions
+     * @implNote  todo add handler for repo exceptions specifically
      */
     @ExceptionHandler(Exception.class)
     @ResponseBody

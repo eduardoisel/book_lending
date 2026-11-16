@@ -20,11 +20,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 /**
- * Since this service is about physical books, it assumes the existence of the ISBN. It may be either ISBN 10 or
- * ISBN 13 or even both, but never neither.
- * <p>
- * Due to this restriction, this class can only one of {@link Book#isbnTen}
- * or {@link Book#isbnThirteen} fields as null
+ * Since this service is about physical books, it assumes the existence of the ISBN. It may have ISBN 10 and has
+ * ISBN 13.
  */
 @Getter
 @Entity
@@ -44,19 +41,43 @@ public class Book {
         Italian,
         Hebrew,
         Hungarian,
-        Danish
+        Danish;
+
+        /**
+         * @param lang three character string from ISO_639
+         * @return Enum representing Language
+         * @see <a href="https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes"></a>
+         */
+        public static Book.Language isoIdToLanguage(String lang) {
+            return switch (lang) {
+                case "eng" -> Book.Language.English;
+                case "por" -> Book.Language.Portuguese;
+                case "spa" -> Book.Language.Spanish;
+                case "rus" -> Book.Language.Russian;
+                case "jpn" -> Book.Language.Japanese;
+                case "ger" -> Book.Language.German;
+                case "heb" -> Book.Language.Hebrew;
+                case "fra", "fre" -> Book.Language.French;
+                case "ita" -> Book.Language.Italian;
+                case "hun" -> Book.Language.Hungarian;
+                case "dan" -> Book.Language.Danish;
+                default ->
+                        throw new RuntimeException(
+                                "Language code %s from external API open library not supported"
+                                        .formatted(lang));
+            };
+        }
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // not unique, can be null
+    // can be converted to isbn 13, todo remove field
     @Column(unique = false, nullable = true, name = "isbn_10", length = 10)
     private String isbnTen;
 
-    // not unique, can be null
-    @Column(unique = false, nullable = true, name = "isbn_13", length = 13)
+    @Column(unique = true, nullable = false, name = "isbn_13", length = 13)
     private String isbnThirteen;
 
     @Column(length = 100, unique = false, nullable = false)

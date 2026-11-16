@@ -69,10 +69,6 @@ dependencies {
 
     implementation("org.eclipse.persistence:eclipselink:4.0.1")
 
-    // extra json parser, attempt to replace it with spring default
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation("com.google.code.gson:gson:2.13.2")
-
 
     //spring boot dependencies below
 
