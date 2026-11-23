@@ -51,7 +51,7 @@ public class UserController {
 
         Page<Book> search = service.getOwnedBooks(userId, page);
 
-        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious());
+        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious(), search.getTotalPages());
     }
 
     /**
@@ -73,7 +73,7 @@ public class UserController {
 
         Page<Request> search = service.getRequestsOfBook(userId, bookId, page);
 
-        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious());
+        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious(), search.getTotalPages());
     }
 
     /**

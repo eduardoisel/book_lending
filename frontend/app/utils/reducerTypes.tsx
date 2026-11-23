@@ -1,45 +1,20 @@
 /**
  * Transforms every end property into being of type string (can be undefined)
  */
-type ObjectToString<O extends object> = {
+export type ObjectToString<O extends object> = {
     [K in keyof O]: O[K] extends object?
         ObjectToString<O[K]>  :
         string | undefined
     };
 
-
-// only workds for predefined fields types
-/*
-type NonEmptyRecord<K extends PropertyKey, V> = {
-  [P in K]: Record<P, V> & Partial<Record<Exclude<K, P>, V>>;
-}[K];
-
-type Role = "admin" | "editor" | "viewer";
-type Permissions = NonEmptyRecord<Role, boolean>;
-
-const valid: Permissions = { admin: true }; // ✅ Valid
-const invalid: Permissions = {};            // ❌ Error: Property 'viewer' is missing...
-
-
-const empty: NonEmptyRecord<string, string> = {}
-*/
-
 /**
  * 
  */
-type PropertyPathAndType<T extends Record<string, string>> = {
+export type PropertyPathAndType<T extends Record<string, string>> = {
         [K in keyof T]: T[K] extends object
             ? PropertyPathAndType<T[K]>
             : { propertyName: K, inputValue: T[K]};
-      }[keyof T]
-
-
-const b = {
-    c: "",
-    er: "ASD"
-}
-type APropAndTypes = PropertyPathAndType<typeof b>;
-
+      }[keyof T];
 
 /*
  * Input in state and action only accepts type {@link Record<string, string>}. This is due to type inference. On reduce, even if one
@@ -47,30 +22,6 @@ type APropAndTypes = PropertyPathAndType<typeof b>;
  * so it is circumvented by making them all of type string. 
  * String is is what is read from the input fields in html anyways, so the conversion is just done later when checking the value. 
  */
-
-type DoesItExtendObject<T> = T extends object ? true : false;
-type N = DoesItExtendObject<never>; 
-
-type DoesItExtend<T, BaseClass> = T extends BaseClass ? true : false;
-
-type O = DoesItExtend<object, TestBase>
-
-type NoData = never;
-
-interface TestBase{
-};
-
-interface Extends extends TestBase, Record<string, string>{
-    
-}
-
-interface ExtendsWithNothing extends TestBase{}
-
-type qweas = DoesItExtendObject<ExtendsWithNothing>
-type DoesItExtendTest<T> = T extends TestBase ? true : false;
-
-type rExt = DoesItExtendTest<Record<string, string>>;
-
 
 /**
  * Only includes the ones where you stay in the same screen, no done state
@@ -88,7 +39,7 @@ export type GeneralState<Input extends Record<string, string>, Data extends obje
  * action of type error is for the property error in GeneralState, validationErrors is for validationErrors
  */
 export type GeneralAction<Input extends Record<string, string>, Data extends object> =
-    | { type: 'edit'; propertySet: PropertyPathAndType<Input> }
+    { type: 'edit'; propertySet: PropertyPathAndType<Input> }
     | { type: 'submit' }
     | { type: 'error'; message: string }
     | { type: 'validationErrors'; errors: ObjectToString<Input>}

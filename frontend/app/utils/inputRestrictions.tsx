@@ -193,7 +193,7 @@ export function stringValidate(input: string, restriction: InputRestrictions): s
     }
 
     if(restriction.minLength && restriction.minLength && input.length < restriction.minLength){
-        return `Field must be at least ${restriction.maxLength} characters`;
+        return `Field must be at least ${restriction.minLength} characters`;
     }
 
     if(restriction.pattern && !new RegExp(restriction.pattern).test(input)){

@@ -55,7 +55,7 @@ public class BookController {
 
         List<Book> list = books.toList();
 
-        return new ListedData<>(list, books.hasNext(), books.hasPrevious());
+        return new ListedData<>(list, books.hasNext(), books.hasPrevious(), books.getTotalPages());
     }
 
     /**
@@ -78,7 +78,7 @@ public class BookController {
 
         Page<User> users = service.getOwnersOfBook(ISBN.ISBN(), page, user.getLocation());
 
-        return new ListedData<>(users.toList(), users.hasNext(), users.hasPrevious());
+        return new ListedData<>(users.toList(), users.hasNext(), users.hasPrevious(), users.getTotalPages());
     }
 
     /**

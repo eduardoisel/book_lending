@@ -5,6 +5,7 @@ import { useAuthenticationContext } from "~/context/userAuthentication";
 import { logoutUser } from "~/api/requests";
 import { useState } from "react";
 import { TypedStatusError } from "~/api/typed-openapi/schema";
+import { BookOwners } from "~/components/bookOwnersForm";
 
 
 function Logout(){
@@ -98,6 +99,8 @@ export function Welcome() {
             <div className="text-center text-gray-700 dark:text-gray-200">
               You are logged in as {auth.username}.
               <Logout />
+
+              <BookOwners.OwnersOfBookForm/>
             </div>
           ) : (
             <div>

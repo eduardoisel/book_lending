@@ -107,44 +107,5 @@ public class OpenLibraryApi implements BookApi {
                 apiBook.title,
                 Book.Language.isoIdToLanguage(language[language.length - 1]));
 
-        /*
-        Gson gson = new Gson();
-
-
-        // https://github.com/google/gson/blob/main/UserGuide.md
-        TypeToken<Map<String, Object>> mapType = new TypeToken<Map<String, Object>>() {};
-        Map<String, Object> stringMap = gson.fromJson(serialized, mapType);
-
-        // format is /languages/[3 letter code]
-        //as indicated in https://openlibrary.org/dev/docs/api/search
-        String[] language =
-                ((ArrayList<Map<String, String>>) stringMap.get("languages"))
-                        .getFirst()
-                        .get("key")
-                        .split("/");
-
-        String title = (String) stringMap.get("title");
-
-        ArrayList<String> isbn_10 = ((ArrayList<String>) stringMap.get("isbn_10"));
-        String isbn_10 = null;
-
-        if (isbn_10 != null) {
-            isbn_10 = isbn_10.getFirst();
-        }
-
-        ArrayList<String> isbn_13 = ((ArrayList<String>) stringMap.get("isbn_13"));
-        String isbn_13 = null;
-
-        if (isbn_13 != null) {
-            isbn_13 = isbn_13.getFirst();
-        }
-
-        if (isbn_10 == null && isbn_13 != null && IsbnUtils.isIsbn13ConvertibleTo10(isbn_13)) {
-            isbn_10 = IsbnUtils.isbn13To10(isbn_13);
-        }
-
-        return new Book(isbn_10, isbn_13, title, Book.Language.isoIdToLanguage(language[language.length - 1]));
-        */
-
     }
 }

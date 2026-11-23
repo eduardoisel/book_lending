@@ -135,11 +135,6 @@ export default function CreateUser() {
         
         dispatch({ type: 'submit' });
         try {
-            console.log("state.inputs.x is of type ", typeof state.inputs.x)
-            console.log("x + 5 = ", x + 5)
-            if(x > 90 || x < -90){
-                console.log("Bad value")
-            }
             const result = await zodCreateUser({ email: username, password, x, y });
 
             //if (result.type === 'failure') {

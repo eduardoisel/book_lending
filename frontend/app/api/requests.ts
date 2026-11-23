@@ -103,13 +103,15 @@ export const getBookOwners = EndpointByMethod.get["/books/owners/{ISBN}"]
  * @param page 
  * @returns 
  */
-export function zodBookOwners(ISBN: string, page: number = 0){//: Promise<Schemas.ListedDataUser> {
+export function zodBookOwners(ISBN: string, page: number = 0, signal: AbortSignal | undefined = undefined){//: Promise<Schemas.ListedDataUser> {
   //console.log('Hello from zodBookOwners');
   return api.get("/books/owners/{ISBN}", {
     path: { ISBN: ISBN },
     query: { page },
     withResponse: true,
-  });
+    overrides: {signal: signal}
+  },
+  );
 }
 
 

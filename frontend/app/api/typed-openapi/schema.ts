@@ -4,14 +4,14 @@ import type * as __TypedOpenapi from "./schema.types.js";
   import { z } from "zod";
 
 // <Schemas>
-export type ProblemDetail = __TypedOpenapi.Schemas.ProblemDetail;
-export const ProblemDetail = z.strictObject({ type: z.url().optional(), title: z.string().optional(), status: z.number().int(), detail: z.string().optional(), instance: z.url().optional(), properties: z.record(z.string(), z.unknown()).optional() });
-
 export type FieldError = __TypedOpenapi.Schemas.FieldError;
 export const FieldError = z.strictObject({ field: z.string(), message: z.string() }).partial();
 
 export type ValidationProblemDetail = __TypedOpenapi.Schemas.ValidationProblemDetail;
 export const ValidationProblemDetail = z.strictObject({ type: z.url().optional(), title: z.string().optional(), status: z.number().int(), detail: z.string().optional(), instance: z.url().optional(), properties: z.record(z.string(), z.unknown()).optional(), validationIssues: z.array(FieldError).optional() });
+
+export type ProblemDetail = __TypedOpenapi.Schemas.ProblemDetail;
+export const ProblemDetail = z.strictObject({ type: z.url().optional(), title: z.string().optional(), status: z.number().int(), detail: z.string().optional(), instance: z.url().optional(), properties: z.record(z.string(), z.unknown()).optional() });
 
 export type UserLogin = __TypedOpenapi.Schemas.UserLogin;
 export const UserLogin = z.strictObject({ email: z.string(), password: z.string() });
@@ -32,7 +32,7 @@ export type LendCreation = __TypedOpenapi.Schemas.LendCreation;
 export const LendCreation = z.strictObject({ isbn: z.string().min(10).max(13).regex(new RegExp("^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)")), receiverEmail: z.string().min(1) });
 
 export type ListedDataBook = __TypedOpenapi.Schemas.ListedDataBook;
-export const ListedDataBook = z.strictObject({ data: z.array(Book), hasNextPage: z.boolean(), hasPreviousPage: z.boolean() });
+export const ListedDataBook = z.strictObject({ data: z.array(Book), hasNextPage: z.boolean(), hasPreviousPage: z.boolean(), totalPages: z.number().int() });
 
 export type OwnedId = __TypedOpenapi.Schemas.OwnedId;
 export const OwnedId = z.strictObject({ userId: z.number().int(), bookId: z.number().int() }).partial();
@@ -50,10 +50,10 @@ export type Request = __TypedOpenapi.Schemas.Request;
 export const Request = z.strictObject({ requestId: RequestId, owned: Owned, date: z.iso.datetime(), duration: z.number().int() }).partial();
 
 export type ListedDataRequest = __TypedOpenapi.Schemas.ListedDataRequest;
-export const ListedDataRequest = z.strictObject({ data: z.array(Request), hasNextPage: z.boolean(), hasPreviousPage: z.boolean() });
+export const ListedDataRequest = z.strictObject({ data: z.array(Request), hasNextPage: z.boolean(), hasPreviousPage: z.boolean(), totalPages: z.number().int() });
 
 export type ListedDataUser = __TypedOpenapi.Schemas.ListedDataUser;
-export const ListedDataUser = z.strictObject({ data: z.array(User), hasNextPage: z.boolean(), hasPreviousPage: z.boolean() });
+export const ListedDataUser = z.strictObject({ data: z.array(User), hasNextPage: z.boolean(), hasPreviousPage: z.boolean(), totalPages: z.number().int() });
 
 // </Schemas>
 

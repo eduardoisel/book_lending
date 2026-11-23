@@ -1,9 +1,9 @@
 
   export namespace Schemas {
     // <Schemas>
-  export type ProblemDetail = { type?: string, title?: string, status: number, detail?: string, instance?: string, properties?: Record<string, unknown> }
-export type FieldError = Partial<{ field: string, message: string }>
+  export type FieldError = Partial<{ field: string, message: string }>
 export type ValidationProblemDetail = { type?: string, title?: string, status: number, detail?: string, instance?: string, properties?: Record<string, unknown>, validationIssues?: Array<FieldError> }
+export type ProblemDetail = { type?: string, title?: string, status: number, detail?: string, instance?: string, properties?: Record<string, unknown> }
 export type UserLogin = { email: string, password: string }
 /**
  * Information necessary to authenticate
@@ -36,11 +36,8 @@ export type UserCreation = {
   y: number;
 }
 /**
- * Since this service is about physical books, it assumes the existence of the ISBN. It may be either ISBN 10 or
- *  ISBN 13 or even both, but never neither.
- *  <p>
- *  Due to this restriction, this class can only one of {@link Book#isbnTen Book#isbnTen}
- *  or {@link Book#isbnThirteen Book#isbnThirteen} fields as null
+ * Since this service is about physical books, it assumes the existence of the ISBN. It may have ISBN 10 and has
+ *  ISBN 13.
  */
 export type Book = Partial<{ id: number, isbnTen: string, isbnThirteen: string, title: string, language: ("English" | "Portuguese" | "Spanish" | "French" | "German" | "Russian" | "Japanese" | "Italian" | "Hebrew" | "Hungarian" | "Danish") }>
 export type RequestCreation = {
@@ -80,6 +77,7 @@ export type ListedDataBook = {
    */
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+  totalPages: number;
 }
 export type OwnedId = Partial<{ userId: number, bookId: number }>
 export type RequestId = Partial<{ requested: OwnedId, userId: number }>
@@ -99,6 +97,7 @@ export type ListedDataRequest = {
    */
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+  totalPages: number;
 }
 /**
  * Listed data, possibly not complete.
@@ -113,6 +112,7 @@ export type ListedDataUser = {
    */
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+  totalPages: number;
 }
 
     // </Schemas>

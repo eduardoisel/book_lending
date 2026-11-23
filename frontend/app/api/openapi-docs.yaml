@@ -29,12 +29,6 @@ paths:
           minLength: 10
           pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -42,6 +36,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: OK
         "400":
@@ -79,12 +79,6 @@ paths:
         schema:
           type: string
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -92,6 +86,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: OK
         "404":
@@ -127,12 +127,6 @@ paths:
               $ref: "#/components/schemas/UserLogin"
         required: true
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -140,6 +134,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "201":
           description: login token
           content:
@@ -171,12 +171,6 @@ paths:
               $ref: "#/components/schemas/UserCreation"
         required: true
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -184,6 +178,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "201":
           description: login token
           content:
@@ -221,12 +221,6 @@ paths:
           minLength: 10
           pattern: "^([0-9]{9}|[0-9]{12})([0-9x-xX-X]{1}$)"
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -234,6 +228,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "201":
           description: Added book
           content:
@@ -274,12 +274,6 @@ paths:
               $ref: "#/components/schemas/RequestCreation"
         required: true
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -287,6 +281,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: OK
         "400":
@@ -318,12 +318,6 @@ paths:
               $ref: "#/components/schemas/LendCreation"
         required: true
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -331,6 +325,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: OK
         "404":
@@ -381,12 +381,6 @@ paths:
         schema:
           type: string
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -394,6 +388,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: list of owned books
           content:
@@ -445,12 +445,6 @@ paths:
         schema:
           type: string
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -458,6 +452,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: list of requests
           content:
@@ -507,12 +507,6 @@ paths:
         schema:
           type: string
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -520,6 +514,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: list of books
           content:
@@ -565,12 +565,6 @@ paths:
         schema:
           type: string
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -578,6 +572,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: list of books
           content:
@@ -592,12 +592,6 @@ paths:
       - user-authentication-controller
       operationId: logout
       responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/ProblemDetail"
         "422":
           description: Validation Problem detail with message specific to the parameter
             violations detected from the request
@@ -605,6 +599,12 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/ValidationProblemDetail"
+        "500":
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
         "200":
           description: OK
         "401":
@@ -617,27 +617,6 @@ paths:
       - bearer: []
 components:
   schemas:
-    ProblemDetail:
-      type: object
-      properties:
-        type:
-          type: string
-          format: uri
-        title:
-          type: string
-        status:
-          type: integer
-          format: int32
-        detail:
-          type: string
-        instance:
-          type: string
-          format: uri
-        properties:
-          type: object
-          additionalProperties: {}
-      required:
-      - status
     FieldError:
       type: object
       properties:
@@ -668,6 +647,27 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/FieldError"
+      required:
+      - status
+    ProblemDetail:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+        properties:
+          type: object
+          additionalProperties: {}
       required:
       - status
     UserLogin:
@@ -723,11 +723,8 @@ components:
     Book:
       type: object
       description: |-
-        Since this service is about physical books, it assumes the existence of the ISBN. It may be either ISBN 10 or
-         ISBN 13 or even both, but never neither.
-         <p>
-         Due to this restriction, this class can only one of {@link Book#isbnTen Book#isbnTen}
-         or {@link Book#isbnThirteen Book#isbnThirteen} fields as null
+        Since this service is about physical books, it assumes the existence of the ISBN. It may have ISBN 10 and has
+         ISBN 13.
       properties:
         id:
           type: integer
@@ -806,10 +803,14 @@ components:
           description: has more data to retrieve
         hasPreviousPage:
           type: boolean
+        totalPages:
+          type: integer
+          format: int32
       required:
       - data
       - hasNextPage
       - hasPreviousPage
+      - totalPages
     ListedDataRequest:
       type: object
       description: "Listed data, possibly not complete."
@@ -824,10 +825,14 @@ components:
           description: has more data to retrieve
         hasPreviousPage:
           type: boolean
+        totalPages:
+          type: integer
+          format: int32
       required:
       - data
       - hasNextPage
       - hasPreviousPage
+      - totalPages
     Owned:
       type: object
       properties:
@@ -897,10 +902,14 @@ components:
           description: has more data to retrieve
         hasPreviousPage:
           type: boolean
+        totalPages:
+          type: integer
+          format: int32
       required:
       - data
       - hasNextPage
       - hasPreviousPage
+      - totalPages
   headers:
     Authorization:
       description: Bearer token required

@@ -9,4 +9,4 @@ import java.util.List;
  * @param hasNextPage has more data to retrieve
  */
 public record ListedData<T>(
-        @NotNull List<T> data, @NotNull Boolean hasNextPage, @NotNull Boolean hasPreviousPage) {}
+        @NotNull List<T> data, @NotNull Boolean hasNextPage, @NotNull Boolean hasPreviousPage, int totalPages) {}
