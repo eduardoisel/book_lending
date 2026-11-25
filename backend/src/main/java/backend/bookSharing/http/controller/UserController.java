@@ -1,9 +1,9 @@
 package backend.bookSharing.http.controller;
 
+import backend.bookSharing.http.data.BookDto;
 import backend.bookSharing.http.data.IsbnString;
+import backend.bookSharing.http.data.RequestsOfOwnership;
 import backend.bookSharing.http.returns.ListedData;
-import backend.bookSharing.repository.entities.Book;
-import backend.bookSharing.repository.entities.Request;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.user.UserService;
 import backend.bookSharing.services.user.failures.OwnerShipAdditionError;
@@ -44,14 +44,14 @@ public class UserController {
     @GetMapping("ownedBy/{userId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData<Book> booksOwned(
+    public ListedData<BookDto> booksOwned(
             @PathVariable Integer userId,
             @RequestParam(required = false, defaultValue = "0") Integer page)
             throws UserOwnershipSearchError {
 
-        Page<Book> search = service.getOwnedBooks(userId, page);
+        Page<BookDto> search = service.getOwnedBooks(userId, page).map(BookDto::new);
 
-        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious(), search.getTotalPages());
+        return new ListedData<>(search);
     }
 
     /**
@@ -65,15 +65,16 @@ public class UserController {
     @GetMapping("ownedBy/{userId}/requests/{bookId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData<Request> bookRequests(
+    public ListedData<RequestsOfOwnership> bookRequests(
             @PathVariable Integer userId,
             @PathVariable Integer bookId,
             @RequestParam(required = false, defaultValue = "0") Integer page)
             throws OwnershipRequestSearchError {
 
-        Page<Request> search = service.getRequestsOfBook(userId, bookId, page);
+        Page<RequestsOfOwnership> search =
+                service.getRequestsOfBook(userId, bookId, page).map(RequestsOfOwnership::new);
 
-        return new ListedData<>(search.toList(), search.hasNext(), search.hasPrevious(), search.getTotalPages());
+        return new ListedData<>(search);
     }
 
     /**

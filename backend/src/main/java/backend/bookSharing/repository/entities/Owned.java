@@ -1,6 +1,5 @@
 package backend.bookSharing.repository.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -36,14 +35,12 @@ public class Owned {
     @JoinColumn(nullable = false, name = "book_id", referencedColumnName = "id")
     private Book book;
 
-    @JsonIgnore
-    @OneToMany(
-            mappedBy =
-                    "owned") // note: mapped by string value is from owned class Request field name
+    // note: mapped by string value is from owned class Request field name
+    @OneToMany(mappedBy = "owned")
     private Set<Request> requests;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "lent") // note: mapped by string value is from owned class Lend field name
+    // note: mapped by string value is from owned class Lend field name
+    @OneToOne(mappedBy = "lent")
     private Lend lend;
 
     /**

@@ -12,7 +12,7 @@ public class RequestId {
 
     private OwnedId requested;
 
-    @Column(name = "requester_user_id")
+    @Column(name = "requester_user_id", nullable = false)
     private Integer userId;
 
     public RequestId(OwnedId requested, Integer userId) {

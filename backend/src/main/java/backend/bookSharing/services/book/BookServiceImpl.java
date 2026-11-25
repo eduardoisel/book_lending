@@ -47,13 +47,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<User> getOwnersOfBook(String isbn, Integer pageNumber, Point location)
+    public Page<User> getOwnersOfBook(String isbn13, Integer pageNumber, Point location)
             throws BookOwnersSearchError {
 
-        Book book =
-                isbn.length() == 10
-                        ? bookRepo.findByIsbnTen(isbn)
-                        : bookRepo.findByIsbnThirteen(isbn);
+        Book book = bookRepo.findByIsbnThirteen(isbn13);
 
         if (book == null) {
             throw new BookOwnersSearchError.BookNotFound();
@@ -71,19 +68,13 @@ public class BookServiceImpl implements BookService {
         return ownedPage.map(Owned::getUser);
     }
 
-    public Book addBookFromApi(String isbn) throws BookAdditionError {
+    public Book addBookFromApi(String isbn13) throws BookAdditionError {
 
-        boolean isIsbn10 = isbn.length() == 10;
-
-        if (isIsbn10 && bookRepo.findByIsbnTen(isbn) != null) {
-            throw new BookAdditionError.Isbn10InUse();
+        if (bookRepo.findByIsbnThirteen(isbn13) != null) {
+            throw new BookAdditionError.IsbnInUse();
         }
 
-        if (!isIsbn10 && bookRepo.findByIsbnThirteen(isbn) != null) {
-            throw new BookAdditionError.Isbn13InUse();
-        }
-
-        Book book = bookApi.getBook(isbn);
+        Book book = bookApi.getBook(isbn13);
 
         if (book == null) {
             throw new BookAdditionError.BookNotFound();
@@ -93,7 +84,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void requestBook(String isbn, String ownerEmail, User user, Integer timeInDays)
+    public void requestBook(String isbn13, String ownerEmail, User user, Integer timeInDays)
             throws BookRequestError {
 
         User owner =
@@ -106,10 +97,7 @@ public class BookServiceImpl implements BookService {
             throw new BookRequestError.CannotRequestFromSelf();
         }
 
-        Book searchedBook =
-                isbn.length() == 10
-                        ? bookRepo.findByIsbnTen(isbn)
-                        : bookRepo.findByIsbnThirteen(isbn);
+        Book searchedBook = bookRepo.findByIsbnThirteen(isbn13);
 
         if (searchedBook == null) {
             throw new BookRequestError.OwnershipNotFound();
@@ -132,16 +120,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void lendBook(String isbn, String receiverEmail, User user) throws BookLendError {
+    public void lendBook(String isbn13, String receiverEmail, User user) throws BookLendError {
 
         User requester =
                 userRepo.findByEmail(receiverEmail)
                         .orElseThrow((Supplier<BookLendError>) BookLendError.RequestNotFound::new);
 
-        Book book =
-                isbn.length() == 10
-                        ? bookRepo.findByIsbnTen(isbn)
-                        : bookRepo.findByIsbnThirteen(isbn);
+        Book book = bookRepo.findByIsbnThirteen(isbn13);
 
         if (book == null) {
             throw new BookLendError.RequestNotFound();

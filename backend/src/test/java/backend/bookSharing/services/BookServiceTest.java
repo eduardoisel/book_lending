@@ -55,13 +55,12 @@ public class BookServiceTest {
     public void addBookFromApiTest() throws BookAdditionError {
         Book book = TestData.booksExclusiveFromApi[0];
 
-        when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(null);
-        when(bookApi.getBook(book.getIsbnTen())).thenReturn(book);
+        when(bookRepo.findByIsbnThirteen(book.getIsbnThirteen())).thenReturn(null);
+        when(bookApi.getBook(book.getIsbnThirteen())).thenReturn(book);
         when(bookRepo.save(book)).thenReturn(book);
 
-        Book returnedBook = service.addBookFromApi(book.getIsbnTen());
+        Book returnedBook = service.addBookFromApi(book.getIsbnThirteen());
 
-        assertEquals(book.getIsbnTen(), returnedBook.getIsbnTen());
         assertEquals(book.getIsbnThirteen(), returnedBook.getIsbnThirteen());
         assertEquals(book.getTitle(), returnedBook.getTitle());
     }
@@ -73,16 +72,12 @@ public class BookServiceTest {
 
         when(bookApi.getBook(any())).thenReturn(book);
 
-        when(bookRepo.findByIsbnTen(anyString())).thenReturn(book);
-
-        assertThrowsExactly(
-                BookAdditionError.Isbn10InUse.class,
-                () -> service.addBookFromApi(book.getIsbnTen()));
+        when(bookRepo.findByIsbnThirteen(anyString())).thenReturn(book);
 
         when(bookRepo.findByIsbnThirteen(anyString())).thenReturn(book);
 
         assertThrowsExactly(
-                BookAdditionError.Isbn13InUse.class,
+                BookAdditionError.IsbnInUse.class,
                 () -> service.addBookFromApi(book.getIsbnThirteen()));
     }
 
@@ -91,18 +86,17 @@ public class BookServiceTest {
 
         Book book =
                 new Book(
-                        RandomValuesGenerator.generateNumeric(10),
                         RandomValuesGenerator.generateNumeric(13),
                         RandomValuesGenerator.generateAlphaNumeric(5),
                         Book.Language.English);
 
         when(bookApi.getBook(any())).thenReturn(null);
 
-        when(bookRepo.findByIsbnTen(anyString())).thenReturn(null);
+        when(bookRepo.findByIsbnThirteen(anyString())).thenReturn(null);
 
         assertThrowsExactly(
                 BookAdditionError.BookNotFound.class,
-                () -> service.addBookFromApi(book.getIsbnTen()));
+                () -> service.addBookFromApi(book.getIsbnThirteen()));
     }
 
     @Test
@@ -110,17 +104,11 @@ public class BookServiceTest {
 
         Book book =
                 new Book(
-                        RandomValuesGenerator.generateNumeric(10),
                         RandomValuesGenerator.generateNumeric(13),
                         RandomValuesGenerator.generateAlphaNumeric(5),
                         Book.Language.English);
 
-        when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(null);
         when(bookRepo.findByIsbnThirteen(book.getIsbnThirteen())).thenReturn(null);
-
-        assertThrowsExactly(
-                BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnTen(), 0, null));
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
@@ -138,7 +126,7 @@ public class BookServiceTest {
         Page<Owned> page =
                 new PageImpl<Owned>(owners.stream().map(user -> new Owned(user, book)).toList());
 
-        when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(book);
+        when(bookRepo.findByIsbnThirteen(book.getIsbnThirteen())).thenReturn(book);
 
         when(ownedRepo.findNearbyOwners(
                         eq(book.getId()), any(), anyDouble(), eq(PageRequest.of(pageNumber, 20))))
@@ -146,7 +134,8 @@ public class BookServiceTest {
 
         assertEquals(
                 owners,
-                service.getOwnersOfBook(book.getIsbnTen(), pageNumber, TestData.points.getFirst())
+                service.getOwnersOfBook(
+                                book.getIsbnThirteen(), pageNumber, TestData.points.getFirst())
                         .toList());
     }
 
@@ -156,8 +145,7 @@ public class BookServiceTest {
         User lender = TestData.users.getFirst();
 
         Book book = TestData.databaseBooks[0];
-        when(bookRepo.findByIsbnTen(book.getIsbnTen())).thenReturn(book);
-        when(bookRepo.findByIsbnTen(book.getIsbnThirteen())).thenReturn(book);
+        when(bookRepo.findByIsbnThirteen(book.getIsbnThirteen())).thenReturn(book);
 
         User receiver = TestData.users.get(1);
         when(userRepo.findByEmail(receiver.getEmail())).thenReturn(Optional.of(receiver));
@@ -173,7 +161,7 @@ public class BookServiceTest {
         when(lendRepo.existsById(new LendId(owned.getId(), receiver.getId()))).thenReturn(false);
 
         try {
-            service.lendBook(book.getIsbnTen(), receiver.getEmail(), lender);
+            service.lendBook(book.getIsbnThirteen(), receiver.getEmail(), lender);
         } catch (Exception e) {
             fail("Should not fail", e);
         }

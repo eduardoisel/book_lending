@@ -1,6 +1,5 @@
 package backend.bookSharing.repository.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,39 +43,29 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     @Size(max = maxEmailSize, message = "{validation.name.size.too_long}") private String email;
 
-    /**
-     * Possibly to be changed so it is on another table
-     */
-    @JsonIgnore @Setter private Boolean locked = false;
+    @Setter private Boolean locked = false;
 
     @Column(name = "has_admin_powers", nullable = false)
     private Boolean isAdmin;
 
-    @JsonIgnore @ToString.Exclude private PasswordValidationInfo validationInfo;
+    @ToString.Exclude private PasswordValidationInfo validationInfo;
 
-    @JsonIgnore
     @Column(columnDefinition = "geography(Point,4326)")
     private Point location;
 
-    //    @JdbcTypeCode(SqlTypes.GEOGRAPHY)
-    //    private Geometry<G2D> location;
-
-    @JsonIgnore
-    @OneToMany(
-            mappedBy = "user",
-            fetch = FetchType.LAZY) // note: mapped by string value is from owned class user
-    // reference name member
+    // note: mapped by string value is from owned class user reference name member
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Owned> owned;
 
-    @JsonIgnore
-    @OneToMany(
-            mappedBy = "user",
-            orphanRemoval =
-                    true) // note: mapped by string value is from owned class user reference name
-    // member
+    // note: mapped by string value is from owned class user reference name member
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     @ToString.Exclude
     private List<Token> tokens;
+
+    @OneToMany(mappedBy = "requester")
+    @ToString.Exclude
+    private List<Request> requests;
 
     public User(Point point, String email, PasswordValidationInfo validationInfo) {
         this.location = point;
@@ -95,7 +84,6 @@ public class User implements UserDetails {
     /**
      * @return admin authority or none
      */
-    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.isAdmin) {
@@ -104,33 +92,18 @@ public class User implements UserDetails {
         return List.of();
     }
 
-    @JsonIgnore
     @Override
     public @Nullable String getPassword() {
         return validationInfo.hash();
     }
 
-    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return !locked;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @JsonIgnore
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
     }
 }

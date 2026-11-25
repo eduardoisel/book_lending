@@ -27,13 +27,19 @@ public class Request {
     })
     private Owned owned;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @MapsId("requests")
+    @JoinColumn(name = "requester_user_id", referencedColumnName = "id")
+    private User requester;
+
     @Column(insertable = false)
     private Timestamp date;
 
     private Integer duration;
 
     /**
-     * Constructor sets all fields, including {@link ManyToOne} relationship
+     * Constructor sets all fields, except {@link ManyToOne} relationship of user requester (thought it would be
+     * needed, todo see if it is)
      * @param owned requested book
      * @param requesterId id of user requesting book
      * @param duration duration in days of request

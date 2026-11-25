@@ -178,12 +178,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Owned addOwner(String isbn, User user) throws OwnerShipAdditionError {
+    public Owned addOwner(String isbn13, User user) throws OwnerShipAdditionError {
 
-        Book searchedBook =
-                isbn.length() == 10
-                        ? bookRepo.findByIsbnTen(isbn)
-                        : bookRepo.findByIsbnThirteen(isbn);
+        Book searchedBook = bookRepo.findByIsbnThirteen(isbn13);
 
         if (searchedBook == null) {
             throw new OwnerShipAdditionError.BookNotFound();

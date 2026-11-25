@@ -20,29 +20,39 @@ public interface BookService {
     @Transactional
     Page<Book> getBooks(Integer pageNumber);
 
+    /**
+     *
+     * @param isbn13 ISBN 13 of requested {@link Book}
+     * @param pageNumber the current page requested. smallest is 0
+     * @param location location of user doing the request
+     * @return List of users who own the selected book. Limited to users deemed to be close enough
+     */
     @Transactional
-    Page<User> getOwnersOfBook(String isbn, Integer pageNumber, Point location)
+    Page<User> getOwnersOfBook(String isbn13, Integer pageNumber, Point location)
             throws BookOwnersSearchError;
 
+    /**
+     * @param isbn13 ISBN 13 of requested {@link Book}
+     * @return book added to the api
+     */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    Book addBookFromApi(String isbn) throws BookAdditionError;
+    Book addBookFromApi(String isbn13) throws BookAdditionError;
 
     /**
-     * @param isbn isbn of requested {@link Book}
+     * @param isbn13 ISBN 13 of requested {@link Book}
      * @param ownerEmail email of owner, a {@link User}
      * @param user authenticated {@link User} doing request
      * @param timeInDays amount of days requested
      */
     @Transactional
-    void requestBook(String isbn, String ownerEmail, User user, Integer timeInDays)
+    void requestBook(String isbn13, String ownerEmail, User user, Integer timeInDays)
             throws BookRequestError;
 
     /**
-     * @param isbn isbn of requested {@link Book}
+     * @param isbn13 ISBN 13 of requested {@link Book}
      * @param receiverEmail email of receiver
      * @param user authenticated {@link  User}
-     * @throws BookLendError
      */
     @Transactional
-    void lendBook(String isbn, String receiverEmail, User user) throws BookLendError;
+    void lendBook(String isbn13, String receiverEmail, User user) throws BookLendError;
 }

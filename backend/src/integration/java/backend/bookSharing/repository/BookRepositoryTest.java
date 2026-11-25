@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import backend.bookSharing.TestData;
 import backend.bookSharing.repository.entities.Book;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,6 +27,13 @@ public class BookRepositoryTest extends DatabaseTest {
     }
 
     @Test
+    public void createWithBadIsbn13Test() {
+        Book b = new Book("abcdefg", "irrelevant", Book.Language.English);
+
+        assertThrowsExactly(ConstraintViolationException.class, () -> bookRepository.save(b));
+    }
+
+    @Test
     public void deletionTest() {
         Book temporaryInsert = TestData.duplicate(TestData.databaseBooks[0]);
 
@@ -35,28 +43,13 @@ public class BookRepositoryTest extends DatabaseTest {
     }
 
     @Test
-    public void findByIsbn10Test() {
-        String isbn10 = "0123456789";
+    public void findByIsbnTest() {
+        Book inserted =
+                TestData.duplicate(
+                        TestData.databaseBooks[
+                                0]); // new Book(null, isbn13, "test", Book.Language.Portuguese);
 
-        Book inserted = new Book(isbn10, null, "test", Book.Language.Portuguese);
-
-        bookRepository.save(inserted);
-
-        Book found = bookRepository.findByIsbnTen(isbn10);
-
-        assertNotNull(found);
-
-        assertEquals(inserted.getIsbnTen(), found.getIsbnTen());
-        assertEquals(inserted.getIsbnThirteen(), found.getIsbnThirteen());
-        assertEquals(inserted.getTitle(), found.getTitle());
-        assertEquals(inserted.getLanguage(), found.getLanguage());
-    }
-
-    @Test
-    public void findByIsbn13Test() {
-        String isbn13 = "1234567890321";
-
-        Book inserted = new Book(null, isbn13, "test", Book.Language.Portuguese);
+        String isbn13 = inserted.getIsbnThirteen();
 
         bookRepository.save(inserted);
 
@@ -64,7 +57,6 @@ public class BookRepositoryTest extends DatabaseTest {
 
         assertNotNull(found);
 
-        assertEquals(inserted.getIsbnTen(), found.getIsbnTen());
         assertEquals(inserted.getIsbnThirteen(), found.getIsbnThirteen());
         assertEquals(inserted.getTitle(), found.getTitle());
         assertEquals(inserted.getLanguage(), found.getLanguage());

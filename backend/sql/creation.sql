@@ -34,11 +34,9 @@ CREATE type LANGUAGE as ENUM(
 );
 
 -- https://stackoverflow.com/questions/63967873/postgresql-regex-constraint-so-that-varchar-contains-only-digits
---- either isbn 10 or isbn_13 may be required to not be null
 CREATE TABLE Book(
     id serial primary key NOT NULL,
-    isbn_10 varchar(10) CHECK(isbn_10 ~ '^[0-9]*[0-9X]$'),
-    isbn_13 varchar(13) CHECK(isbn_13 ~ '^[0-9]*[0-9X]$') UNIQUE NOT NULL,
+    isbn_13 varchar(13) CHECK(isbn_13 ~ '^[0-9]{13}$') UNIQUE NOT NULL,
     title varchar(100) NOT NULL,
     lang LANGUAGE NOT NULL
 );

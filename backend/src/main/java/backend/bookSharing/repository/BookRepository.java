@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 */
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    Book findByIsbnTen(String isbn_10);
-
     Book findByIsbnThirteen(String isbn_13);
 
     // List<Book> findByLanguage(Language language);

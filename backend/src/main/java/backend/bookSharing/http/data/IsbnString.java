@@ -1,5 +1,6 @@
 package backend.bookSharing.http.data;
 
+import backend.bookSharing.utils.IsbnUtils;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.ISBN;
 
@@ -7,4 +8,9 @@ import org.hibernate.validator.constraints.ISBN;
  * @param ISBN ISBN string, either ISBN 10 or 13. Should also respect ISBN checksum
  */
 public record IsbnString(
-        @NotNull @ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY) String ISBN) {}
+        @NotNull @ISBN(type = org.hibernate.validator.constraints.ISBN.Type.ANY) String ISBN) {
+
+    public String ISBN13() {
+        return IsbnUtils.getIsbn13(ISBN);
+    }
+}

@@ -55,11 +55,6 @@ public class OwnedBooks {
     private static Book getBookWithId(List<Book> idBooks, Owned owned) {
 
         for (Book book : idBooks) {
-            if (book.getIsbnTen() != null
-                    && owned.getBook().getIsbnTen() != null
-                    && book.getIsbnTen().equals(owned.getBook().getIsbnTen())) {
-                return book;
-            }
             if (book.getIsbnThirteen() != null
                     && owned.getBook().getIsbnThirteen() != null
                     && book.getIsbnThirteen().equals(owned.getBook().getIsbnThirteen())) {
@@ -67,10 +62,7 @@ public class OwnedBooks {
             }
         }
 
-        String isbn =
-                (owned.getBook().getIsbnTen() != null)
-                        ? owned.getBook().getIsbnTen()
-                        : owned.getBook().getIsbnThirteen();
+        String isbn = owned.getBook().getIsbnThirteen();
         throw new IllegalArgumentException("Book with id" + isbn + "not found");
     }
 

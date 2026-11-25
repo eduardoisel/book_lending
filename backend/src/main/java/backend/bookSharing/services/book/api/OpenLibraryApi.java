@@ -85,27 +85,17 @@ public class OpenLibraryApi implements BookApi {
 
         String[] language = apiBook.languages[0].key.split("/");
 
-        if (apiBook.isbn_10 == null) {
+        if (apiBook.isbn_13 == null) {
+            // assumes isbn_10 is not null
             return new Book(
-                    IsbnUtils.isIsbn13ConvertibleTo10(apiBook.isbn_13[0])
-                            ? IsbnUtils.isbn13To10(apiBook.isbn_13[0])
-                            : null,
-                    apiBook.isbn_13[0],
-                    apiBook.title,
-                    Book.Language.isoIdToLanguage(language[language.length - 1]));
-        } else if (apiBook.isbn_13 == null) {
-            return new Book(
-                    apiBook.isbn_10[0],
                     IsbnUtils.isbn10To13(apiBook.isbn_10[0]),
                     apiBook.title,
                     Book.Language.isoIdToLanguage(language[language.length - 1]));
         }
 
         return new Book(
-                apiBook.isbn_10[0],
                 apiBook.isbn_13[0],
                 apiBook.title,
                 Book.Language.isoIdToLanguage(language[language.length - 1]));
-
     }
 }

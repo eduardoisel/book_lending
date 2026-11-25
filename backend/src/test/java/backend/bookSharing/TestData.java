@@ -3,6 +3,7 @@ package backend.bookSharing;
 import backend.bookSharing.data.ApiBooks;
 import backend.bookSharing.data.ClearPasswordUser;
 import backend.bookSharing.data.DatabaseBooks;
+import backend.bookSharing.data.TestBook;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.User;
 import java.lang.reflect.Array;
@@ -36,21 +37,11 @@ public class TestData {
         return resultList.toArray(resultArray);
     }
 
-    public static final Book[] databaseBooks = DatabaseBooks.books;
+    public static final TestBook[] databaseBooks = DatabaseBooks.books;
 
-    public static Book[] booksExclusiveFromApi = ApiBooks.books;
+    public static TestBook[] booksExclusiveFromApi = ApiBooks.books;
 
-    public static Book[] allBooks = concatWithCollection(databaseBooks, booksExclusiveFromApi);
-
-    public static Boolean isIsbn10Unique(@NonNull String isbn10) {
-
-        for (Book book : allBooks) {
-            if (isbn10.equals(book.getIsbnTen())) {
-                return false;
-            }
-        }
-        return true;
-    }
+    public static TestBook[] allBooks = concatWithCollection(databaseBooks, booksExclusiveFromApi);
 
     public static Boolean isIsbn13Unique(@NonNull String isbn13) {
 
@@ -105,8 +96,7 @@ public class TestData {
      * @return Instance with auto generated id NOT set
      */
     public static Book duplicate(Book book) {
-        return new Book(
-                book.getIsbnTen(), book.getIsbnThirteen(), book.getTitle(), book.getLanguage());
+        return new Book(book.getIsbnThirteen(), book.getTitle(), book.getLanguage());
     }
 
     /**

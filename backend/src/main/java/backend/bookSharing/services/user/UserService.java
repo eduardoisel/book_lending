@@ -61,12 +61,12 @@ public interface UserService extends UserDetailsService {
 
     /**
      *
-     * @param isbn isbn 10 or 13 from book
+     * @param isbn13 book's ISBN 13
      * @param user authenticated {@link User} doing action
      * @return created {@link Owned} instance. Can be changed to void
      */
     @Transactional
-    Owned addOwner(String isbn, User user) throws OwnerShipAdditionError;
+    Owned addOwner(String isbn13, User user) throws OwnerShipAdditionError;
 
     /**
      * Theoretically to be used only by a type of administrator. Ought to forbid them to interact with other accounts,

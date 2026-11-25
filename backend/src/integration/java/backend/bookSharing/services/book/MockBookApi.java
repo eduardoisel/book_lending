@@ -1,6 +1,7 @@
 package backend.bookSharing.services.book;
 
 import backend.bookSharing.TestData;
+import backend.bookSharing.data.TestBook;
 import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.services.book.api.BookApi;
 import java.util.Arrays;
@@ -19,40 +20,22 @@ public class MockBookApi implements BookApi {
             throw new IllegalStateException("Should not be null");
         }
 
-        if (isbn.length() == 13) {
-            Optional<Book> searchedIsbn13Book =
-                    Arrays.stream(TestData.allBooks)
-                            .filter(
-                                    book -> {
-                                        String isbn13 = book.getIsbnThirteen();
-
-                                        if (isbn13 == null) {
-                                            return false;
-                                        }
-
-                                        return isbn13.equals(isbn);
-                                    })
-                            .findFirst();
-
-            if (searchedIsbn13Book.isEmpty()) {
-                throw new RuntimeException("Mock api has not found the book");
-            }
-
-            return TestData.duplicate(searchedIsbn13Book.get());
+        if (isbn.length() != 13) {
+            throw new IllegalStateException(
+                    "ISBN length should be 13. Exception placed as service layer uses only ISBN 13"
+                            + " now.");
         }
 
-        Optional<Book> searchedIsbn10Book =
+        Optional<TestBook> searchedIsbn13Book =
                 Arrays.stream(TestData.allBooks)
                         .filter(
                                 book -> {
-                                    String isbn10 = book.getIsbnTen();
-                                    if (isbn10 == null) {
-                                        return false;
-                                    }
-                                    return book.getIsbnTen().equals(isbn);
+                                    String isbn13 = book.getIsbnThirteen();
+
+                                    return isbn13.equals(isbn);
                                 })
                         .findFirst();
 
-        return searchedIsbn10Book.map(TestData::duplicate).orElse(null);
+        return searchedIsbn13Book.map(TestData::duplicate).orElse(null);
     }
 }

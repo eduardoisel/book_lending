@@ -1,18 +1,19 @@
 package backend.bookSharing.http.controller;
 
+import backend.bookSharing.http.data.BookDto;
 import backend.bookSharing.http.data.IsbnString;
 import backend.bookSharing.http.data.LendCreation;
 import backend.bookSharing.http.data.RequestCreation;
+import backend.bookSharing.http.data.UserDto;
 import backend.bookSharing.http.returns.ListedData;
-import backend.bookSharing.repository.entities.Book;
 import backend.bookSharing.repository.entities.User;
 import backend.bookSharing.services.book.BookService;
 import backend.bookSharing.services.book.failures.BookAdditionError;
 import backend.bookSharing.services.book.failures.BookLendError;
 import backend.bookSharing.services.book.failures.BookOwnersSearchError;
 import backend.bookSharing.services.book.failures.BookRequestError;
+import backend.bookSharing.utils.IsbnUtils;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -48,14 +49,12 @@ public class BookController {
     //            unless = "#result.hasNext()==false") // no cache since list may increase
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData<Book> getBooks(
+    public ListedData<BookDto> getBooks(
             @RequestParam(required = false, defaultValue = "0") Integer page) {
 
-        Page<Book> books = service.getBooks(page);
+        Page<BookDto> books = service.getBooks(page).map(BookDto::new);
 
-        List<Book> list = books.toList();
-
-        return new ListedData<>(list, books.hasNext(), books.hasPrevious(), books.getTotalPages());
+        return new ListedData<>(books);
     }
 
     /**
@@ -70,15 +69,16 @@ public class BookController {
     // @Cacheable("bookOwners")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ListedData<User> getBookOwners(
+    public ListedData<UserDto> getBookOwners(
             @Valid @PathVariable IsbnString ISBN,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @AuthenticationPrincipal User user)
             throws BookOwnersSearchError {
 
-        Page<User> users = service.getOwnersOfBook(ISBN.ISBN(), page, user.getLocation());
+        Page<UserDto> users =
+                service.getOwnersOfBook(ISBN.ISBN13(), page, user.getLocation()).map(UserDto::new);
 
-        return new ListedData<>(users.toList(), users.hasNext(), users.hasPrevious(), users.getTotalPages());
+        return new ListedData<>(users);
     }
 
     /**
@@ -93,8 +93,8 @@ public class BookController {
     @PostMapping("/{ISBN}")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Book postBook(@Valid @PathVariable IsbnString ISBN) throws BookAdditionError {
-        return service.addBookFromApi(ISBN.ISBN());
+    public BookDto postBook(@Valid @PathVariable IsbnString ISBN) throws BookAdditionError {
+        return new BookDto(service.addBookFromApi(ISBN.ISBN13()));
     }
 
     @PostMapping("/request")
@@ -104,7 +104,11 @@ public class BookController {
             @AuthenticationPrincipal User authenticatedUser)
             throws BookRequestError {
 
-        service.requestBook(body.isbn(), body.ownerEmail(), authenticatedUser, body.timeInDays());
+        service.requestBook(
+                IsbnUtils.getIsbn13(body.isbn()),
+                body.ownerEmail(),
+                authenticatedUser,
+                body.timeInDays());
     }
 
     @PostMapping("/lend")
@@ -112,6 +116,6 @@ public class BookController {
     public void lendBook(@Valid @RequestBody LendCreation body, @AuthenticationPrincipal User user)
             throws BookLendError {
 
-        service.lendBook(body.isbn(), body.receiverEmail(), user);
+        service.lendBook(IsbnUtils.getIsbn13(body.isbn()), body.receiverEmail(), user);
     }
 }

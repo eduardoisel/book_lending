@@ -16,9 +16,9 @@ import lombok.ToString;
 @ToString
 public class OwnedId {
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
 
-    @Column(name = "book_id")
+    @Column(name = "book_id", nullable = false)
     private Integer bookId;
 }

@@ -1,6 +1,5 @@
 package backend.bookSharing.repository.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -22,6 +22,7 @@ import org.hibernate.type.SqlTypes;
 /**
  * Since this service is about physical books, it assumes the existence of the ISBN. It may have ISBN 10 and has
  * ISBN 13.
+ * Should not be exposed to outside
  */
 @Getter
 @Entity
@@ -73,10 +74,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // can be converted to isbn 13, todo remove field
-    @Column(unique = false, nullable = true, name = "isbn_10", length = 10)
-    private String isbnTen;
-
+    @Pattern(regexp = "^([0-9]{13})$")
     @Column(unique = true, nullable = false, name = "isbn_13", length = 13)
     private String isbnThirteen;
 
@@ -89,7 +87,6 @@ public class Book {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private Language language;
 
-    @JsonIgnore
     @OneToMany(
             mappedBy = "book",
             fetch = FetchType.LAZY) // note: mapped by string value is from owned class Owned
@@ -98,8 +95,7 @@ public class Book {
     @ToString.Exclude
     private List<Owned> owners; // private Set<Owned> owners;
 
-    public Book(String isbn_10, String isbn_13, String title, Language language) {
-        this.isbnTen = isbn_10;
+    public Book(String isbn_13, String title, Language language) {
         this.isbnThirteen = isbn_13;
         this.title = title;
         this.language = language;

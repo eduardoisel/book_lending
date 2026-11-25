@@ -33,7 +33,7 @@ public class UserControllerTest extends ControllerTestBase {
         User owner = insertedUsers.getFirst();
 
         String returned =
-                mockMvc.perform(get("/users/owned/{userId}", owner.getId()))
+                mockMvc.perform(get("/users/ownedBy/{userId}", owner.getId()))
                         .andExpect(MockMvcResultMatchers.status().isOk())
                         .andReturn()
                         .getResponse()

@@ -26,7 +26,7 @@ public class BookServiceTest extends ServiceTestBase {
     public void addBookFromApiTest() {
 
         try {
-            service.addBookFromApi(TestData.booksExclusiveFromApi[0].getIsbnTen());
+            service.addBookFromApi(TestData.booksExclusiveFromApi[0].getIsbnThirteen());
         } catch (BookAdditionError e) {
             fail("Should succeed");
         }
@@ -38,11 +38,7 @@ public class BookServiceTest extends ServiceTestBase {
         Book book = TestData.databaseBooks[0];
 
         assertThrowsExactly(
-                BookAdditionError.Isbn10InUse.class,
-                () -> service.addBookFromApi(book.getIsbnTen()));
-
-        assertThrowsExactly(
-                BookAdditionError.Isbn13InUse.class,
+                BookAdditionError.IsbnInUse.class,
                 () -> service.addBookFromApi(book.getIsbnThirteen()));
     }
 
@@ -51,14 +47,13 @@ public class BookServiceTest extends ServiceTestBase {
 
         Book book =
                 new Book(
-                        RandomValuesGenerator.generateNumeric(10),
                         RandomValuesGenerator.generateNumeric(13),
                         RandomValuesGenerator.generateAlphaNumeric(5),
                         Book.Language.English);
 
         assertThrowsExactly(
                 BookAdditionError.BookNotFound.class,
-                () -> service.addBookFromApi(book.getIsbnTen()));
+                () -> service.addBookFromApi(book.getIsbnThirteen()));
     }
 
     @Test
@@ -66,14 +61,15 @@ public class BookServiceTest extends ServiceTestBase {
 
         Book book =
                 new Book(
-                        RandomValuesGenerator.generateNumeric(10),
                         RandomValuesGenerator.generateNumeric(13),
                         RandomValuesGenerator.generateAlphaNumeric(5),
                         Book.Language.English);
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
-                () -> service.getOwnersOfBook(book.getIsbnTen(), 0, TestData.points.getFirst()));
+                () ->
+                        service.getOwnersOfBook(
+                                book.getIsbnThirteen(), 0, TestData.points.getFirst()));
 
         assertThrowsExactly(
                 BookOwnersSearchError.BookNotFound.class,
